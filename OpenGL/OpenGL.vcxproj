@@ -160,12 +160,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Header\shader.h" />
-    <ClCompile Include="Src\shader.cpp" />
+    <ClCompile Include="Src\Render\ebo.cpp" />
+    <ClCompile Include="Src\Render\mesh.cpp" />
+    <ClCompile Include="Src\Render\shader.cpp" />
+    <ClCompile Include="Src\Render\vao.cpp" />
+    <ClCompile Include="Src\Render\vbo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Header\Engine\Render\ebo.h" />
+    <ClInclude Include="Header\Engine\Render\mesh.h" />
+    <ClInclude Include="Header\Engine\Render\shader.h" />
+    <ClInclude Include="Header\Engine\Render\vao.h" />
+    <ClInclude Include="Header\Engine\Render\vbo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
