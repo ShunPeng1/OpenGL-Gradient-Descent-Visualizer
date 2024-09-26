@@ -159,12 +159,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Header\Engine\Loader\modelLoader.h" />
     <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Src\Render\ebo.cpp" />
-    <ClCompile Include="Src\Render\mesh.cpp" />
-    <ClCompile Include="Src\Render\shader.cpp" />
-    <ClCompile Include="Src\Render\vao.cpp" />
-    <ClCompile Include="Src\Render\vbo.cpp" />
+    <ClCompile Include="Src\Engine\Loader\modelLoader.cpp" />
+    <ClCompile Include="Src\Engine\Render\ebo.cpp" />
+    <ClCompile Include="Src\Engine\Render\mesh.cpp" />
+    <ClCompile Include="Src\Engine\Render\shader.cpp" />
+    <ClCompile Include="Src\Engine\Render\vao.cpp" />
+    <ClCompile Include="Src\Engine\Render\vbo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
@@ -173,9 +175,15 @@
   <ItemGroup>
     <ClInclude Include="Header\Engine\Render\ebo.h" />
     <ClInclude Include="Header\Engine\Render\mesh.h" />
+    <ClInclude Include="Header\Engine\Render\renderer.h" />
     <ClInclude Include="Header\Engine\Render\shader.h" />
+    <ClInclude Include="Header\Engine\Render\texture.h" />
     <ClInclude Include="Header\Engine\Render\vao.h" />
     <ClInclude Include="Header\Engine\Render\vbo.h" />
+    <ClInclude Include="Header\Engine\Render\vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Models\teapot.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
