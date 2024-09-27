@@ -59,6 +59,10 @@ int main(void)
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    /* Maximize the window */
+    glfwMaximizeWindow(window);
+
+
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     Shader defaultShader = Shader(".\\Resources\\Shaders\\default.vert", ".\\Resources\\Shaders\\default.frag");
@@ -71,6 +75,7 @@ int main(void)
     defaultShader.setUniformMat4("mWorld", world);
     defaultShader.setUniformMat4("mProj", proj);
     defaultShader.setUniformVec2("mTexScale", texScale);
+	defaultShader.setUniformBool("useTexture", true);
 
     Mesh teapot = ModelLoader::loadModel(".\\Resources\\Models\\teapot.obj");
 
@@ -130,7 +135,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height * SCR_WIDTH / SCR_HEIGHT);
 }
 
 // glfw: whenever the mouse moves, this callback is called
