@@ -92,3 +92,82 @@ Mesh ModelLoader::LoadObjFile(const char* path)
     file.close();
     return Mesh(vertices, indices, textures);
 }
+
+Mesh ModelLoader::LoadTriangle()
+{
+	std::vector<glm::vec3> positions = {
+		glm::vec3(-0.5f, -0.5f, 0.0f),
+		glm::vec3(0.5f, -0.5f, 0.0f),
+		glm::vec3(0.0f, 0.5f, 0.0f)
+	};
+
+	std::vector<glm::vec3> normals = {
+		glm::vec3(0.0f, 0.0f, 1.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f)
+	};
+
+	std::vector<glm::vec2> texcoords = {
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.5f, 1.0f)
+	};
+
+    std::vector<glm::vec4> normalColors = {
+		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
+    };
+
+	std::vector<Vertex> vertices;
+	for (size_t i = 0; i < positions.size(); i++) {
+		Vertex vertex = {};
+		vertex.positions = positions[i];
+		vertex.normals = normals[i];
+		vertex.texCoords = texcoords[i];
+	
+        if (mUseNormalColor) {
+			vertex.color = normalColors[i];
+        }
+        else {
+            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+		vertices.push_back(vertex);
+	}
+
+	std::vector<unsigned int> indices = {
+		0, 1, 2
+	};
+
+	return Mesh(vertices, indices, {});
+}
+
+Mesh ModelLoader::LoadQuad()
+{
+    return Mesh({}, {}, {});
+}
+
+Mesh ModelLoader::LoadCube()
+{
+    return Mesh({}, {}, {});
+}
+
+Mesh ModelLoader::LoadCylinder(float height, float radius)
+{
+    return Mesh({}, {}, {});
+}
+
+Mesh ModelLoader::LoadSphere(float radius, int sector, int stack)
+{
+    return Mesh({}, {}, {});
+}
+
+Mesh ModelLoader::LoadCone(float height, float radius)
+{
+    return Mesh({}, {}, {});
+}
+
+Mesh ModelLoader::LoadPlane()
+{
+    return Mesh({}, {}, {});
+}

@@ -4,13 +4,47 @@
 
 #include "Engine/Render/Mesh.h"
 
-static class ModelLoader {
+class ModelLoader {
 public:
-	static Mesh LoadObjFile(const char* path);	
 
+	Mesh LoadObjFile(const char* path);	
+	Mesh LoadTriangle();
+	Mesh LoadQuad();
+	Mesh LoadCube();
+	Mesh LoadCylinder(float height, float radius);
+	Mesh LoadSphere(float radius, int sector, int stack);
+	Mesh LoadCone(float height, float radius);
+	Mesh LoadPlane();
+
+	class Builder {
+	public:
+		Builder() {
+			mUseNormalColor = false;
+		}
+
+		Builder& SetUseNormalColor(bool useNormalColor) {
+			this->mUseNormalColor = useNormalColor;
+			return *this;
+		}
+
+		ModelLoader Build() {
+			ModelLoader modelLoader;
+			modelLoader.mUseNormalColor = mUseNormalColor;
+			return modelLoader;
+		}
+
+	private:
+		bool mUseNormalColor;
+	};
+	
+
+	~ModelLoader() {};
 private: 
-	ModelLoader() {}
-	~ModelLoader() {}
+	bool mUseNormalColor;
+
+
+
+	ModelLoader() {};
 };
 
 #endif // MODELLOADER_H

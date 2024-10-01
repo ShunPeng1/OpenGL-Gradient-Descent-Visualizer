@@ -32,6 +32,8 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+int currentModel = 1; // Variable to keep track of the current model
+
 int main(void)
 {
     GLFWwindow* window;
@@ -62,7 +64,6 @@ int main(void)
     /* Maximize the window */
     glfwMaximizeWindow(window);
 
-
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     Shader defaultShader = Shader(".\\Resources\\Shaders\\default.vert", ".\\Resources\\Shaders\\default.frag");
@@ -75,10 +76,21 @@ int main(void)
     defaultShader.SetUniformMat4("mWorld", world);
     defaultShader.SetUniformMat4("mProj", proj);
     defaultShader.SetUniformVec2("mTexScale", texScale);
-	defaultShader.SetUniformBool("mUseTexture", false);
-	defaultShader.SetUniformBool("mUseColor", true);
+    defaultShader.SetUniformBool("mUseTexture", false);
+    defaultShader.SetUniformBool("mUseColor", true);
 
-    Mesh teapot = ModelLoader::LoadObjFile(".\\Resources\\Models\\teapot.obj");
+    ModelLoader loader = ModelLoader::Builder()
+        .SetUseNormalColor(true)
+        .Build();
+    Mesh teapot = loader.LoadObjFile(".\\Resources\\Models\\teapot.obj");
+    Mesh triangle = loader.LoadTriangle();
+    // Add other models here
+    Mesh quad = loader.LoadQuad();
+    Mesh cube = loader.LoadCube();
+    Mesh cylinder = loader.LoadCylinder(1.0f, 0.5f);
+    Mesh sphere = loader.LoadSphere(0.5f, 36, 18);
+    Mesh cone = loader.LoadCone(1.0f, 0.5f);
+    Mesh plane = loader.LoadPlane();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -96,7 +108,18 @@ int main(void)
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         defaultShader.SetUniformMat4("mView", view);
 
-        teapot.Draw(defaultShader);
+        // Draw the selected model
+        switch (currentModel) {
+        case 1: teapot.Draw(defaultShader); break;
+        case 2: triangle.Draw(defaultShader); break;
+        case 3: quad.Draw(defaultShader); break;
+        case 4: cube.Draw(defaultShader); break;
+        case 5: cylinder.Draw(defaultShader); break;
+        case 6: sphere.Draw(defaultShader); break;
+        case 7: cone.Draw(defaultShader); break;
+        case 8: plane.Draw(defaultShader); break;
+            // Add more cases if you have more models
+        }
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -128,6 +151,25 @@ void processInput(GLFWwindow* window)
         cameraPos += cameraSpeed * cameraUp;
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    // Change model based on key press
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        currentModel = 1;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        currentModel = 2;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        currentModel = 3;
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        currentModel = 4;
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+        currentModel = 5;
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+        currentModel = 6;
+    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS)
+        currentModel = 7;
+    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
+        currentModel = 8;
+    // Add more keys if you have more models
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

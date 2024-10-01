@@ -7,7 +7,9 @@ Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vecto
     this->indices = indices;
     this->textures = textures;
 
-    setupMesh();
+	if (vertices.size() > 0)
+		setupMesh();
+
 }
 
 void Mesh::setupMesh() {
