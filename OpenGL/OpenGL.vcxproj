@@ -159,31 +159,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Header\Engine\Loader\modelLoader.h" />
+    <ClCompile Include="Header\Engine\Loader\ModelLoader.h" />
     <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Src\Engine\Loader\modelLoader.cpp" />
-    <ClCompile Include="Src\Engine\Render\ebo.cpp" />
-    <ClCompile Include="Src\Engine\Render\mesh.cpp" />
-    <ClCompile Include="Src\Engine\Render\shader.cpp" />
-    <ClCompile Include="Src\Engine\Render\vao.cpp" />
-    <ClCompile Include="Src\Engine\Render\vbo.cpp" />
+    <ClCompile Include="Src\Engine\Loader\ModelLoader.cpp" />
+    <ClCompile Include="Src\Engine\Render\EBO.cpp" />
+    <ClCompile Include="Src\Engine\Render\Mesh.cpp" />
+    <ClCompile Include="Src\Engine\Render\Shader.cpp" />
+    <ClCompile Include="Src\Engine\Render\VAO.cpp" />
+    <ClCompile Include="Src\Engine\Render\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header\Engine\Render\ebo.h" />
-    <ClInclude Include="Header\Engine\Render\mesh.h" />
-    <ClInclude Include="Header\Engine\Render\renderer.h" />
-    <ClInclude Include="Header\Engine\Render\shader.h" />
-    <ClInclude Include="Header\Engine\Render\texture.h" />
-    <ClInclude Include="Header\Engine\Render\vao.h" />
-    <ClInclude Include="Header\Engine\Render\vbo.h" />
-    <ClInclude Include="Header\Engine\Render\vertex.h" />
+    <ClInclude Include="Header\Engine\Render\EBO.h" />
+    <ClInclude Include="Header\Engine\Render\Mesh.h" />
+    <ClInclude Include="Header\Engine\Render\Renderer.h" />
+    <ClInclude Include="Header\Engine\Render\Shader.h" />
+    <ClInclude Include="Header\Engine\Render\Texture.h" />
+    <ClInclude Include="Header\Engine\Render\VAO.h" />
+    <ClInclude Include="Header\Engine\Render\VBO.h" />
+    <ClInclude Include="Header\Engine\Render\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Models\teapot.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\PC\Downloads\Temp\Blank.png" />
+    <Image Include="Resources\Textures\Blank.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

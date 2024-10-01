@@ -9,8 +9,8 @@ public:
     VAO();
     ~VAO();
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
 private:
     GLuint ID;

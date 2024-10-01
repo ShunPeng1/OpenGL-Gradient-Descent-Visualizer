@@ -1,6 +1,6 @@
-#include "Engine/Loader/modelLoader.h"
+#include "Engine/Loader/ModelLoader.h"
 
-Mesh ModelLoader::loadModel(const char* path)
+Mesh ModelLoader::LoadObjFile(const char* path)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -80,6 +80,8 @@ Mesh ModelLoader::loadModel(const char* path)
                 else {
                     vertex.normals = glm::vec3(0.0f, 0.0f, 0.0f);
                 }
+
+				vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
                 vertices.push_back(vertex);
                 indices.push_back(indices.size());

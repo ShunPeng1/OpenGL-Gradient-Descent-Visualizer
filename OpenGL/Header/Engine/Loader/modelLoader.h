@@ -6,8 +6,11 @@
 
 static class ModelLoader {
 public:
-	static Mesh loadModel(const char* path);	
+	static Mesh LoadObjFile(const char* path);	
 
+private: 
+	ModelLoader() {}
+	~ModelLoader() {}
 };
 
 #endif // MODELLOADER_H

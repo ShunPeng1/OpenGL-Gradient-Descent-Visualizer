@@ -1,4 +1,4 @@
-#include "Engine/Render/vbo.h"
+#include "Engine/Render/VBO.h"
 
 VBO::VBO(const void* data, GLsizeiptr size) {
     glGenBuffers(1, &ID);
@@ -10,10 +10,10 @@ VBO::~VBO() {
     glDeleteBuffers(1, &ID);
 }
 
-void VBO::bind() const {
+void VBO::Bind() const {
     glBindBuffer(GL_ARRAY_BUFFER, ID);
 }
 
-void VBO::unbind() const {
+void VBO::Unbind() const {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

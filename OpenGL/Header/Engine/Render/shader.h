@@ -15,25 +15,25 @@ class Shader
 {
 public:
     // the program ID
-    unsigned int ID;
+    unsigned int mID;
 
     // constructor reads and builds the shader
     Shader(const char* vertexPath, const char* fragmentPath);
     // use/activate the shader
-    void use();
+    void Use();
 
     // utility uniform functions
-    void setUniformBool(const std::string& name, bool value) const;
-    void setUniformInt(const std::string& name, int value) const;
-    void setUniformFloat(const std::string& name, float value) const;
-	void setUniformVec2(const std::string& name, glm::vec2 value) const;
-	void setUniformVec3(const std::string& name, glm::vec3 value) const;
-	void setUniformVec4(const std::string& name, glm::vec4 value) const;
-	void setUniformMat2(const std::string& name, glm::mat2 value) const;
-	void setUniformMat3(const std::string& name, glm::mat3 value) const;
-	void setUniformMat4(const std::string& name, glm::mat4 value) const;
+    void SetUniformBool(const std::string& name, bool value) const;
+    void SetUniformInt(const std::string& name, int value) const;
+    void SetUniformFloat(const std::string& name, float value) const;
+	void SetUniformVec2(const std::string& name, glm::vec2 value) const;
+	void SetUniformVec3(const std::string& name, glm::vec3 value) const;
+	void SetUniformVec4(const std::string& name, glm::vec4 value) const;
+	void SetUniformMat2(const std::string& name, glm::mat2 value) const;
+	void SetUniformMat3(const std::string& name, glm::mat3 value) const;
+	void SetUniformMat4(const std::string& name, glm::mat4 value) const;
 private: 
-	void checkCompileErrors(unsigned int shader, std::string type); 
+	void CheckCompileErrors(unsigned int shader, std::string type); 
 };
 
 #endif

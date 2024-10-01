@@ -14,6 +14,7 @@ uniform mat4 mView;
 uniform mat4 mProj;
 uniform vec2 mTexScale;
 uniform bool mUseTexture;
+uniform bool mUseColor;
 
 void main()
 {

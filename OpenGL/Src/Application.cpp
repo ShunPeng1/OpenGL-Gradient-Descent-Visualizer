@@ -9,9 +9,9 @@
 #include <ext/scalar_constants.hpp> // glm::pi
 
 #include <iostream>
-#include "Engine/Render/shader.h"
-#include "Engine/Render/mesh.h"
-#include "Engine/Loader/modelLoader.h"
+#include "Engine/Render/Shader.h"
+#include "Engine/Render/Mesh.h"
+#include "Engine/Loader/ModelLoader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -66,18 +66,19 @@ int main(void)
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     Shader defaultShader = Shader(".\\Resources\\Shaders\\default.vert", ".\\Resources\\Shaders\\default.frag");
-    defaultShader.use();
+    defaultShader.Use();
 
     glm::mat4 world = glm::mat4(1.0f);
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     glm::vec2 texScale = glm::vec2(1.0f, 1.0f);
 
-    defaultShader.setUniformMat4("mWorld", world);
-    defaultShader.setUniformMat4("mProj", proj);
-    defaultShader.setUniformVec2("mTexScale", texScale);
-	defaultShader.setUniformBool("useTexture", true);
+    defaultShader.SetUniformMat4("mWorld", world);
+    defaultShader.SetUniformMat4("mProj", proj);
+    defaultShader.SetUniformVec2("mTexScale", texScale);
+	defaultShader.SetUniformBool("mUseTexture", false);
+	defaultShader.SetUniformBool("mUseColor", true);
 
-    Mesh teapot = ModelLoader::loadModel(".\\Resources\\Models\\teapot.obj");
+    Mesh teapot = ModelLoader::LoadObjFile(".\\Resources\\Models\\teapot.obj");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -93,9 +94,9 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        defaultShader.setUniformMat4("mView", view);
+        defaultShader.SetUniformMat4("mView", view);
 
-        teapot.draw(defaultShader);
+        teapot.Draw(defaultShader);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

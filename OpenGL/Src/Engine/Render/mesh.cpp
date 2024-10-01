@@ -1,4 +1,4 @@
-#include "Engine/Render/mesh.h"
+#include "Engine/Render/Mesh.h"
 
 Mesh::
 Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
@@ -11,16 +11,16 @@ Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vecto
 }
 
 void Mesh::setupMesh() {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, &mVAO);
+    glGenBuffers(1, &mVBO);
+    glGenBuffers(1, &mEBO);
 
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindVertexArray(mVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
         &indices[0], GL_STATIC_DRAW);
 
@@ -33,11 +33,14 @@ void Mesh::setupMesh() {
     // vertex texture coords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+	// vertex color
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader& shader) {
+void Mesh::Draw(Shader& shader) {
 	/*unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	for (unsigned int i = 0; i < textures.size(); i++)
@@ -54,7 +57,7 @@ void Mesh::draw(Shader& shader) {
 		glBindTexture(GL_TEXTURE_2D, textures[i].ID);
 	}*/
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(mVAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 

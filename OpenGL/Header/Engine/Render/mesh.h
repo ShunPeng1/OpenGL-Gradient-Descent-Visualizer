@@ -4,9 +4,9 @@
 #include <vector>
 #include <glm.hpp>
 
-#include "vertex.h"
-#include "texture.h"
-#include "shader.h"
+#include "Vertex.h"
+#include "Texture.h"
+#include "Shader.h"
 
 class Mesh {
 public:
@@ -15,10 +15,10 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void draw(Shader& shader);
-private:
+    virtual void Draw(Shader& shader);
+protected:
     //  render data
-    unsigned int VAO, VBO, EBO;
+    unsigned int mVAO, mVBO, mEBO;
 
     void setupMesh();
 };

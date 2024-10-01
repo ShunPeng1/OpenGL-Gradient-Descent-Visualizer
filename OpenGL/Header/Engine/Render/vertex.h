@@ -4,8 +4,6 @@
 #include <glm.hpp>
 
 
-
-
 const int POSITION_LENGTH = 3;
 const int NORMAL_LENGTH = 3;
 const int TEX_COORD_LENGTH = 2;
@@ -20,8 +18,7 @@ struct Vertex {
     glm::vec3 positions;
     glm::vec3 normals;
     glm::vec2 texCoords;
-
-
+	glm::vec4 color;
 };
 
 #endif // VERTEX_H
