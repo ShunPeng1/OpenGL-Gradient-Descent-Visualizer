@@ -490,14 +490,83 @@ Mesh ModelLoader::LoadSphere(int sector, int stack)
 	}
 
 
-
-
     return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh ModelLoader::LoadCone(int sector)
 {
-    return Mesh({}, {}, {});
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> texcoords;
+    std::vector<glm::vec4> normalColors;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    float radius = 1.0f;
+    float height = 1.0f;
+    float halfHeight = height / 2.0f;
+    float angleStep = 2.0f * M_PI / sector;
+
+    // Generate vertices for the top and bottom circles
+    for (int i = 0; i < sector; ++i) {
+        float angle = i * angleStep;
+        float x = radius * cos(angle);
+        float y = radius * sin(angle);
+
+        // Bottom circle
+        positions.push_back(glm::vec3(x, y, -halfHeight));
+        normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+        texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+        if (mUseNormalColor) {
+            normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, -halfHeight), glm::vec3(x, y, -halfHeight)), 1));
+        }
+        else {
+            normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        }
+    }
+
+    // Create vertices and indices
+    for (size_t i = 0; i < positions.size(); ++i) {
+        Vertex vertex = {};
+        vertex.positions = positions[i];
+        vertex.normals = normals[i];
+        vertex.texCoords = texcoords[i];
+        vertex.color = normalColors[i];
+        vertices.push_back(vertex);
+    }
+
+    // Add the top and bottom center vertices
+    Vertex topCenterVertex = {
+        glm::vec3(0.0f, 0.0f, halfHeight),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.5f, 0.5f),
+        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+    };
+    int topCenterIndex = vertices.size();
+    vertices.push_back(topCenterVertex);
+
+
+
+	// Add indices for the bottom circle
+    for (int i = 0; i < sector / 2; ++i) {
+        indices.push_back((sector - i - 1));
+        indices.push_back(i);
+    }
+
+	indices.push_back(indices[indices.size() - 1]);
+	indices.push_back(0);
+
+	// Add indices for the side of the cone
+	for (int i = 0; i < sector; ++i) {
+		indices.push_back(i);
+		indices.push_back(topCenterIndex);
+	}
+	indices.push_back(0);
+	indices.push_back(topCenterIndex);
+
+
+
+    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh ModelLoader::LoadPlane()
