@@ -104,7 +104,15 @@ int main(void)
     Mesh cylinder = loader.LoadCylinder(36);
     Mesh sphere = loader.LoadSphere(40, 40);
     Mesh cone = loader.LoadCone(36);
-    Mesh plane = loader.LoadPlane();
+
+	ModelLoader::Range xRange(-1.0f, 1.0f, 0.5f);
+	ModelLoader::Range yRange(-1.0f, 1.0f, 0.5f);
+    
+    Mesh plane = loader.LoadPlane(
+        [](float x, float y) -> float {
+            // Example function: return a constant value
+            return x * x + y * y * y;
+        }, xRange, yRange);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

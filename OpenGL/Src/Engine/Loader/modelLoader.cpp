@@ -569,9 +569,69 @@ Mesh ModelLoader::LoadCone(int sector)
     return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh ModelLoader::LoadPlane()
+Mesh ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange)
 {
-    return Mesh({}, {}, {});
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> texcoords;
+    std::vector<glm::vec4> normalColors;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+	float xStep = (xRange.to - xRange.from) / xRange.step;
+	float yStep = (yRange.to - yRange.from) / yRange.step;
+
+    for (int i = 0; i <= xStep; i++) {
+        for (int j = 0; j <= yStep; j++) {
+            float x = xRange.from + i * xRange.step;
+            float y = yRange.from + j * yRange.step;
+            float z = func(x, y);
+
+            positions.push_back(glm::vec3(x, y, z));
+
+			glm::vec3 normal = glm::cross(glm::vec3(1.0f, 0.0f, func(x + 0.01f, y) - z), glm::vec3(0.0f, 1.0f, func(x, y + 0.01f) - z));
+            normals.push_back(glm::normalize(normal));
+
+            texcoords.push_back(glm::vec2(x, y));
+
+            if (mUseNormalColor) {
+                normalColors.push_back(glm::vec4(normal, 1));
+            }
+            else {
+                normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            }
+        }
+    }
+
+	for (int i = 0; i <= xStep; i++) {
+		for (int j = 0; j <= yStep; j++) {
+			int index = j + i * (yStep + 1);
+
+			Vertex vertex = {};
+			vertex.positions = positions[index];
+			vertex.normals = normals[index];
+			vertex.texCoords = texcoords[index];
+			vertex.color = normalColors[index];
+			vertices.push_back(vertex);
+		}
+	}
+
+    for (int i = 0; i < xStep; i++) {
+        for (int j = 0; j <= yStep; j++) {
+            int index1 = j + i * (yStep + 1);
+            int index2 = j + (i + 1) * (yStep + 1);
+
+            indices.push_back(index1);
+            indices.push_back(index2);
+        }
+      
+        if (i < xStep - 1 ) {
+            indices.push_back(indices[indices.size() - 1]);
+            indices.push_back((i + 1) * (yStep + 1));
+        }
+    }
+
+	return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 glm::vec3 ModelLoader::getNormalFromOrigin(glm::vec3 origin, glm::vec3 point)

@@ -3,9 +3,19 @@
 
 
 #include "Engine/Render/Mesh.h"
+#include <functional>
 
 class ModelLoader {
 public:
+
+	class Range {
+	public:
+		float from;
+		float to;
+		float step;
+
+		Range(float from, float to, float step) : from(from), to(to), step(step) {}
+	};
 
 	Mesh LoadObjFile(const char* path);	
 	Mesh LoadTriangle();
@@ -15,7 +25,8 @@ public:
 	Mesh LoadCylinder(int sector);
 	Mesh LoadSphere(int sector, int stack);
 	Mesh LoadCone(int sector);
-	Mesh LoadPlane();
+	Mesh LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange);
+
 
 	class Builder {
 	public:
