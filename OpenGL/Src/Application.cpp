@@ -71,6 +71,8 @@ int main(void)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	
+
 
     /* Maximize the window */
     glfwMaximizeWindow(window);
@@ -98,9 +100,10 @@ int main(void)
     // Add other models here
     Mesh quad = loader.LoadQuad();
     Mesh cube = loader.LoadCube();
-    Mesh cylinder = loader.LoadCylinder(1.0f, 0.5f);
-    Mesh sphere = loader.LoadSphere(0.5f, 36, 18);
-    Mesh cone = loader.LoadCone(1.0f, 0.5f);
+	Mesh circle = loader.LoadCircle(36);
+    Mesh cylinder = loader.LoadCylinder(6);
+    Mesh sphere = loader.LoadSphere(36, 18);
+    Mesh cone = loader.LoadCone(36);
     Mesh plane = loader.LoadPlane();
 
     /* Loop until the user closes the window */
@@ -112,9 +115,11 @@ int main(void)
 
         processInput(window);
 
+        glEnable(GL_DEPTH_TEST);
+
         /* Render here */
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         defaultShader.SetUniformMat4("mView", view);
@@ -125,10 +130,11 @@ int main(void)
         case 2: triangle.Draw(defaultShader); break;
         case 3: quad.Draw(defaultShader); break;
         case 4: cube.Draw(defaultShader); break;
-        case 5: cylinder.Draw(defaultShader); break;
-        case 6: sphere.Draw(defaultShader); break;
-        case 7: cone.Draw(defaultShader); break;
-        case 8: plane.Draw(defaultShader); break;
+		case 5: circle.Draw(defaultShader); break;
+        case 6: cylinder.Draw(defaultShader); break;
+        case 7: sphere.Draw(defaultShader); break;
+        case 8: cone.Draw(defaultShader); break;
+        case 9: plane.Draw(defaultShader); break;
             // Add more cases if you have more models
         }
 
@@ -193,6 +199,8 @@ void processInput(GLFWwindow* window)
         currentModel = 7;
     if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
         currentModel = 8;
+	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
+		currentModel = 9;
 
 
     // Toggle rendering mode 

@@ -11,9 +11,10 @@ public:
 	Mesh LoadTriangle();
 	Mesh LoadQuad();
 	Mesh LoadCube();
-	Mesh LoadCylinder(float height, float radius);
-	Mesh LoadSphere(float radius, int sector, int stack);
-	Mesh LoadCone(float height, float radius);
+	Mesh LoadCircle(int sector);
+	Mesh LoadCylinder(int sector);
+	Mesh LoadSphere(int sector, int stack);
+	Mesh LoadCone(int sector);
 	Mesh LoadPlane();
 
 	class Builder {
@@ -42,6 +43,7 @@ public:
 private: 
 	bool mUseNormalColor;
 
+	glm::vec3 getNormalFromOrigin(glm::vec3 origin, glm::vec3 point);
 
 
 	ModelLoader() {};
