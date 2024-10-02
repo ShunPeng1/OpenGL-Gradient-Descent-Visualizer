@@ -144,12 +144,127 @@ Mesh ModelLoader::LoadTriangle()
 
 Mesh ModelLoader::LoadQuad()
 {
-    return Mesh({}, {}, {});
+    std::vector<glm::vec3> positions = {
+        glm::vec3(-0.5f, -0.5f, 0.0f),
+		glm::vec3(-0.5f, 0.5f, 0.0f),
+        glm::vec3(0.5f, -0.5f, 0.0f),
+        glm::vec3(0.5f, 0.5f, 0.0f),
+    };
+
+    std::vector<glm::vec3> normals = {
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f)
+    };
+
+    std::vector<glm::vec2> texcoords = {
+        glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f)
+    };
+
+    std::vector<glm::vec4> normalColors = {
+        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)
+    };
+
+    std::vector<Vertex> vertices;
+    for (size_t i = 0; i < positions.size(); i++) {
+        Vertex vertex = {};
+        vertex.positions = positions[i];
+        vertex.normals = normals[i];
+        vertex.texCoords = texcoords[i];
+
+        if (mUseNormalColor) {
+            vertex.color = normalColors[i];
+        }
+        else {
+            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        vertices.push_back(vertex);
+    }
+
+    std::vector<unsigned int> indices = {
+        0, 1, 2, 3
+    };
+
+    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
+// https://stackoverflow.com/questions/28375338/cube-using-single-gl-triangle-strip
+// From : 4 3 7 8 5 3 1 4 2 7 6 5 2 1
+// To   : 3 2 6 7 4 2 0 3 1 6 5 4 1 0
 Mesh ModelLoader::LoadCube()
 {
-    return Mesh({}, {}, {});
+    std::vector<glm::vec3> positions = {
+        glm::vec3(0.5f, 0.5f, -0.5f),   // 1 0
+        glm::vec3(-0.5f, 0.5f, -0.5f),  // 2 1
+        glm::vec3(0.5f, -0.5f, -0.5f),  // 3 2
+        glm::vec3(-0.5f, -0.5f, -0.5f), // 4 3
+        glm::vec3(0.5f, 0.5f, 0.5f),    // 5 4
+        glm::vec3(-0.5f, 0.5f, 0.5f),   // 6 5
+		glm::vec3(-0.5f, -0.5f, 0.5f),  // 7 6
+		glm::vec3(0.5f, -0.5f, 0.5f),   // 8 7
+    };
+
+    std::vector<glm::vec3> normals = {
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f)
+    };
+
+    std::vector<glm::vec2> texcoords = {
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f)
+    };
+
+    std::vector<glm::vec4> normalColors = {
+        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+        glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+        glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+        glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),
+		glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+    };
+
+    std::vector<Vertex> vertices;
+    for (size_t i = 0; i < positions.size(); i++) {
+        Vertex vertex = {};
+        vertex.positions = positions[i];
+        vertex.normals = normals[i];
+        vertex.texCoords = texcoords[i];
+
+        if (mUseNormalColor) {
+            vertex.color = normalColors[i];
+        }
+        else {
+            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        vertices.push_back(vertex);
+    }
+
+    std::vector<unsigned int> indices = {
+        3, 2, 6, 7, 4, 2, 0, 3, 1, 6, 5, 4, 1, 0
+    };
+
+    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh ModelLoader::LoadCylinder(float height, float radius)

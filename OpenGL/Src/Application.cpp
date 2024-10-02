@@ -13,6 +13,14 @@
 #include "Engine/Render/Mesh.h"
 #include "Engine/Loader/ModelLoader.h"
 
+
+enum class RenderMode {
+    FACE,
+    WIREFRAME,
+    POINT
+};
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -31,8 +39,11 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+bool spacePressed = false;
 
 int currentModel = 1; // Variable to keep track of the current model
+RenderMode currentRenderMode = RenderMode::FACE;
+
 
 int main(void)
 {
@@ -121,6 +132,19 @@ int main(void)
             // Add more cases if you have more models
         }
 
+        // Set the polygon mode based on the current rendering mode
+        switch (currentRenderMode) {
+        case RenderMode::FACE:
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            break;
+        case RenderMode::WIREFRAME:
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            break;
+        case RenderMode::POINT:
+            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+            break;
+        }
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -169,7 +193,29 @@ void processInput(GLFWwindow* window)
         currentModel = 7;
     if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS)
         currentModel = 8;
-    // Add more keys if you have more models
+
+
+    // Toggle rendering mode 
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !spacePressed) {
+        spacePressed = true;
+        switch (currentRenderMode) {
+        case RenderMode::FACE:
+            currentRenderMode = RenderMode::WIREFRAME;
+            break;
+        case RenderMode::WIREFRAME:
+            currentRenderMode = RenderMode::POINT;
+            break;
+        case RenderMode::POINT:
+            currentRenderMode = RenderMode::FACE;
+            break;
+        }
+    }
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+		spacePressed = false;
+	}
+
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

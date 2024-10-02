@@ -15,10 +15,12 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode);
     virtual void Draw(Shader& shader);
 protected:
     //  render data
     unsigned int mVAO, mVBO, mEBO;
+    GLenum mDrawMode; // Member variable to store the drawing mode
 
     void setupMesh();
 };
