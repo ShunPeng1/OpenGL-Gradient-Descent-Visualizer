@@ -101,8 +101,8 @@ int main(void)
     Mesh quad = loader.LoadQuad();
     Mesh cube = loader.LoadCube();
 	Mesh circle = loader.LoadCircle(36);
-    Mesh cylinder = loader.LoadCylinder(6);
-    Mesh sphere = loader.LoadSphere(36, 18);
+    Mesh cylinder = loader.LoadCylinder(36);
+    Mesh sphere = loader.LoadSphere(40, 40);
     Mesh cone = loader.LoadCone(36);
     Mesh plane = loader.LoadPlane();
 

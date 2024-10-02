@@ -394,7 +394,7 @@ Mesh ModelLoader::LoadCylinder(int sector)
         indices.push_back((sector - i - 1) * 2 + 1);
         indices.push_back(i * 2 + 1);
     }
-    /*indices.push_back(indices[indices.size() - 1]);
+    indices.push_back(indices[indices.size() - 1]);
     indices.push_back(0);
     // Add indices for the side of the cylinder
     for (int i = 0; i < sector; ++i) {
@@ -403,14 +403,96 @@ Mesh ModelLoader::LoadCylinder(int sector)
     }
 	indices.push_back(0);
 	indices.push_back(1);
-	*/
+	
 
     return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh ModelLoader::LoadSphere(int sector, int stack)
 {
-    return Mesh({}, {}, {});
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> texcoords;
+    std::vector<glm::vec4> normalColors;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    float radius = 1.0f;
+    float sectorAngleStep = 2.0f * M_PI / sector;
+	float stackAngleStep = M_PI / (stack-1);
+
+
+
+    for (int j = 1; j < stack-1; j++) {
+        float stackAngle = j * stackAngleStep;
+        float z = radius * cos(stackAngle);
+
+        for (int i = 0; i < sector; ++i) {
+            float sectorAngle = i * sectorAngleStep;
+            float x = radius * sin(stackAngle) * cos(sectorAngle);
+            float y = radius * sin(stackAngle) * sin(sectorAngle);
+
+        
+            positions.push_back(glm::vec3(x, y, z));
+            normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+            texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+            if (mUseNormalColor) {
+                normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(x, y, z)), 1));
+            }
+            else {
+                normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            }
+
+        }
+
+    }
+
+    // Create vertices and indices
+    for (size_t i = 0; i < positions.size(); ++i) {
+        Vertex vertex = {};
+        vertex.positions = positions[i];
+        vertex.normals = normals[i];
+        vertex.texCoords = texcoords[i];
+        vertex.color = normalColors[i];
+        vertices.push_back(vertex);
+    }
+
+    // Add the top and bottom center vertices
+    Vertex topCenterVertex = {
+        glm::vec3(0.0f, 0.0f, radius),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.5f, 0.5f),
+        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+    };
+    Vertex bottomCenterVertex = {
+        glm::vec3(0.0f, 0.0f, -radius),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.5f, 0.5f),
+        glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+    };
+
+    int topCenterIndex = vertices.size();
+    vertices.push_back(topCenterVertex);
+
+    int bottomCenterIndex = vertices.size();
+    vertices.push_back(bottomCenterVertex);
+
+
+    for (int j = 0; j < stack - 1; j++) {
+        for (int i = 0; i < sector; ++i) {
+            indices.push_back(j - 1 == -1 ? topCenterIndex : (j - 1) * sector + i);
+			indices.push_back(j == stack - 2 ? bottomCenterIndex : j * sector + i);
+		}
+
+		indices.push_back(j - 1 == -1 ? topCenterIndex : (j - 1) * sector);
+		indices.push_back(j == stack - 2 ? bottomCenterIndex : j * sector);
+
+	}
+
+
+
+
+    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh ModelLoader::LoadCone(int sector)
