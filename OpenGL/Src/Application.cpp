@@ -103,6 +103,7 @@ int main(void)
 	Mesh circle = loader.LoadCircle(36);
     Mesh cylinder = loader.LoadCylinder(36);
     Mesh sphere = loader.LoadSphere(40, 40);
+	Mesh icosphere = loader.LoadIcoshere(5);
     Mesh cone = loader.LoadCone(36);
 
 	ModelLoader::Range xRange(-2.0f, 2.0f, 0.1f);
@@ -143,6 +144,7 @@ int main(void)
         case 7: sphere.Draw(defaultShader); break;
         case 8: cone.Draw(defaultShader); break;
         case 9: plane.Draw(defaultShader); break;
+		case 0: icosphere.Draw(defaultShader); break;
             // Add more cases if you have more models
         }
 
@@ -209,6 +211,8 @@ void processInput(GLFWwindow* window)
         currentModel = 8;
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
 		currentModel = 9;
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
+		currentModel = 0;
 
 
     // Toggle rendering mode 

@@ -1,5 +1,7 @@
 #include "Engine/Loader/ModelLoader.h"
 
+#include <map>
+
 const float M_PI = 3.14159265358979323846f;
 
 
@@ -491,6 +493,140 @@ Mesh ModelLoader::LoadSphere(int sector, int stack)
 
 
     return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+}
+
+unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::vec3>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
+    uint64_t smallerIndex = std::min(p1, p2);
+    uint64_t greaterIndex = std::max(p1, p2);
+    uint64_t key = (smallerIndex << 32) + greaterIndex;
+
+    auto it = middlePointCache.find(key);
+    if (it != middlePointCache.end()) {
+        return it->second;
+    }
+
+    glm::vec3 point1 = vertices[p1];
+    glm::vec3 point2 = vertices[p2];
+    glm::vec3 middle = glm::normalize((point1 + point2) * 0.5f);
+
+    vertices.push_back(middle);
+    unsigned int index = vertices.size() - 1;
+    middlePointCache[key] = index;
+    return index;
+}
+
+Mesh ModelLoader::LoadIcoshere(int subdivision)
+{
+	std::vector<glm::vec3> positions(12);
+
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+
+    // constants
+    const float PI = 3.1415926f;
+    const float H_ANGLE = PI / 180 * 72;    // 72 degree = 360 / 5
+    const float V_ANGLE = atanf(1.0f / 2);  // elevation = 26.565 degree
+    const float RADIUS = 1.0f;
+
+    float z, xy;                            // coords
+    float hAngle1 = -PI / 2 - H_ANGLE / 2;  // start from -126 deg at 1st row
+    float hAngle2 = -PI / 2;                // start from -90 deg at 2nd row
+
+    // the first top vertex at (0, 0, r)
+    positions[0] = glm::vec3(0, 0, RADIUS);
+    positions[11] = glm::vec3(0, 0, -RADIUS);
+
+    // compute 10 vertices at 1st and 2nd rows
+    for (int i = 1; i <= 5; ++i)
+    {
+        int i1 = i;         // index for 1st row
+		int nextI1 = i % 5 + 1; // index for next vertex in 1st row
+        int i2 = (i + 5);   // index for 2nd row
+		int nextI2 = (i) % 5 + 6; // index for next vertex in 2nd row
+
+        z = RADIUS * sinf(V_ANGLE);     // elevaton
+        xy = RADIUS * cosf(V_ANGLE);    // length on XY plane
+
+        positions[i1] = glm::vec3(xy * cosf(hAngle1), xy * sinf(hAngle1), z);     // 1st row
+        positions[i2] = glm::vec3(xy * cosf(hAngle2), xy * sinf(hAngle2), -z);    // 2nd row
+
+        // next horizontal angles
+        hAngle1 += H_ANGLE;
+        hAngle2 += H_ANGLE;
+
+		// add indices
+		indices.push_back(0);
+		indices.push_back(i1);
+		indices.push_back(nextI1);
+
+		indices.push_back(11);
+		indices.push_back(i2);
+		indices.push_back(nextI2);
+
+		indices.push_back(i1);
+		indices.push_back(i2);
+		indices.push_back(nextI1);
+
+		indices.push_back(nextI1);
+		indices.push_back(i2);
+		indices.push_back(nextI2);
+    }
+    
+    
+    
+    std::map<uint64_t, unsigned int> middlePointCache;
+
+    for (int i = 0; i < subdivision; ++i) {
+        std::vector<unsigned int> newIndices;
+        for (size_t j = 0; j < indices.size(); j += 3) {
+            unsigned int a = addMiddlePoint(indices[j], indices[j + 1], positions, middlePointCache);
+            unsigned int b = addMiddlePoint(indices[j + 1], indices[j + 2], positions, middlePointCache);
+            unsigned int c = addMiddlePoint(indices[j + 2], indices[j], positions, middlePointCache);
+
+            newIndices.push_back(indices[j]);
+            newIndices.push_back(a);
+            newIndices.push_back(c);
+
+            newIndices.push_back(indices[j + 1]);
+            newIndices.push_back(b);
+            newIndices.push_back(a);
+
+            newIndices.push_back(indices[j + 2]);
+            newIndices.push_back(c);
+            newIndices.push_back(b);
+
+            newIndices.push_back(a);
+            newIndices.push_back(b);
+            newIndices.push_back(c);
+        }
+        indices = newIndices;
+    }
+
+    for (const auto& pos : positions) {
+        Vertex vertex;
+        vertex.positions = pos;
+        vertex.normals = pos;
+        vertex.texCoords = glm::vec2(0.0f, 0.0f); // Placeholder, you can calculate proper UVs if needed
+        if (mUseNormalColor) {
+            vertex.color = glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(pos.x, pos.y, pos.z)), 1);
+        }
+        else {
+            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        vertices.push_back(vertex);
+    }
+
+	return Mesh(vertices, indices, {}, GL_TRIANGLES);
+
+}
+
+Mesh ModelLoader::LoadCubeSphere(int subdivision)
+{
+    
+
+
+
+    return Mesh({}, {}, {});
 }
 
 Mesh ModelLoader::LoadCone(int sector)

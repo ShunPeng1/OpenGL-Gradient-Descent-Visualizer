@@ -24,6 +24,8 @@ public:
 	Mesh LoadCircle(int sector);
 	Mesh LoadCylinder(int sector);
 	Mesh LoadSphere(int sector, int stack);
+	Mesh LoadIcoshere(int subdivision);
+	Mesh LoadCubeSphere(int sector);
 	Mesh LoadCone(int sector);
 	Mesh LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange);
 
