@@ -105,8 +105,8 @@ int main(void)
     Mesh sphere = loader.LoadSphere(40, 40);
     Mesh cone = loader.LoadCone(36);
 
-	ModelLoader::Range xRange(-1.0f, 1.0f, 0.5f);
-	ModelLoader::Range yRange(-1.0f, 1.0f, 0.5f);
+	ModelLoader::Range xRange(-2.0f, 2.0f, 0.1f);
+	ModelLoader::Range yRange(-2.0f, 2.0f, 0.1f);
     
     Mesh plane = loader.LoadPlane(
         [](float x, float y) -> float {

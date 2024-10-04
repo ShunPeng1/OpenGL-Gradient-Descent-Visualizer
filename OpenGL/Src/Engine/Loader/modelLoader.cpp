@@ -595,7 +595,7 @@ Mesh ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRan
             texcoords.push_back(glm::vec2(x, y));
 
             if (mUseNormalColor) {
-                normalColors.push_back(glm::vec4(normal, 1));
+                normalColors.push_back(glm::vec4(glm::vec3(x, y, z), 1));
             }
             else {
                 normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
