@@ -183,9 +183,6 @@
     <ClInclude Include="Header\Engine\Render\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Models\teapot.obj" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="C:\Users\PC\Downloads\Temp\Blank.png" />
     <Image Include="Resources\Textures\Blank.png" />
   </ItemGroup>
