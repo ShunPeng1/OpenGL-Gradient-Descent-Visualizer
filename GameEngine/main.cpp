@@ -16,10 +16,8 @@ int main(int argc, char* argv[])
     openGLWidget.resize(800, 600);
     openGLWidget.show();
 
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/qt/qml/gameengine/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    
+
 
     return app.exec();
 }

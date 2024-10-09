@@ -37,6 +37,17 @@ private:
     Shader* defaultShader;
     ModelLoader* loader;
     Mesh* teapot;
+	Mesh* triangle;
+	Mesh* quad;
+    Mesh* circle;
+	Mesh* cube;
+	Mesh* sphere;
+	Mesh* icosphere;
+	Mesh* cylinder;
+	Mesh* cone;
+    Mesh* plane;
+	
+
     // Add other models...
 
     glm::vec3 cameraPos;
@@ -53,6 +64,8 @@ private:
 
     int currentModel;
     RenderMode currentRenderMode;
+  
+    QElapsedTimer* elapsedTimer;
 };
 
 #endif // OPENGLWIDGET_H

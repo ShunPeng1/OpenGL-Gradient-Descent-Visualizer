@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Textures/Blank.png</file>
+        <file>Resources/Shaders/default.frag</file>
+        <file>Resources/Shaders/default.vert</file>
+        <file>Resources/Models/teapot.obj</file>
+    </qresource>
+</RCC>

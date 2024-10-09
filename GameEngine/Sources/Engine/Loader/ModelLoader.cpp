@@ -1,15 +1,13 @@
 #include "Engine/Loader/ModelLoader.h"
-
+#include <QFile>
+#include <QTextStream>
 #include <map>
-
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
 
-
-
-Mesh ModelLoader::LoadObjFile(const char* path)
+Mesh* ModelLoader::LoadObjFile(const char* path)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -19,14 +17,16 @@ Mesh ModelLoader::LoadObjFile(const char* path)
     std::vector<glm::vec3> temp_normals;
     std::vector<glm::vec2> temp_texcoords;
 
-    std::ifstream file(path);
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open .obj file");
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        std::cerr << "Failed to open file: " << path << std::endl;
+        return new Mesh(vertices, indices, textures);
     }
 
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
+    QTextStream in(&file);
+    QString line;
+    while (in.readLineInto(&line)) {
+        std::istringstream ss(line.toStdString());
         std::string prefix;
         ss >> prefix;
 
@@ -90,7 +90,7 @@ Mesh ModelLoader::LoadObjFile(const char* path)
                     vertex.normals = glm::vec3(0.0f, 0.0f, 0.0f);
                 }
 
-				vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+                vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
                 vertices.push_back(vertex);
                 indices.push_back(indices.size());
@@ -99,10 +99,11 @@ Mesh ModelLoader::LoadObjFile(const char* path)
     }
 
     file.close();
-    return Mesh(vertices, indices, textures);
+    return new Mesh(vertices, indices, textures);
 }
 
-Mesh ModelLoader::LoadTriangle()
+
+Mesh* ModelLoader::LoadTriangle()
 {
 	std::vector<glm::vec3> positions = {
 		glm::vec3(-0.5f, -0.5f, 0.0f),
@@ -148,10 +149,10 @@ Mesh ModelLoader::LoadTriangle()
 		0, 1, 2
 	};
 
-	return Mesh(vertices, indices, {});
+	return new Mesh(vertices, indices, {});
 }
 
-Mesh ModelLoader::LoadQuad()
+Mesh* ModelLoader::LoadQuad()
 {
     std::vector<glm::vec3> positions = {
         glm::vec3(-0.5f, -0.5f, 0.0f),
@@ -201,13 +202,13 @@ Mesh ModelLoader::LoadQuad()
         0, 1, 2, 3
     };
 
-    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 // https://stackoverflow.com/questions/28375338/cube-using-single-gl-triangle-strip
 // From : 4 3 7 8 5 3 1 4 2 7 6 5 2 1
 // To   : 3 2 6 7 4 2 0 3 1 6 5 4 1 0
-Mesh ModelLoader::LoadCube()
+Mesh* ModelLoader::LoadCube()
 {
     std::vector<glm::vec3> positions = {
         glm::vec3(0.5f, 0.5f, -0.5f),   // 1 0
@@ -273,10 +274,10 @@ Mesh ModelLoader::LoadCube()
         3, 2, 6, 7, 4, 2, 0, 3, 1, 6, 5, 4, 1, 0
     };
 
-    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh ModelLoader::LoadCircle(int sector)
+Mesh* ModelLoader::LoadCircle(int sector)
 {
     std::vector<glm::vec3> positions;
 	std::vector<glm::vec3> normals;
@@ -311,10 +312,10 @@ Mesh ModelLoader::LoadCircle(int sector)
 		indices.push_back(i);
 
 	}
-	return Mesh(vertices, indices, {}, GL_TRIANGLE_FAN);
+	return new Mesh(vertices, indices, {}, GL_TRIANGLE_FAN);
 }
 
-Mesh ModelLoader::LoadCylinder(int sector)
+Mesh* ModelLoader::LoadCylinder(int sector)
 {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
@@ -409,10 +410,10 @@ Mesh ModelLoader::LoadCylinder(int sector)
 	indices.push_back(1);
 	
 
-    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh ModelLoader::LoadSphere(int sector, int stack)
+Mesh* ModelLoader::LoadSphere(int sector, int stack)
 {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
@@ -494,7 +495,7 @@ Mesh ModelLoader::LoadSphere(int sector, int stack)
 	}
 
 
-    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::vec3>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
@@ -517,7 +518,7 @@ unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::v
     return index;
 }
 
-Mesh ModelLoader::LoadIcoshere(int subdivision)
+Mesh* ModelLoader::LoadIcosphere(int subdivision)
 {
 	std::vector<glm::vec3> positions(12);
 
@@ -618,20 +619,20 @@ Mesh ModelLoader::LoadIcoshere(int subdivision)
         vertices.push_back(vertex);
     }
 
-	return Mesh(vertices, indices, {}, GL_TRIANGLES);
+	return new Mesh(vertices, indices, {}, GL_TRIANGLES);
 
 }
 
-Mesh ModelLoader::LoadCubeSphere(int subdivision)
+Mesh* ModelLoader::LoadCubeSphere(int subdivision)
 {
     
 
 
 
-    return Mesh({}, {}, {});
+    return new Mesh({}, {}, {});
 }
 
-Mesh ModelLoader::LoadCone(int sector)
+Mesh* ModelLoader::LoadCone(int sector)
 {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
@@ -704,10 +705,10 @@ Mesh ModelLoader::LoadCone(int sector)
 
 
 
-    return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange)
+Mesh* ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange)
 {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> normals;
@@ -769,7 +770,7 @@ Mesh ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRan
         }
     }
 
-	return Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+	return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 glm::vec3 ModelLoader::getNormalFromOrigin(glm::vec3 origin, glm::vec3 point)

@@ -4,6 +4,8 @@
 #include <QOpenGLFunctions>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QDebug>
+#include <qdir.h>
 #include <glm.hpp>
 #include <ext/matrix_clip_space.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -12,17 +14,35 @@
 #include "Engine/Render/Mesh.h"
 #include "Engine/Loader/ModelLoader.h"
 
-OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent) {
+OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunctions() {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLWidget::update));
     timer->start(16); // ~60 FPS
+
+    // Initialize camera parameters
+    cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    yaw = -90.0f;
+    pitch = 0.0f;
+    firstMouse = true;
+    deltaTime = 0.0f;
+    lastFrame = 0.0f;
+    spacePressed = false;
+    currentRenderMode = RenderMode::FACE;
+    currentModel = 1;
+
+	elapsedTimer = new QElapsedTimer();
+    elapsedTimer->start();
 }
 
 void OpenGLWidget::initializeGL() {
     initializeOpenGLFunctions();
     glEnable(GL_DEPTH_TEST);
+
+    qInfo() << "OpenGL version: " << glGetString(GL_VERSION) << "Current Dir" << QDir::current().absolutePath().toStdString();
 
     // Initialize shaders, models, etc.
     defaultShader = new Shader(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
@@ -40,10 +60,17 @@ void OpenGLWidget::initializeGL() {
 
     ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
     loader = &tempLoader;
-    Mesh tempTeapot = loader->LoadObjFile(":/Resources/Models/teapot.obj");
-    teapot = &tempTeapot;
 
-    // Load other models...
+    teapot = tempLoader.LoadObjFile(":/Resources/Models/teapot.obj");
+    triangle = tempLoader.LoadTriangle();
+    quad = tempLoader.LoadQuad();
+    cube = tempLoader.LoadCube();
+    circle = tempLoader.LoadCircle(36);
+    cylinder = tempLoader.LoadCylinder(36);
+    sphere = tempLoader.LoadSphere(40, 40);
+    icosphere = tempLoader.LoadIcosphere(5);
+    cone = tempLoader.LoadCone(36);
+
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {
@@ -51,16 +78,30 @@ void OpenGLWidget::resizeGL(int w, int h) {
 }
 
 void OpenGLWidget::paintGL() {
+ 	qint64 currentFrame = elapsedTimer->elapsed();
+    deltaTime = (currentFrame - lastFrame) / 1000.0f; // Convert milliseconds to seconds
+    lastFrame = currentFrame;
+
+
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	qDebug() << view[0].a << view[0].b << view[0].g << view[1].a << view[1].b << view[1].g << view[2].a << view[2].b << view[2].g << view[3].a << view[3].b << view[3].g;
     defaultShader->SetUniformMat4("mView", view);
 
     // Draw the selected model
     switch (currentModel) {
     case 1: teapot->Draw(*defaultShader); break;
-        // Add other cases...
+    case 2: triangle->Draw(*defaultShader); break;
+    case 3: quad->Draw(*defaultShader); break;
+    case 4: cube->Draw(*defaultShader); break;
+    case 5: circle->Draw(*defaultShader); break;
+    case 6: cylinder->Draw(*defaultShader); break;
+    case 7: sphere->Draw(*defaultShader); break;
+    case 8: cone->Draw(*defaultShader); break;
+    case 9: plane->Draw(*defaultShader); break;
+    case 0: icosphere->Draw(*defaultShader); break;
     }
 
     // Set the polygon mode based on the current rendering mode
@@ -78,7 +119,9 @@ void OpenGLWidget::paintGL() {
 }
 
 void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
-    float cameraSpeed = 2.5f * deltaTime;
+    qDebug() << "Key Pressed: " << event->key();
+    
+    float cameraSpeed = 2.5 * deltaTime;
     if (event->key() == Qt::Key_W)
         cameraPos += cameraSpeed * cameraFront;
     if (event->key() == Qt::Key_S)
@@ -94,10 +137,29 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Escape)
         close();
 
+    qDebug() << "Camera Position: " << cameraPos.x << cameraPos.y << cameraPos.z;
+
     // Change model based on key press
     if (event->key() == Qt::Key_1)
         currentModel = 1;
-    // Add other key cases...
+    if (event->key() == Qt::Key_2)
+        currentModel = 2;
+    if (event->key() == Qt::Key_3)
+        currentModel = 3;
+    if (event->key() == Qt::Key_4)
+        currentModel = 4;
+    if (event->key() == Qt::Key_5)
+        currentModel = 5;
+    if (event->key() == Qt::Key_6)
+        currentModel = 6;
+    if (event->key() == Qt::Key_7)
+        currentModel = 7;
+    if (event->key() == Qt::Key_8)
+        currentModel = 8;
+    if (event->key() == Qt::Key_9)
+        currentModel = 9;
+    if (event->key() == Qt::Key_0)
+        currentModel = 0;
 
     // Toggle rendering mode
     if (event->key() == Qt::Key_Space && !spacePressed) {
