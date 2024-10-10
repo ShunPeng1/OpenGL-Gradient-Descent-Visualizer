@@ -56,7 +56,7 @@ public:
 private: 
 	bool mUseNormalColor;
 
-	glm::vec3 getNormalFromOrigin(glm::vec3 origin, glm::vec3 point);
+	QVector3D getNormalFromOrigin(QVector3D origin, QVector3D point);
 
 
 	ModelLoader() {};

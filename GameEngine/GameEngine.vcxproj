@@ -66,20 +66,20 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLM;$(SolutionDir)Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLM;$(SolutionDir)Headers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Headers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>$(SolutionDir)Resources;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLM;$(SolutionDir)Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLM;$(SolutionDir)Headers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Headers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>$(SolutionDir)Resources;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -134,7 +134,7 @@
     <ClInclude Include="Headers\Engine\Render\EBO.h" />
     <ClInclude Include="Headers\Engine\Render\Mesh.h" />
     <ClInclude Include="Headers\Engine\Render\Renderer.h" />
-    <ClInclude Include="Headers\Engine\Render\Shader.h" />
+    <ClInclude Include="Headers\Engine\Render\ShaderProgram.h" />
     <ClInclude Include="Headers\Engine\Render\Texture.h" />
     <ClInclude Include="Headers\Engine\Render\VAO.h" />
     <ClInclude Include="Headers\Engine\Render\VBO.h" />
@@ -144,7 +144,7 @@
     <ClCompile Include="Sources\Engine\Loader\ModelLoader.cpp" />
     <ClCompile Include="Sources\Engine\Render\EBO.cpp" />
     <ClCompile Include="Sources\Engine\Render\Mesh.cpp" />
-    <ClCompile Include="Sources\Engine\Render\Shader.cpp" />
+    <ClCompile Include="Sources\Engine\Render\ShaderProgram.cpp" />
     <ClCompile Include="Sources\Engine\Render\VAO.cpp" />
     <ClCompile Include="Sources\Engine\Render\VBO.cpp" />
     <ClCompile Include="Sources\Qt\OpenGLWidget.cpp" />

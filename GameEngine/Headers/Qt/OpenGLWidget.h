@@ -6,10 +6,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTimer>
-#include <glm.hpp>
-#include <ext/matrix_clip_space.hpp>
-#include <gtc/matrix_transform.hpp>
-#include "Engine/Render/Shader.h"
+#include "Engine/Render/ShaderProgram.h"
 #include "Engine/Render/Mesh.h"
 #include "Engine/Loader/ModelLoader.h"
 
@@ -34,7 +31,7 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
-    Shader* defaultShader;
+    ShaderProgram* defaultShader;
     ModelLoader* loader;
     Mesh* teapot;
 	Mesh* triangle;
@@ -50,9 +47,9 @@ private:
 
     // Add other models...
 
-    glm::vec3 cameraPos;
-    glm::vec3 cameraFront;
-    glm::vec3 cameraUp;
+    QVector3D cameraPos;
+    QVector3D cameraFront;
+    QVector3D cameraUp;
     float yaw;
     float pitch;
     float lastX;

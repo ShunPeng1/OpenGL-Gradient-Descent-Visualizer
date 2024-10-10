@@ -2,12 +2,11 @@
 #define MESH_H
 
 #include <vector>
-#include <glm.hpp>
 #include <QOpenGLExtraFunctions>
 
 #include "Vertex.h"
 #include "Texture.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 
 class Mesh : public QOpenGLExtraFunctions {
 public:
@@ -17,7 +16,7 @@ public:
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode);
-    virtual void Draw(Shader& shader);
+    virtual void Draw(ShaderProgram& shader);
 protected:
     //  render data
     unsigned int mVAO, mVBO, mEBO;

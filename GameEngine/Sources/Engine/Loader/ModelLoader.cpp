@@ -13,9 +13,9 @@ Mesh* ModelLoader::LoadObjFile(const char* path)
     std::vector<unsigned int> indices;
     std::vector<Texture> textures; // Assuming you have a way to load textures
 
-    std::vector<glm::vec3> temp_positions;
-    std::vector<glm::vec3> temp_normals;
-    std::vector<glm::vec2> temp_texcoords;
+    std::vector<QVector3D> temp_positions;
+    std::vector<QVector3D> temp_normals;
+    std::vector<QVector2D> temp_texcoords;
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -31,18 +31,29 @@ Mesh* ModelLoader::LoadObjFile(const char* path)
         ss >> prefix;
 
         if (prefix == "v") {
-            glm::vec3 position;
-            ss >> position.x >> position.y >> position.z;
+            QVector3D position;
+            float x, y, z;
+            ss >> x >> y >> z;
+            position.setX(x);
+            position.setY(y);
+            position.setZ(z);
             temp_positions.push_back(position);
         }
         else if (prefix == "vt") {
-            glm::vec2 texcoord;
-            ss >> texcoord.x >> texcoord.y;
+            QVector2D texcoord;
+            float x, y;
+            ss >> x >> y;
+            texcoord.setX(x);
+            texcoord.setY(y);
             temp_texcoords.push_back(texcoord);
         }
         else if (prefix == "vn") {
-            glm::vec3 normal;
-            ss >> normal.x >> normal.y >> normal.z;
+            QVector3D normal;
+            float x, y, z;
+            ss >> x >> y >> z;
+            normal.setX(x);
+            normal.setY(y);
+            normal.setZ(z);
             temp_normals.push_back(normal);
         }
         else if (prefix == "f") {
@@ -80,17 +91,17 @@ Mesh* ModelLoader::LoadObjFile(const char* path)
                     vertex.texCoords = temp_texcoords[texcoordIndices[i] - 1];
                 }
                 else {
-                    vertex.texCoords = glm::vec2(0.0f, 0.0f);
+                    vertex.texCoords = QVector2D(0.0f, 0.0f);
                 }
 
                 if (normalIndices[i] > 0 && normalIndices[i] <= temp_normals.size()) {
                     vertex.normals = temp_normals[normalIndices[i] - 1];
                 }
                 else {
-                    vertex.normals = glm::vec3(0.0f, 0.0f, 0.0f);
+                    vertex.normals = QVector3D(0.0f, 0.0f, 0.0f);
                 }
 
-                vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+                vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 
                 vertices.push_back(vertex);
                 indices.push_back(indices.size());
@@ -105,28 +116,28 @@ Mesh* ModelLoader::LoadObjFile(const char* path)
 
 Mesh* ModelLoader::LoadTriangle()
 {
-	std::vector<glm::vec3> positions = {
-		glm::vec3(-0.5f, -0.5f, 0.0f),
-		glm::vec3(0.5f, -0.5f, 0.0f),
-		glm::vec3(0.0f, 0.5f, 0.0f)
+	std::vector<QVector3D> positions = {
+		QVector3D(-0.5f, -0.5f, 0.0f),
+		QVector3D(0.5f, -0.5f, 0.0f),
+		QVector3D(0.0f, 0.5f, 0.0f)
 	};
 
-	std::vector<glm::vec3> normals = {
-		glm::vec3(0.0f, 0.0f, 1.0f),
-		glm::vec3(0.0f, 0.0f, 1.0f),
-		glm::vec3(0.0f, 0.0f, 1.0f)
+	std::vector<QVector3D> normals = {
+		QVector3D(0.0f, 0.0f, 1.0f),
+		QVector3D(0.0f, 0.0f, 1.0f),
+		QVector3D(0.0f, 0.0f, 1.0f)
 	};
 
-	std::vector<glm::vec2> texcoords = {
-		glm::vec2(0.0f, 0.0f),
-		glm::vec2(1.0f, 0.0f),
-		glm::vec2(0.5f, 1.0f)
+	std::vector<QVector2D> texcoords = {
+		QVector2D(0.0f, 0.0f),
+		QVector2D(1.0f, 0.0f),
+		QVector2D(0.5f, 1.0f)
 	};
 
-    std::vector<glm::vec4> normalColors = {
-		glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
-		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)
+    std::vector<QVector4D> normalColors = {
+		QVector4D(1.0f, 0.0f, 0.0f, 1.0f),
+		QVector4D(0.0f, 1.0f, 0.0f, 1.0f),
+		QVector4D(0.0f, 0.0f, 1.0f, 1.0f)
     };
 
 	std::vector<Vertex> vertices;
@@ -140,7 +151,7 @@ Mesh* ModelLoader::LoadTriangle()
 			vertex.color = normalColors[i];
         }
         else {
-            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
         }
 		vertices.push_back(vertex);
 	}
@@ -154,32 +165,32 @@ Mesh* ModelLoader::LoadTriangle()
 
 Mesh* ModelLoader::LoadQuad()
 {
-    std::vector<glm::vec3> positions = {
-        glm::vec3(-0.5f, -0.5f, 0.0f),
-		glm::vec3(-0.5f, 0.5f, 0.0f),
-        glm::vec3(0.5f, -0.5f, 0.0f),
-        glm::vec3(0.5f, 0.5f, 0.0f),
+    std::vector<QVector3D> positions = {
+        QVector3D(-0.5f, -0.5f, 0.0f),
+		QVector3D(-0.5f, 0.5f, 0.0f),
+        QVector3D(0.5f, -0.5f, 0.0f),
+        QVector3D(0.5f, 0.5f, 0.0f),
     };
 
-    std::vector<glm::vec3> normals = {
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f)
+    std::vector<QVector3D> normals = {
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector3D(0.0f, 0.0f, 1.0f)
     };
 
-    std::vector<glm::vec2> texcoords = {
-        glm::vec2(0.0f, 0.0f),
-		glm::vec2(0.0f, 1.0f),
-        glm::vec2(1.0f, 0.0f),
-		glm::vec2(1.0f, 1.0f)
+    std::vector<QVector2D> texcoords = {
+        QVector2D(0.0f, 0.0f),
+		QVector2D(0.0f, 1.0f),
+        QVector2D(1.0f, 0.0f),
+		QVector2D(1.0f, 1.0f)
     };
 
-    std::vector<glm::vec4> normalColors = {
-        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
-		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)
+    std::vector<QVector4D> normalColors = {
+        QVector4D(1.0f, 0.0f, 0.0f, 1.0f),
+		QVector4D(0.0f, 1.0f, 0.0f, 1.0f),
+		QVector4D(0.0f, 0.0f, 1.0f, 1.0f),
+		QVector4D(1.0f, 1.0f, 0.0f, 1.0f)
     };
 
     std::vector<Vertex> vertices;
@@ -193,7 +204,7 @@ Mesh* ModelLoader::LoadQuad()
             vertex.color = normalColors[i];
         }
         else {
-            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
         }
         vertices.push_back(vertex);
     }
@@ -210,48 +221,48 @@ Mesh* ModelLoader::LoadQuad()
 // To   : 3 2 6 7 4 2 0 3 1 6 5 4 1 0
 Mesh* ModelLoader::LoadCube()
 {
-    std::vector<glm::vec3> positions = {
-        glm::vec3(0.5f, 0.5f, -0.5f),   // 1 0
-        glm::vec3(-0.5f, 0.5f, -0.5f),  // 2 1
-        glm::vec3(0.5f, -0.5f, -0.5f),  // 3 2
-        glm::vec3(-0.5f, -0.5f, -0.5f), // 4 3
-        glm::vec3(0.5f, 0.5f, 0.5f),    // 5 4
-        glm::vec3(-0.5f, 0.5f, 0.5f),   // 6 5
-		glm::vec3(-0.5f, -0.5f, 0.5f),  // 7 6
-		glm::vec3(0.5f, -0.5f, 0.5f),   // 8 7
+    std::vector<QVector3D> positions = {
+        QVector3D(0.5f, 0.5f, -0.5f),   // 1 0
+        QVector3D(-0.5f, 0.5f, -0.5f),  // 2 1
+        QVector3D(0.5f, -0.5f, -0.5f),  // 3 2
+        QVector3D(-0.5f, -0.5f, -0.5f), // 4 3
+        QVector3D(0.5f, 0.5f, 0.5f),    // 5 4
+        QVector3D(-0.5f, 0.5f, 0.5f),   // 6 5
+		QVector3D(-0.5f, -0.5f, 0.5f),  // 7 6
+		QVector3D(0.5f, -0.5f, 0.5f),   // 8 7
     };
 
-    std::vector<glm::vec3> normals = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f)
+    std::vector<QVector3D> normals = {
+        QVector3D(0.0f, 0.0f, 0.0f),
+        QVector3D(0.0f, 0.0f, 0.0f),
+        QVector3D(0.0f, 0.0f, 0.0f),
+        QVector3D(0.0f, 0.0f, 0.0f),
+		QVector3D(0.0f, 0.0f, 0.0f),
+		QVector3D(0.0f, 0.0f, 0.0f),
+		QVector3D(0.0f, 0.0f, 0.0f),
+		QVector3D(0.0f, 0.0f, 0.0f)
     };
 
-    std::vector<glm::vec2> texcoords = {
-        glm::vec2(0.0f, 0.0f),
-        glm::vec2(0.0f, 0.0f),
-        glm::vec2(0.0f, 0.0f),
-        glm::vec2(0.0f, 0.0f),
-		glm::vec2(0.0f, 0.0f),
-		glm::vec2(0.0f, 0.0f),
-		glm::vec2(0.0f, 0.0f),
-		glm::vec2(0.0f, 0.0f)
+    std::vector<QVector2D> texcoords = {
+        QVector2D(0.0f, 0.0f),
+        QVector2D(0.0f, 0.0f),
+        QVector2D(0.0f, 0.0f),
+        QVector2D(0.0f, 0.0f),
+		QVector2D(0.0f, 0.0f),
+		QVector2D(0.0f, 0.0f),
+		QVector2D(0.0f, 0.0f),
+		QVector2D(0.0f, 0.0f)
     };
 
-    std::vector<glm::vec4> normalColors = {
-        glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
-        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
-        glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-        glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),
-		glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-		glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),
-		glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-		glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)
+    std::vector<QVector4D> normalColors = {
+        QVector4D(0.0f, 0.0f, 0.0f, 1.0f),
+        QVector4D(1.0f, 0.0f, 0.0f, 1.0f),
+        QVector4D(0.0f, 1.0f, 0.0f, 1.0f),
+        QVector4D(1.0f, 1.0f, 0.0f, 1.0f),
+		QVector4D(0.0f, 0.0f, 1.0f, 1.0f),
+		QVector4D(0.0f, 1.0f, 1.0f, 1.0f),
+		QVector4D(1.0f, 1.0f, 1.0f, 1.0f),
+		QVector4D(0.0f, 1.0f, 1.0f, 1.0f)
     };
 
     std::vector<Vertex> vertices;
@@ -265,7 +276,7 @@ Mesh* ModelLoader::LoadCube()
             vertex.color = normalColors[i];
         }
         else {
-            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
         }
         vertices.push_back(vertex);
     }
@@ -279,10 +290,10 @@ Mesh* ModelLoader::LoadCube()
 
 Mesh* ModelLoader::LoadCircle(int sector)
 {
-    std::vector<glm::vec3> positions;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> texcoords;
-	std::vector<glm::vec4> normalColors;
+    std::vector<QVector3D> positions;
+	std::vector<QVector3D> normals;
+	std::vector<QVector2D> texcoords;
+	std::vector<QVector4D> normalColors;
 
 	std::vector<Vertex> vertices;
 
@@ -293,13 +304,13 @@ Mesh* ModelLoader::LoadCircle(int sector)
 		float x = cos(angle);
 		float y = sin(angle);
 
-		positions.push_back(glm::vec3(x, y, 0.0f));
+		positions.push_back(QVector3D(x, y, 0.0f));
 
-		normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+		normals.push_back(QVector3D(0.0f, 0.0f, 1.0f));
 
-		texcoords.push_back(glm::vec2(x, y));
+		texcoords.push_back(QVector2D(x, y));
 
-		normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
 		Vertex vertex = {};
 		vertex.positions = positions[i];
@@ -317,10 +328,10 @@ Mesh* ModelLoader::LoadCircle(int sector)
 
 Mesh* ModelLoader::LoadCylinder(int sector)
 {
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texcoords;
-    std::vector<glm::vec4> normalColors;
+    std::vector<QVector3D> positions;
+    std::vector<QVector3D> normals;
+    std::vector<QVector2D> texcoords;
+    std::vector<QVector4D> normalColors;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
@@ -336,25 +347,25 @@ Mesh* ModelLoader::LoadCylinder(int sector)
         float y = radius * sin(angle);
 
         // Top circle
-        positions.push_back(glm::vec3(x, y, halfHeight));
-        normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-        texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+        positions.push_back(QVector3D(x, y, halfHeight));
+        normals.push_back(QVector3D(0.0f, 0.0f, 1.0f));
+        texcoords.push_back(QVector2D((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
         if (mUseNormalColor) {
-            normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, halfHeight), glm::vec3(x, y, halfHeight)), 1));
+            normalColors.push_back(QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, halfHeight), QVector3D(x, y, halfHeight)), 1));
         }
         else {
-            normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
         }
 
         // Bottom circle
-        positions.push_back(glm::vec3(x, y, -halfHeight));
-        normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-        texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+        positions.push_back(QVector3D(x, y, -halfHeight));
+        normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        texcoords.push_back(QVector2D((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
         if (mUseNormalColor) {
-            normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, -halfHeight), glm::vec3(x, y, -halfHeight)), 1));
+            normalColors.push_back(QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, -halfHeight), QVector3D(x, y, -halfHeight)), 1));
         }
         else {
-            normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
         }
     }
 
@@ -370,16 +381,16 @@ Mesh* ModelLoader::LoadCylinder(int sector)
 
     // Add the top and bottom center vertices
     Vertex topCenterVertex = {
-        glm::vec3(0.0f, 0.0f, halfHeight),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.5f, 0.5f),
-        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+        QVector3D(0.0f, 0.0f, halfHeight),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector2D(0.5f, 0.5f),
+        QVector4D(1.0f, 1.0f, 1.0f, 1.0f)
     };
     Vertex bottomCenterVertex = {
-        glm::vec3(0.0f, 0.0f, -halfHeight),
-        glm::vec3(0.0f, 0.0f, -1.0f),
-        glm::vec2(0.5f, 0.5f),
-        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+        QVector3D(0.0f, 0.0f, -halfHeight),
+        QVector3D(0.0f, 0.0f, -1.0f),
+        QVector2D(0.5f, 0.5f),
+        QVector4D(1.0f, 1.0f, 1.0f, 1.0f)
     };
 
     int topCenterIndex = vertices.size();
@@ -415,10 +426,10 @@ Mesh* ModelLoader::LoadCylinder(int sector)
 
 Mesh* ModelLoader::LoadSphere(int sector, int stack)
 {
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texcoords;
-    std::vector<glm::vec4> normalColors;
+    std::vector<QVector3D> positions;
+    std::vector<QVector3D> normals;
+    std::vector<QVector2D> texcoords;
+    std::vector<QVector4D> normalColors;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
@@ -438,14 +449,14 @@ Mesh* ModelLoader::LoadSphere(int sector, int stack)
             float y = radius * sin(stackAngle) * sin(sectorAngle);
 
         
-            positions.push_back(glm::vec3(x, y, z));
-            normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-            texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+            positions.push_back(QVector3D(x, y, z));
+            normals.push_back(QVector3D(0.0f, 0.0f, 1.0f));
+            texcoords.push_back(QVector2D((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
             if (mUseNormalColor) {
-                normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(x, y, z)), 1));
+                normalColors.push_back(QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(x, y, z)), 1));
             }
             else {
-                normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
             }
 
         }
@@ -464,16 +475,16 @@ Mesh* ModelLoader::LoadSphere(int sector, int stack)
 
     // Add the top and bottom center vertices
     Vertex topCenterVertex = {
-        glm::vec3(0.0f, 0.0f, radius),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.5f, 0.5f),
-        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+        QVector3D(0.0f, 0.0f, radius),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector2D(0.5f, 0.5f),
+        QVector4D(1.0f, 1.0f, 1.0f, 1.0f)
     };
     Vertex bottomCenterVertex = {
-        glm::vec3(0.0f, 0.0f, -radius),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.5f, 0.5f),
-        glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
+        QVector3D(0.0f, 0.0f, -radius),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector2D(0.5f, 0.5f),
+        QVector4D(0.0f, 0.0f, 0.0f, 1.0f)
     };
 
     int topCenterIndex = vertices.size();
@@ -498,7 +509,7 @@ Mesh* ModelLoader::LoadSphere(int sector, int stack)
     return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::vec3>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
+unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<QVector3D>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
     uint64_t smallerIndex = std::min(p1, p2);
     uint64_t greaterIndex = std::max(p1, p2);
     uint64_t key = (smallerIndex << 32) + greaterIndex;
@@ -508,10 +519,10 @@ unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::v
         return it->second;
     }
 
-    glm::vec3 point1 = vertices[p1];
-    glm::vec3 point2 = vertices[p2];
-    glm::vec3 middle = glm::normalize((point1 + point2) * 0.5f);
-
+    QVector3D point1 = vertices[p1];
+    QVector3D point2 = vertices[p2];
+    QVector3D middle = (point1 + point2) * 0.5f;
+    middle.normalize();
     vertices.push_back(middle);
     unsigned int index = vertices.size() - 1;
     middlePointCache[key] = index;
@@ -520,7 +531,7 @@ unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<glm::v
 
 Mesh* ModelLoader::LoadIcosphere(int subdivision)
 {
-	std::vector<glm::vec3> positions(12);
+	std::vector<QVector3D> positions(12);
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -536,8 +547,8 @@ Mesh* ModelLoader::LoadIcosphere(int subdivision)
     float hAngle2 = -PI / 2;                // start from -90 deg at 2nd row
 
     // the first top vertex at (0, 0, r)
-    positions[0] = glm::vec3(0, 0, RADIUS);
-    positions[11] = glm::vec3(0, 0, -RADIUS);
+    positions[0] = QVector3D(0, 0, RADIUS);
+    positions[11] = QVector3D(0, 0, -RADIUS);
 
     // compute 10 vertices at 1st and 2nd rows
     for (int i = 1; i <= 5; ++i)
@@ -550,8 +561,8 @@ Mesh* ModelLoader::LoadIcosphere(int subdivision)
         z = RADIUS * sinf(V_ANGLE);     // elevaton
         xy = RADIUS * cosf(V_ANGLE);    // length on XY plane
 
-        positions[i1] = glm::vec3(xy * cosf(hAngle1), xy * sinf(hAngle1), z);     // 1st row
-        positions[i2] = glm::vec3(xy * cosf(hAngle2), xy * sinf(hAngle2), -z);    // 2nd row
+        positions[i1] = QVector3D(xy * cosf(hAngle1), xy * sinf(hAngle1), z);     // 1st row
+        positions[i2] = QVector3D(xy * cosf(hAngle2), xy * sinf(hAngle2), -z);    // 2nd row
 
         // next horizontal angles
         hAngle1 += H_ANGLE;
@@ -609,12 +620,12 @@ Mesh* ModelLoader::LoadIcosphere(int subdivision)
         Vertex vertex;
         vertex.positions = pos;
         vertex.normals = pos;
-        vertex.texCoords = glm::vec2(0.0f, 0.0f); // Placeholder, you can calculate proper UVs if needed
+        vertex.texCoords = QVector2D(0.0f, 0.0f); // Placeholder, you can calculate proper UVs if needed
         if (mUseNormalColor) {
-            vertex.color = glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(pos.x, pos.y, pos.z)), 1);
+            vertex.color = QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(pos)), 1);
         }
         else {
-            vertex.color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
         }
         vertices.push_back(vertex);
     }
@@ -634,10 +645,10 @@ Mesh* ModelLoader::LoadCubeSphere(int subdivision)
 
 Mesh* ModelLoader::LoadCone(int sector)
 {
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texcoords;
-    std::vector<glm::vec4> normalColors;
+    std::vector<QVector3D> positions;
+    std::vector<QVector3D> normals;
+    std::vector<QVector2D> texcoords;
+    std::vector<QVector4D> normalColors;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
@@ -653,14 +664,14 @@ Mesh* ModelLoader::LoadCone(int sector)
         float y = radius * sin(angle);
 
         // Bottom circle
-        positions.push_back(glm::vec3(x, y, -halfHeight));
-        normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-        texcoords.push_back(glm::vec2((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
+        positions.push_back(QVector3D(x, y, -halfHeight));
+        normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        texcoords.push_back(QVector2D((x / radius + 1.0f) / 2.0f, (y / radius + 1.0f) / 2.0f));
         if (mUseNormalColor) {
-            normalColors.push_back(glm::vec4(getNormalFromOrigin(glm::vec3(0.0f, 0.0f, -halfHeight), glm::vec3(x, y, -halfHeight)), 1));
+            normalColors.push_back(QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, -halfHeight), QVector3D(x, y, -halfHeight)), 1));
         }
         else {
-            normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
         }
     }
 
@@ -676,10 +687,10 @@ Mesh* ModelLoader::LoadCone(int sector)
 
     // Add the top and bottom center vertices
     Vertex topCenterVertex = {
-        glm::vec3(0.0f, 0.0f, halfHeight),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.5f, 0.5f),
-        glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+        QVector3D(0.0f, 0.0f, halfHeight),
+        QVector3D(0.0f, 0.0f, 1.0f),
+        QVector2D(0.5f, 0.5f),
+        QVector4D(1.0f, 1.0f, 1.0f, 1.0f)
     };
     int topCenterIndex = vertices.size();
     vertices.push_back(topCenterVertex);
@@ -710,10 +721,10 @@ Mesh* ModelLoader::LoadCone(int sector)
 
 Mesh* ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange)
 {
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> texcoords;
-    std::vector<glm::vec4> normalColors;
+    std::vector<QVector3D> positions;
+    std::vector<QVector3D> normals;
+    std::vector<QVector2D> texcoords;
+    std::vector<QVector4D> normalColors;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
@@ -726,18 +737,24 @@ Mesh* ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRa
             float y = yRange.from + j * yRange.step;
             float z = func(x, y);
 
-            positions.push_back(glm::vec3(x, y, z));
+            positions.push_back(QVector3D(x, y, z));
 
-			glm::vec3 normal = glm::cross(glm::vec3(1.0f, 0.0f, func(x + 0.01f, y) - z), glm::vec3(0.0f, 1.0f, func(x, y + 0.01f) - z));
-            normals.push_back(glm::normalize(normal));
+            // Calculate the normal using QVector3D's crossProduct method
+            QVector3D normal = QVector3D::crossProduct(
+                QVector3D(1.0f, 0.0f, func(x + 0.01f, y) - z),
+                QVector3D(0.0f, 1.0f, func(x, y + 0.01f) - z)
+            );
 
-            texcoords.push_back(glm::vec2(x, y));
+            // Normalize the normal vector and add it to the normals vector
+            normals.push_back(normal.normalized());
+
+            texcoords.push_back(QVector2D(x, y));
 
             if (mUseNormalColor) {
-                normalColors.push_back(glm::vec4(glm::vec3(x, y, z), 1));
+                normalColors.push_back(QVector4D(QVector3D(x, y, z), 1));
             }
             else {
-                normalColors.push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
             }
         }
     }
@@ -773,7 +790,7 @@ Mesh* ModelLoader::LoadPlane(std::function<float(float, float)> func, Range& xRa
 	return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-glm::vec3 ModelLoader::getNormalFromOrigin(glm::vec3 origin, glm::vec3 point)
+QVector3D ModelLoader::getNormalFromOrigin(QVector3D origin, QVector3D point)
 {
-	return glm::normalize(point - origin);
+    return (point - origin).normalized();
 }

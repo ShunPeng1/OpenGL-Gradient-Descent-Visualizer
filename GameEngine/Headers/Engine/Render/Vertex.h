@@ -1,8 +1,9 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-#include <glm.hpp>
-
+#include <QVector3D>
+#include <QVector2D>
+#include <QVector4D>
 
 const int POSITION_LENGTH = 3;
 const int NORMAL_LENGTH = 3;
@@ -15,10 +16,10 @@ const int TEX_COORD_OFFSET = NORMAL_LENGTH + NORMAL_OFFSET;
 const int VERTEX_LENGTH = POSITION_LENGTH + NORMAL_LENGTH + TEX_COORD_LENGTH;
 
 struct Vertex {
-    glm::vec3 positions;
-    glm::vec3 normals;
-    glm::vec2 texCoords;
-	glm::vec4 color;
+    QVector3D positions;
+    QVector3D normals;
+    QVector2D texCoords;
+    QVector4D color;
 };
 
 #endif // VERTEX_H

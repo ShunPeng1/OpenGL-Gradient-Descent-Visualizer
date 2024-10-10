@@ -53,7 +53,7 @@
     <ClCompile Include="Sources\Engine\Render\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\Render\Shader.cpp">
+    <ClCompile Include="Sources\Engine\Render\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Engine\Render\VAO.cpp">
@@ -76,7 +76,7 @@
     <ClInclude Include="Headers\Engine\Render\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Render\Shader.h">
+    <ClInclude Include="Headers\Engine\Render\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Engine\Render\Texture.h">
@@ -97,9 +97,6 @@
     <None Include="Resources\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="Resources\Models\teapot.obj" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Resources\Textures\Blank.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -108,5 +105,10 @@
     <QtMoc Include="Headers\Qt\OpenGLWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Resource.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

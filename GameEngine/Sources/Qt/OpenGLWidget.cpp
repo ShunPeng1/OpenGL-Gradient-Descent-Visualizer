@@ -5,12 +5,10 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QDebug>
-#include <qdir.h>
-#include <glm.hpp>
-#include <ext/matrix_clip_space.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <iostream>
-#include "Engine/Render/Shader.h"
+#include <QDir.h>
+#include <QMatrix4x4>
+#include <QVector3D>
+#include "Engine/Render/ShaderProgram.h"
 #include "Engine/Render/Mesh.h"
 #include "Engine/Loader/ModelLoader.h"
 
@@ -22,9 +20,9 @@ OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunc
     timer->start(16); // ~60 FPS
 
     // Initialize camera parameters
-    cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    cameraPos = QVector3D(0.0f, 0.0f, 3.0f);
+    cameraFront = QVector3D(0.0f, 0.0f, -1.0f);
+    cameraUp = QVector3D(0.0f, 1.0f, 0.0f);
     yaw = -90.0f;
     pitch = 0.0f;
     firstMouse = true;
@@ -45,18 +43,20 @@ void OpenGLWidget::initializeGL() {
     qInfo() << "OpenGL version: " << glGetString(GL_VERSION) << "Current Dir" << QDir::current().absolutePath().toStdString();
 
     // Initialize shaders, models, etc.
-    defaultShader = new Shader(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
-    defaultShader->Use();
+    defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
+    defaultShader->bind();
 
-    glm::mat4 world = glm::mat4(1.0f);
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width() / (float)height(), 0.1f, 100.0f);
-    glm::vec2 texScale = glm::vec2(1.0f, 1.0f);
+    QMatrix4x4 world;
+    world.setToIdentity();
+    QMatrix4x4 proj;
+    proj.perspective(45.0f, float(width()) / float(height()), 0.1f, 100.0f);
+    QVector2D texScale(1.0f, 1.0f);
 
-    defaultShader->SetUniformMat4("mWorld", world);
-    defaultShader->SetUniformMat4("mProj", proj);
-    defaultShader->SetUniformVec2("mTexScale", texScale);
-    defaultShader->SetUniformBool("mUseTexture", false);
-    defaultShader->SetUniformBool("mUseColor", true);
+    defaultShader->setUniformValue("mWorld", world);
+    defaultShader->setUniformValue("mProj", proj);
+    defaultShader->setUniformValue("mTexScale", texScale);
+    defaultShader->setUniformValue("mUseTexture", false);
+    defaultShader->setUniformValue("mUseColor", true);
 
     ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
     loader = &tempLoader;
@@ -86,9 +86,10 @@ void OpenGLWidget::paintGL() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-	qDebug() << view[0].a << view[0].b << view[0].g << view[1].a << view[1].b << view[1].g << view[2].a << view[2].b << view[2].g << view[3].a << view[3].b << view[3].g;
-    defaultShader->SetUniformMat4("mView", view);
+    QMatrix4x4 view;
+    view.lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+    defaultShader->setUniformValue("mView", view);
 
     // Draw the selected model
     switch (currentModel) {
@@ -127,17 +128,16 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_S)
         cameraPos -= cameraSpeed * cameraFront;
     if (event->key() == Qt::Key_A)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        cameraPos -= QVector3D::crossProduct(cameraFront, cameraUp).normalized() * cameraSpeed;
     if (event->key() == Qt::Key_D)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        cameraPos += QVector3D::crossProduct(cameraFront, cameraUp).normalized() * cameraSpeed;
     if (event->key() == Qt::Key_Q)
         cameraPos -= cameraSpeed * cameraUp;
     if (event->key() == Qt::Key_E)
         cameraPos += cameraSpeed * cameraUp;
     if (event->key() == Qt::Key_Escape)
         close();
-
-    qDebug() << "Camera Position: " << cameraPos.x << cameraPos.y << cameraPos.z;
+    
 
     // Change model based on key press
     if (event->key() == Qt::Key_1)
@@ -208,9 +208,9 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent* event) {
     if (pitch < -89.0f)
         pitch = -89.0f;
 
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+    QVector3D front;
+    front.setX(cos(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
+    front.setY(sin(qDegreesToRadians(pitch)));
+    front.setZ(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
+    cameraFront = front.normalized();
 }
