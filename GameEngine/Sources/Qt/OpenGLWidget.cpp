@@ -74,6 +74,11 @@ void OpenGLWidget::initializeGL() {
     icosphere = tempLoader.LoadIcosphere(5);
     cone = tempLoader.LoadCone(36);
 
+	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
+    ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
+	plane = tempLoader.LoadPlane([](float x, float y) -> float {
+        return std::sin(x) * std::sin(y);
+		}, xRange, yRange);
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {
