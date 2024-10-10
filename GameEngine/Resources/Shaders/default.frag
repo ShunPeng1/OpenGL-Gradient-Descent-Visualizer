@@ -1,6 +1,8 @@
 #version 330 core
-
-precision mediump float;
+#ifdef GL_KHR_blend_equation_advanced
+#extension GL_ARB_fragment_coord_conventions : enable
+#extension GL_KHR_blend_equation_advanced : enable
+#endif
 
 in vec4 fragColor;
 in vec3 fragNormal;
@@ -22,10 +24,10 @@ void main()
     }
 
     if (mUseColor) {
-		color = color * fragColor;
-	}
+        color = color * fragColor;
+    }
 
     if (color.a <= 0.01) {
-		discard;
-	}
+        discard;
+    }
 }

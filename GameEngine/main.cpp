@@ -13,11 +13,7 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
     OpenGLWidget openGLWidget;
-    openGLWidget.resize(800, 600);
-    openGLWidget.show();
-
-    
-
+    openGLWidget.showMaximized();
 
     return app.exec();
 }

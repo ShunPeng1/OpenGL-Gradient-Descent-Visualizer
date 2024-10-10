@@ -28,6 +28,7 @@ protected:
     void paintGL() override;
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
+    void updateInput();
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
@@ -63,6 +64,7 @@ private:
     RenderMode currentRenderMode;
   
     QElapsedTimer* elapsedTimer;
+    QMap<int, bool> keyStates;
 };
 
 #endif // OPENGLWIDGET_H
