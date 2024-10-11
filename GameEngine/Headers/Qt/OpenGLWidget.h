@@ -6,9 +6,9 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTimer>
-#include "Engine/Render/ShaderProgram.h"
-#include "Engine/Render/Mesh.h"
-#include "Engine/Loader/ModelLoader.h"
+#include "Engine/Renders/ShaderProgram.h"
+#include "Engine/Renders/Mesh.h"
+#include "Engine/Loaders/ModelLoader.h"
 
 enum class RenderMode {
     FACE,

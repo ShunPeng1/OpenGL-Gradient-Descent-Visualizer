@@ -1,4 +1,4 @@
-#include "Engine/Render/VAO.h"
+#include "Engine/Renders/VAO.h"
 
 VAO::VAO(const void* data, GLsizeiptr size) {
     initializeOpenGLFunctions();

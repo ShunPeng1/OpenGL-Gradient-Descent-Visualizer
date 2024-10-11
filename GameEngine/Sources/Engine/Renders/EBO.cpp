@@ -1,4 +1,4 @@
-#include "Engine/Render/EBO.h"
+#include "Engine/Renders/EBO.h"
 
 EBO::EBO(const void* data, GLsizeiptr size) {
     initializeOpenGLFunctions();

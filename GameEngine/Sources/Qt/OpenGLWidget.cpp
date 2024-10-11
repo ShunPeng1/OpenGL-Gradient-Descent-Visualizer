@@ -8,9 +8,9 @@
 #include <QDir.h>
 #include <QMatrix4x4>
 #include <QVector3D>
-#include "Engine/Render/ShaderProgram.h"
-#include "Engine/Render/Mesh.h"
-#include "Engine/Loader/ModelLoader.h"
+#include "Engine/Renders/ShaderProgram.h"
+#include "Engine/Renders/Mesh.h"
+#include "Engine/Loaders/ModelLoader.h"
 
 
 OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunctions() {

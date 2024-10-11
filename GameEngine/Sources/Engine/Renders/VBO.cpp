@@ -1,4 +1,4 @@
-#include "Engine/Render/VBO.h"
+#include "Engine/Renders/VBO.h"
 
 VBO::VBO(const void* data, GLsizeiptr size) {
     glGenBuffers(1, &ID);
