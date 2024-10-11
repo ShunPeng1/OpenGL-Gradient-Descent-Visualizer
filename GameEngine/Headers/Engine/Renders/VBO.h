@@ -9,8 +9,8 @@ public:
     VBO(const void* data, GLsizeiptr size);
     ~VBO();
 
-    void Bind();
-    void Unbind();
+    void bind();
+    void unbind();
 
 private:
     GLuint ID;

@@ -64,19 +64,19 @@ void OpenGLWidget::initializeGL() {
     ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
     loader = &tempLoader;
 
-    teapot = tempLoader.LoadObjFile(":/Resources/Models/teapot.obj");
-    triangle = tempLoader.LoadTriangle();
-    quad = tempLoader.LoadQuad();
-    cube = tempLoader.LoadCube();
-    circle = tempLoader.LoadCircle(36);
-    cylinder = tempLoader.LoadCylinder(36);
-    sphere = tempLoader.LoadSphere(40, 40);
-    icosphere = tempLoader.LoadIcosphere(5);
-    cone = tempLoader.LoadCone(36);
+    teapot = tempLoader.loadObjFile(":/Resources/Models/teapot.obj");
+    triangle = tempLoader.loadTriangle();
+    quad = tempLoader.loadQuad();
+    cube = tempLoader.loadCube();
+    circle = tempLoader.loadCircle(36);
+    cylinder = tempLoader.loadCylinder(36);
+    sphere = tempLoader.loadSphere(40, 40);
+    icosphere = tempLoader.loadIcosphere(5);
+    cone = tempLoader.loadCone(36);
 
 	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
     ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	plane = tempLoader.LoadPlane([](float x, float y) -> float {
+	plane = tempLoader.loadPlane([](float x, float y) -> float {
         return std::sin(x) * std::sin(y);
 		}, xRange, yRange);
 }
@@ -112,16 +112,16 @@ void OpenGLWidget::paintGL() {
 
     // Draw the selected model
     switch (currentModel) {
-    case 1: triangle->Draw(*defaultShader); break;
-    case 2: sphere->Draw(*defaultShader); break;
-    case 3: icosphere->Draw(*defaultShader); break;
-    case 4: plane->Draw(*defaultShader); break;
-    case 5: circle->Draw(*defaultShader); break;
-    case 6: cylinder->Draw(*defaultShader); break;
-    case 7: cube->Draw(*defaultShader); break;
-    case 8: cone->Draw(*defaultShader); break;
-    case 9: plane->Draw(*defaultShader); break;
-    case 0: teapot->Draw(*defaultShader); break;
+    case 1: triangle->draw(*defaultShader); break;
+    case 2: sphere->draw(*defaultShader); break;
+    case 3: icosphere->draw(*defaultShader); break;
+    case 4: plane->draw(*defaultShader); break;
+    case 5: circle->draw(*defaultShader); break;
+    case 6: cylinder->draw(*defaultShader); break;
+    case 7: cube->draw(*defaultShader); break;
+    case 8: cone->draw(*defaultShader); break;
+    case 9: plane->draw(*defaultShader); break;
+    case 0: teapot->draw(*defaultShader); break;
     }
 
     // Set the polygon mode based on the current rendering mode

@@ -10,10 +10,10 @@ VBO::~VBO() {
     glDeleteBuffers(1, &ID);
 }
 
-void VBO::Bind() {
+void VBO::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, ID);
 }
 
-void VBO::Unbind() {
+void VBO::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

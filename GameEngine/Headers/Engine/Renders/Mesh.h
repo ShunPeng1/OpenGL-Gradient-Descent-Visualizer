@@ -16,7 +16,7 @@ public:
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode);
-    virtual void Draw(ShaderProgram& shader);
+    virtual void draw(ShaderProgram& shader);
 protected:
     //  render data
     unsigned int mVAO, mVBO, mEBO;

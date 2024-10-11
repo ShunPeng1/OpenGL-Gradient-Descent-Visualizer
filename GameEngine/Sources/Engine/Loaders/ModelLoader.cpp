@@ -7,7 +7,7 @@
 #define M_PI 3.14159265358979323846f
 #endif
 
-Mesh* ModelLoader::LoadObjFile(const char* path)
+Mesh* ModelLoader::loadObjFile(const char* path)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -114,7 +114,7 @@ Mesh* ModelLoader::LoadObjFile(const char* path)
 }
 
 
-Mesh* ModelLoader::LoadTriangle()
+Mesh* ModelLoader::loadTriangle()
 {
 	std::vector<QVector3D> positions = {
 		QVector3D(-0.5f, -0.5f, 0.0f),
@@ -163,7 +163,7 @@ Mesh* ModelLoader::LoadTriangle()
 	return new Mesh(vertices, indices, {});
 }
 
-Mesh* ModelLoader::LoadQuad()
+Mesh* ModelLoader::loadQuad()
 {
     std::vector<QVector3D> positions = {
         QVector3D(-0.5f, -0.5f, 0.0f),
@@ -219,7 +219,7 @@ Mesh* ModelLoader::LoadQuad()
 // https://stackoverflow.com/questions/28375338/cube-using-single-gl-triangle-strip
 // From : 4 3 7 8 5 3 1 4 2 7 6 5 2 1
 // To   : 3 2 6 7 4 2 0 3 1 6 5 4 1 0
-Mesh* ModelLoader::LoadCube()
+Mesh* ModelLoader::loadCube()
 {
     std::vector<QVector3D> positions = {
         QVector3D(0.5f, 0.5f, -0.5f),   // 1 0
@@ -288,7 +288,7 @@ Mesh* ModelLoader::LoadCube()
     return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh* ModelLoader::LoadCircle(int sector)
+Mesh* ModelLoader::loadCircle(int sector)
 {
     std::vector<QVector3D> positions;
 	std::vector<QVector3D> normals;
@@ -326,7 +326,7 @@ Mesh* ModelLoader::LoadCircle(int sector)
 	return new Mesh(vertices, indices, {}, GL_TRIANGLE_FAN);
 }
 
-Mesh* ModelLoader::LoadCylinder(int sector)
+Mesh* ModelLoader::loadCylinder(int sector)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -424,7 +424,7 @@ Mesh* ModelLoader::LoadCylinder(int sector)
     return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-Mesh* ModelLoader::LoadSphere(int sector, int stack)
+Mesh* ModelLoader::loadSphere(int sector, int stack)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -529,7 +529,7 @@ unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<QVecto
     return index;
 }
 
-Mesh* ModelLoader::LoadIcosphere(int subdivision)
+Mesh* ModelLoader::loadIcosphere(int subdivision)
 {
 	std::vector<QVector3D> positions(12);
 
@@ -634,7 +634,7 @@ Mesh* ModelLoader::LoadIcosphere(int subdivision)
 
 }
 
-Mesh* ModelLoader::LoadCubeSphere(int subdivision)
+Mesh* ModelLoader::loadCubeSphere(int subdivision)
 {
     
 
@@ -643,7 +643,7 @@ Mesh* ModelLoader::LoadCubeSphere(int subdivision)
     return new Mesh({}, {}, {});
 }
 
-Mesh* ModelLoader::LoadCone(int sector)
+Mesh* ModelLoader::loadCone(int sector)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -746,7 +746,7 @@ void getHeatMapColor(float value, float* red, float* green, float* blue)
 
 }
 
-Mesh* ModelLoader::LoadPlane(float (*func)(float, float), Range& xRange, Range& yRange)
+Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& yRange)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;

@@ -56,7 +56,7 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(ShaderProgram& shader) {
+void Mesh::draw(ShaderProgram& shader) {
 	/*unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	for (unsigned int i = 0; i < textures.size(); i++)

@@ -11,10 +11,10 @@ EBO::~EBO() {
     glDeleteBuffers(1, &mID);
 }
 
-void EBO::Bind() {
+void EBO::bind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mID);
 }
 
-void EBO::Unbind() {
+void EBO::unbind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

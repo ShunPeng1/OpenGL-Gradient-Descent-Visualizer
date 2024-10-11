@@ -73,9 +73,6 @@
     <ClInclude Include="Headers\Engine\Renders\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Renders\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Renders\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>

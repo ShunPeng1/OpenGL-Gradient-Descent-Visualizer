@@ -133,7 +133,6 @@
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />
-    <ClInclude Include="Headers\Engine\Renders\Renderer.h" />
     <ClInclude Include="Headers\Engine\Renders\ShaderProgram.h" />
     <ClInclude Include="Headers\Engine\Renders\Texture.h" />
     <ClInclude Include="Headers\Engine\Renders\VAO.h" />

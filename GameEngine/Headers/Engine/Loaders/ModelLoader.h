@@ -17,17 +17,17 @@ public:
 		Range(float from, float to, float step) : from(from), to(to), step(step) {}
 	};
 
-	Mesh* LoadObjFile(const char* path);	
-	Mesh* LoadTriangle();
-	Mesh* LoadQuad();
-	Mesh* LoadCube();
-	Mesh* LoadCircle(int sector);
-	Mesh* LoadCylinder(int sector);
-	Mesh* LoadSphere(int sector, int stack);
-	Mesh* LoadIcosphere(int subdivision);
-	Mesh* LoadCubeSphere(int sector);
-	Mesh* LoadCone(int sector);
-	Mesh* LoadPlane(float (*func)(float, float), Range& xRange, Range& yRange);
+	Mesh* loadObjFile(const char* path);	
+	Mesh* loadTriangle();
+	Mesh* loadQuad();
+	Mesh* loadCube();
+	Mesh* loadCircle(int sector);
+	Mesh* loadCylinder(int sector);
+	Mesh* loadSphere(int sector, int stack);
+	Mesh* loadIcosphere(int subdivision);
+	Mesh* loadCubeSphere(int sector);
+	Mesh* loadCone(int sector);
+	Mesh* loadPlane(float (*func)(float, float), Range& xRange, Range& yRange);
 
 
 	class Builder {

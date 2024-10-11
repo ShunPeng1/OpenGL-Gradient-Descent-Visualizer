@@ -8,8 +8,8 @@ public:
     EBO(const void* data, GLsizeiptr size);
     ~EBO();
 
-    void Bind();
-    void Unbind();
+    void bind();
+    void unbind();
 
 private:
     GLuint mID;

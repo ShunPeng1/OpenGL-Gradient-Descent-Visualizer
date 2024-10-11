@@ -8,8 +8,8 @@ public:
     VAO(const void* data, GLsizeiptr size);
     ~VAO();
 
-    void Bind();
-    void Unbind();
+    void bind();
+    void unbind();
 
 private:
     GLuint mID;
