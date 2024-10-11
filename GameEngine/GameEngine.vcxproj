@@ -125,11 +125,17 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
+    <ClCompile Include="Headers\Engine\Scenes\Component.h" />
+    <ClCompile Include="Sources\Engine\Scenes\Component.cpp" />
+    <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp" />
+    <ClCompile Include="Sources\Engine\Scenes\Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
+    <ClInclude Include="Headers\Engine\Components\Transform.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />
@@ -139,6 +145,8 @@
     <ClInclude Include="Headers\Engine\Renders\VBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Vertex.h" />
     <QtMoc Include="Headers\Qt\OpenGLWidget.h" />
+    <ClInclude Include="Headers\Engine\Scenes\GameObject.h" />
+    <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp" />
     <ClCompile Include="Sources\Engine\Renders\EBO.cpp" />
