@@ -27,7 +27,7 @@ public:
 	Mesh* LoadIcosphere(int subdivision);
 	Mesh* LoadCubeSphere(int sector);
 	Mesh* LoadCone(int sector);
-	Mesh* LoadPlane(std::function<float(float, float)> func, Range& xRange, Range& yRange);
+	Mesh* LoadPlane(float (*func)(float, float), Range& xRange, Range& yRange);
 
 
 	class Builder {

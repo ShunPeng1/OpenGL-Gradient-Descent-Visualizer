@@ -112,16 +112,16 @@ void OpenGLWidget::paintGL() {
 
     // Draw the selected model
     switch (currentModel) {
-    case 1: teapot->Draw(*defaultShader); break;
-    case 2: triangle->Draw(*defaultShader); break;
-    case 3: quad->Draw(*defaultShader); break;
-    case 4: cube->Draw(*defaultShader); break;
+    case 1: triangle->Draw(*defaultShader); break;
+    case 2: sphere->Draw(*defaultShader); break;
+    case 3: icosphere->Draw(*defaultShader); break;
+    case 4: plane->Draw(*defaultShader); break;
     case 5: circle->Draw(*defaultShader); break;
     case 6: cylinder->Draw(*defaultShader); break;
-    case 7: sphere->Draw(*defaultShader); break;
+    case 7: cube->Draw(*defaultShader); break;
     case 8: cone->Draw(*defaultShader); break;
     case 9: plane->Draw(*defaultShader); break;
-    case 0: icosphere->Draw(*defaultShader); break;
+    case 0: teapot->Draw(*defaultShader); break;
     }
 
     // Set the polygon mode based on the current rendering mode
