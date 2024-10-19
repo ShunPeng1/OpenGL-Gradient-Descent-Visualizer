@@ -9,6 +9,9 @@
 #include "Engine/Renders/ShaderProgram.h"
 #include "Engine/Renders/Mesh.h"
 #include "Engine/Loaders/ModelLoader.h"
+#include "Engine/GameObjects/Camera.h"
+#include "TestGame/Controllers/FPSCameraController.h"
+
 
 enum class RenderMode {
     FACE,
@@ -16,11 +19,13 @@ enum class RenderMode {
     POINT
 };
 
+
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     Q_OBJECT
 
 public:
     OpenGLWidget(QWidget* parent = nullptr);
+	~OpenGLWidget();
 
 protected:
     void initializeGL() override;
@@ -47,19 +52,13 @@ private:
 	
 
     // Add other models...
+    Camera* camera;
+    FPSCameraController* cameraController;
 
-    QVector3D cameraPos;
-    QVector3D cameraFront;
-    QVector3D cameraUp;
-    float yaw;
-    float pitch;
-    float lastX;
-    float lastY;
     bool firstMouse;
     float deltaTime;
     float lastFrame;
     bool spacePressed;
-
     int currentModel;
     RenderMode currentRenderMode;
   

@@ -13,6 +13,7 @@
 #include "Engine/Loaders/ModelLoader.h"
 
 
+
 OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunctions() {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
@@ -20,23 +21,21 @@ OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunc
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLWidget::update));
     timer->start(16); // ~60 FPS
 
-    // Initialize camera parameters
-    cameraPos = QVector3D(0.0f, 0.0f, 3.0f);
-    cameraFront = QVector3D(0.0f, 0.0f, -1.0f);
-    cameraUp = QVector3D(0.0f, 1.0f, 0.0f);
-    yaw = -90.0f;
-    pitch = 0.0f;
-    firstMouse = true;
-    deltaTime = 0.0f;
-    lastFrame = 0.0f;
-    spacePressed = false;
     currentRenderMode = RenderMode::FACE;
     currentModel = 1;
 
 	elapsedTimer = new QElapsedTimer();
     elapsedTimer->start();
 
-    
+	camera = new Camera();
+	cameraController = new FPSCameraController(camera);
+}
+
+OpenGLWidget::~OpenGLWidget()
+{
+    delete camera;
+    delete cameraController;
+    delete elapsedTimer;
 }
 
 void OpenGLWidget::initializeGL() {
@@ -104,8 +103,7 @@ void OpenGLWidget::paintGL() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 view;
-    view.lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    QMatrix4x4 view = camera->getViewMatrix();
 
     defaultShader->bind();
     defaultShader->setUniformValue("mView", view);
@@ -141,6 +139,7 @@ void OpenGLWidget::paintGL() {
 }
 void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
     keyStates[event->key()] = true;
+    cameraController->handleKeyPress(event);
 
     // Change model based on key press
     if (event->key() == Qt::Key_1)
@@ -182,7 +181,7 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
 }
 
 void OpenGLWidget::keyReleaseEvent(QKeyEvent* event) {
-    keyStates[event->key()] = false;
+    cameraController->handleKeyRelease(event);
 
     if (event->key() == Qt::Key_Space) {
         spacePressed = false;
@@ -190,52 +189,12 @@ void OpenGLWidget::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void OpenGLWidget::updateInput() {
-    float cameraSpeed = 2.5 * deltaTime;
-    if (keyStates[Qt::Key_W])
-        cameraPos += cameraSpeed * cameraFront;
-    if (keyStates[Qt::Key_S])
-        cameraPos -= cameraSpeed * cameraFront;
-    if (keyStates[Qt::Key_A])
-        cameraPos -= QVector3D::crossProduct(cameraFront, cameraUp).normalized() * cameraSpeed;
-    if (keyStates[Qt::Key_D])
-        cameraPos += QVector3D::crossProduct(cameraFront, cameraUp).normalized() * cameraSpeed;
-    if (keyStates[Qt::Key_Q])
-        cameraPos -= cameraSpeed * cameraUp;
-    if (keyStates[Qt::Key_E])
-        cameraPos += cameraSpeed * cameraUp;
-
-
+   
+	cameraController->update(deltaTime);
     
 }
 
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event) {
-    if (firstMouse) {
-        lastX = event->position().x();
-        lastY = event->position().y();
-        firstMouse = false;
-    }
-
-    float xoffset = event->position().x() - lastX;
-    float yoffset = lastY - event->position().y(); // reversed since y-coordinates go from bottom to top
-    lastX = event->position().x();
-    lastY = event->position().y();
-
-    float sensitivity = 0.1f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    QVector3D front;
-    front.setX(cos(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
-    front.setY(sin(qDegreesToRadians(pitch)));
-    front.setZ(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
-    cameraFront = front.normalized();
+    cameraController->handleMouseMove(event);
 }

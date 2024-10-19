@@ -13,25 +13,25 @@ public:
 	Scene();
 	virtual ~Scene();
 
+	virtual void load() = 0;
 	virtual void init() = 0;
 
 	virtual void update(float deltaTime) = 0;
 	virtual void render() = 0;
 
-	virtual void addMesh(Mesh* mesh);
-	virtual void addGameObject(GameObject* gameObject);
-	virtual void addComponent(Component* component);
+	void addMesh(Mesh* mesh);
+	void addGameObject(GameObject* gameObject);
+	void addComponent(Component* component);
 
-	virtual void removeMesh(Mesh* mesh);
-	virtual void removeGameObject(GameObject* gameObject);
-	virtual void removeComponent(Component* component);
+	void removeMesh(Mesh* mesh);
+	void removeGameObject(GameObject* gameObject);
+	void removeComponent(Component* component);
 
 
-private:
+protected:
 	std::vector<Mesh*> mMeshes;
-	std::vector<GameObject*> mGameObjects;
-	std::vector<Component*> mComponents;
-	
+	std::vector<GameObject*> mUpdateLists;
+	std::vector<GameObject*> mRenderLists;
 };
 
 

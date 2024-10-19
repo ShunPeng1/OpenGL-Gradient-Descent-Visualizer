@@ -12,7 +12,7 @@ public:
 	virtual ~Container() noexcept; // Add noexcept to match the base class destructor
 
 public:  
-	Transform mTransform;
+	Transform transform;
 };
 
 

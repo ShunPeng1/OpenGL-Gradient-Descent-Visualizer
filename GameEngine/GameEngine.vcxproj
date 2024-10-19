@@ -125,6 +125,7 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Engine\GameObjects\Camera.cpp" />
     <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
     <ClCompile Include="Sources\Engine\GameObjects\MeshRenderer.cpp" />
     <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
@@ -139,6 +140,7 @@
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
     <ClInclude Include="Headers\Engine\Engine.h" />
+    <ClInclude Include="Headers\Engine\GameObjects\Camera.h" />
     <ClInclude Include="Headers\Engine\GameObjects\MeshRenderer.h" />
     <ClInclude Include="Headers\Engine\Components\Transform.h" />
     <ClInclude Include="Headers\Engine\GameObjects\Container.h" />
@@ -154,6 +156,8 @@
     <QtMoc Include="Headers\Qt\OpenGLWidget.h" />
     <ClInclude Include="Headers\Engine\Scenes\GameObject.h" />
     <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
+    <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
+    <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp" />
     <ClCompile Include="Sources\Engine\Renders\EBO.cpp" />
@@ -162,6 +166,7 @@
     <ClCompile Include="Sources\Engine\Renders\VAO.cpp" />
     <ClCompile Include="Sources\Engine\Renders\VBO.cpp" />
     <ClCompile Include="Sources\Qt\OpenGLWidget.cpp" />
+    <ClCompile Include="Sources\TestGame\Scenes\TestScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>

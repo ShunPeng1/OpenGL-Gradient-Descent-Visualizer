@@ -1,6 +1,6 @@
 #include "Engine/GameObjects/Container.h"
 
-Container::Container() : GameObject(), mTransform(Transform(this))
+Container::Container() : GameObject(), transform(Transform(this))
 {
 
 }
