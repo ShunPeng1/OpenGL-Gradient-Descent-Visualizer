@@ -2,7 +2,7 @@
 
 GameObject::GameObject()
 {
-	m_alive = true;
+	mAlive = true;
 }
 
 GameObject::~GameObject()
@@ -12,15 +12,15 @@ GameObject::~GameObject()
 
 void GameObject::kill()
 {
-	m_alive = false;
+	mAlive = false;
 }
 
 void GameObject::revive()
 {
-	m_alive = true;
+	mAlive = true;
 }
 
 bool GameObject::isAlive() const
 {
-	return m_alive;
+	return mAlive;
 }

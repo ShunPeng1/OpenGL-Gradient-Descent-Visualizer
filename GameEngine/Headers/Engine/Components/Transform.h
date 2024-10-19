@@ -1,12 +1,14 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
+
+
+#include "Engine/Scenes/Component.h"
 
 #include <qvector3d.h>
 #include <qquaternion.h>
 #include <qmatrix4x4.h>
 #include <vector>
 
-#include "Engine/Scenes/GameObject.h"
-#include "Engine/Scenes/Component.h"
 
 class Transform : public Component
 {
@@ -22,32 +24,44 @@ public:
 	void setWorldRotation(const QQuaternion& rotation);
 	void setWorldScale(const QVector3D& scale);
 
+	QVector3D getWorldPosition();
+	QQuaternion getWorldRotation();
+	QVector3D getWorldScale();
+
 	void setLocalPosition(const QVector3D& position);
 	void setLocalRotation(const QQuaternion& rotation);
 	void setLocalScale(const QVector3D& scale);
 
-	void setParent(GameObject* parent);
-	GameObject* getParent() const;
-	void addChild(GameObject* child);
-	void removeChild(GameObject* child);
+	QVector3D getLocalPosition();
+	QQuaternion getLocalRotation();
+	QVector3D getLocalScale();
+
+	void setParent(Transform* parent);
+	Transform* getParent() const;
 	int getChildCount() const;
-	GameObject* getChild(int index) const;
-	int getChildIndex(GameObject* child) const;
+	Transform* getChild(int index) const;
+	int getChildIndex(Transform* child) const;
 
 
-	QMatrix4x4 getLocalToWorldMatrix() const;
-	QMatrix4x4 getWorldToLocalMatrix() const;
+	QMatrix4x4 getWorldMatrix();
+	QMatrix4x4 getLocalMatrix();
 
 	Transform* clone() override;
-public:
-	QVector3D worldPosition;
-	QQuaternion worldRotation;
-	QVector3D worldScale;
 
-	QVector3D localPosition;
-	QQuaternion localRotation;
-	QVector3D localScale;
+private:
 
-	GameObject* parent;
-	std::vector<GameObject*> children;
+	void addChild(Transform* child);
+	void removeChild(Transform* child);
+	void updateChildrenWorldMatrix();
+
+	QVector3D mWorldPosition;
+	QQuaternion mWorldRotation;
+	QVector3D mWorldScale;
+
+	Transform* mParent;
+	std::vector<Transform*> mChildren;
 };
+
+
+
+#endif // !TRANSFORM_H

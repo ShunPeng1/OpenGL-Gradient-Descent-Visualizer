@@ -125,8 +125,11 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
+    <ClCompile Include="Sources\Engine\GameObjects\MeshRenderer.cpp" />
     <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
     <ClCompile Include="Headers\Engine\Scenes\Component.h" />
+    <ClCompile Include="Sources\Engine\GameObjects\Container.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\Component.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\Scene.cpp" />
@@ -135,7 +138,11 @@
     <None Include="Resources\Shaders\default.vert" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
+    <ClInclude Include="Headers\Engine\Engine.h" />
+    <ClInclude Include="Headers\Engine\GameObjects\MeshRenderer.h" />
     <ClInclude Include="Headers\Engine\Components\Transform.h" />
+    <ClInclude Include="Headers\Engine\GameObjects\Container.h" />
+    <ClInclude Include="Headers\Engine\Components\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />

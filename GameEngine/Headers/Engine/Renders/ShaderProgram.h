@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef SHADER_PROGRAM_H
+#define SHADER_PROGRAM_H
 
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLShaderProgram>
@@ -19,4 +19,4 @@ public:
     
 };
 
-#endif // SHADER_H
+#endif // SHADER_PROGRAM_H

@@ -1,8 +1,7 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
 #include "Engine/Scenes/Scene.h"
-
-class Scene;
 
 class GameObject
 {
@@ -17,6 +16,8 @@ public:
 	bool isAlive() const;
 
 private:
-	bool m_alive;
-	Scene* m_scenePtr;
+	bool mAlive;
+	Scene* mScenePtr;
 };
+
+#endif // GAMEOBJECT_H
