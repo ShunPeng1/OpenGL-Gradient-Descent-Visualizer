@@ -11,13 +11,7 @@
 #include "Engine/Loaders/ModelLoader.h"
 #include "Engine/GameObjects/Camera.h"
 #include "TestGame/Controllers/FPSCameraController.h"
-
-
-enum class RenderMode {
-    FACE,
-    WIREFRAME,
-    POINT
-};
+#include "Engine/Enums/RenderMode.h"
 
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -60,7 +54,7 @@ private:
     float lastFrame;
     bool spacePressed;
     int currentModel;
-    RenderMode currentRenderMode;
+    PolygonMode currentRenderMode;
   
     QElapsedTimer* elapsedTimer;
     QMap<int, bool> keyStates;

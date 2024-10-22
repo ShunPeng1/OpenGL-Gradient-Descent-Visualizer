@@ -35,10 +35,10 @@
     <None Include="main.qml">
       <Filter>Source Files</Filter>
     </None>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="Headers\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Sources\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Qt\OpenGLWidget.cpp">
@@ -68,12 +68,6 @@
     <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Headers\Engine\Scenes\Component.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Engine\Scenes\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Engine\Components\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Engine\Scenes\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,6 +143,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Scenes\Component.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Enums\RenderMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

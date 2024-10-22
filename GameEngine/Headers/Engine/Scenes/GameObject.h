@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H
 
 #include "Engine/Scenes/Scene.h"
+#include "Engine/Renders/ShaderProgram.h"
 
 class GameObject
 {
@@ -9,14 +10,16 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
+	virtual void init(Scene* scene) = 0;
 	virtual void update(float deltaTime) = 0;
+	virtual void render(ShaderProgram& shaderProgram) = 0;
 
 	virtual void kill();
 	virtual void revive();
-	bool isAlive() const;
+	bool getIsAlive() const;
 
-private:
-	bool mAlive;
+protected:
+	bool mIsAlive;
 	Scene* mScenePtr;
 };
 

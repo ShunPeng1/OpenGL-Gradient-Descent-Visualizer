@@ -129,7 +129,8 @@
     <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
     <ClCompile Include="Sources\Engine\GameObjects\MeshRenderer.cpp" />
     <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
-    <ClCompile Include="Headers\Engine\Scenes\Component.h" />
+    <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />
+    <ClInclude Include="Headers\Engine\Scenes\Component.h" />
     <ClCompile Include="Sources\Engine\GameObjects\Container.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\Component.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp" />
@@ -158,7 +159,7 @@
     <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Headers\stdafx.h" />
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp" />
     <ClCompile Include="Sources\Engine\Renders\EBO.cpp" />
     <ClCompile Include="Sources\Engine\Renders\Mesh.cpp" />
@@ -167,7 +168,7 @@
     <ClCompile Include="Sources\Engine\Renders\VBO.cpp" />
     <ClCompile Include="Sources\Qt\OpenGLWidget.cpp" />
     <ClCompile Include="Sources\TestGame\Scenes\TestScene.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Sources\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>

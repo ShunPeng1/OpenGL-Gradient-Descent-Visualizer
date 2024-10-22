@@ -21,7 +21,7 @@ OpenGLWidget::OpenGLWidget(QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunc
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLWidget::update));
     timer->start(16); // ~60 FPS
 
-    currentRenderMode = RenderMode::FACE;
+    currentRenderMode = PolygonMode::FILL;
     currentModel = 1;
 
 	elapsedTimer = new QElapsedTimer();
@@ -50,8 +50,7 @@ void OpenGLWidget::initializeGL() {
 
     QMatrix4x4 world;
     world.setToIdentity();
-    QMatrix4x4 proj;
-    proj.perspective(45.0f, float(width()) / float(height()), 0.1f, 100.0f);
+	QMatrix4x4 proj = camera->getProjectionMatrix();
     QVector2D texScale(1.0f, 1.0f);
 
     defaultShader->setUniformValue("mWorld", world);
@@ -87,8 +86,8 @@ void OpenGLWidget::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
 
     // Update the projection matrix
-    QMatrix4x4 proj;
-    proj.perspective(45.0f, aspectRatio, 0.1f, 100.0f);
+    camera->setAspectRatio(aspectRatio);
+	QMatrix4x4 proj = camera->getProjectionMatrix();
     defaultShader->bind();
     defaultShader->setUniformValue("mProj", proj);
 }
@@ -124,13 +123,13 @@ void OpenGLWidget::paintGL() {
 
     // Set the polygon mode based on the current rendering mode
     switch (currentRenderMode) {
-    case RenderMode::FACE:
+    case PolygonMode::FILL:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         break;
-    case RenderMode::WIREFRAME:
+    case PolygonMode::LINE:
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         break;
-    case RenderMode::POINT:
+    case PolygonMode::POINT:
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
         break;
     }
@@ -167,14 +166,14 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Space && !spacePressed) {
         spacePressed = true;
         switch (currentRenderMode) {
-        case RenderMode::FACE:
-            currentRenderMode = RenderMode::WIREFRAME;
+        case PolygonMode::FILL:
+            currentRenderMode = PolygonMode::LINE;
             break;
-        case RenderMode::WIREFRAME:
-            currentRenderMode = RenderMode::POINT;
+        case PolygonMode::LINE:
+            currentRenderMode = PolygonMode::POINT;
             break;
-        case RenderMode::POINT:
-            currentRenderMode = RenderMode::FACE;
+        case PolygonMode::POINT:
+            currentRenderMode = PolygonMode::FILL;
             break;
         }
     }
