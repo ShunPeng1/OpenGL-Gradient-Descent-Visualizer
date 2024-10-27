@@ -1,43 +1,11 @@
-#include "Engine/Engine.h"
-#include "Engine/Scenes/Scene.h"
-#include "Engine/Loaders/ModelLoader.h"
-#include "Engine/GameObjects/Camera.h"
-#include "TestGame/Controllers/FPSCameraController.h"
-#include "Engine/GameObjects/MeshRenderer.h"
+#include "TestGame/Scenes/TestScene.h"
 
-class TestScene : public Scene
+TestScene::TestScene() : Scene()
 {
-public:
-	TestScene();
-	virtual ~TestScene();
+	mCameraController = new FPSCameraController(camera);
+	inputPublisher->subscribe(mCameraController);
 
-	void load() override;
-	void init() override;
-	void update(float deltaTime) override;
-	void render() override;
-
-private: 
-	Camera* camera;
-	FPSCameraController* cameraController;
-
-
-    // Add other models...
-
-    bool firstMouse;
-    float deltaTime;
-    float lastFrame;
-    bool spacePressed;
-    int currentModel;
-
-    QElapsedTimer* elapsedTimer;
-    QMap<int, bool> keyStates;
-};
-
-TestScene::TestScene()
-{
 	mDefaultShader = std::shared_ptr<ShaderProgram>(new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag"));
-
-    camera = new Camera();
 
     ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
@@ -60,38 +28,38 @@ TestScene::TestScene()
 
 
 
-    std::shared_ptr<MeshRenderer> teapotGameObject = std::make_shared<MeshRenderer>(teapot);
-	std::shared_ptr<MeshRenderer> triangleGameObject = std::make_shared<MeshRenderer>(triangle);
-	std::shared_ptr<MeshRenderer> quadGameObject = std::make_shared<MeshRenderer>(quad);
-	std::shared_ptr<MeshRenderer> circleGameObject = std::make_shared<MeshRenderer>(circle);
-	std::shared_ptr<MeshRenderer> cubeGameObject = std::make_shared<MeshRenderer>(cube);
-	std::shared_ptr<MeshRenderer> sphereGameObject = std::make_shared<MeshRenderer>(sphere);
-	std::shared_ptr<MeshRenderer> icosphereGameObject = std::make_shared<MeshRenderer>(icosphere);
-	std::shared_ptr<MeshRenderer> cylinderGameObject = std::make_shared<MeshRenderer>(cylinder);
-	std::shared_ptr<MeshRenderer> coneGameObject = std::make_shared<MeshRenderer>(cone);
-	std::shared_ptr<MeshRenderer> planeGameObject = std::make_shared<MeshRenderer>(plane);
+    std::shared_ptr<MeshRenderer> teapotNode = std::make_shared<MeshRenderer>(teapot);
+	std::shared_ptr<MeshRenderer> triangleNode = std::make_shared<MeshRenderer>(triangle);
+	std::shared_ptr<MeshRenderer> quadNode = std::make_shared<MeshRenderer>(quad);
+	std::shared_ptr<MeshRenderer> circleNode = std::make_shared<MeshRenderer>(circle);
+	std::shared_ptr<MeshRenderer> cubeNode = std::make_shared<MeshRenderer>(cube);
+	std::shared_ptr<MeshRenderer> sphereNode = std::make_shared<MeshRenderer>(sphere);
+	std::shared_ptr<MeshRenderer> icosphereNode = std::make_shared<MeshRenderer>(icosphere);
+	std::shared_ptr<MeshRenderer> cylinderNode = std::make_shared<MeshRenderer>(cylinder);
+	std::shared_ptr<MeshRenderer> coneNode = std::make_shared<MeshRenderer>(cone);
+	std::shared_ptr<MeshRenderer> planeNode = std::make_shared<MeshRenderer>(plane);
 
-	addToUpdateList(teapotGameObject);
-	addToUpdateList(triangleGameObject);
-	addToUpdateList(quadGameObject);
-	addToUpdateList(circleGameObject);
-	addToUpdateList(cubeGameObject);
-	addToUpdateList(sphereGameObject);
-	addToUpdateList(icosphereGameObject);
-	addToUpdateList(cylinderGameObject);
-	addToUpdateList(coneGameObject);
-	addToUpdateList(planeGameObject);
+	addToUpdateList(teapotNode);
+	addToUpdateList(triangleNode);
+	addToUpdateList(quadNode);
+	addToUpdateList(circleNode);
+	addToUpdateList(cubeNode);
+	addToUpdateList(sphereNode);
+	addToUpdateList(icosphereNode);
+	addToUpdateList(cylinderNode);
+	addToUpdateList(coneNode);
+	addToUpdateList(planeNode);
 
-	addToRenderList(teapotGameObject);
-	addToRenderList(triangleGameObject);
-	addToRenderList(quadGameObject);
-	addToRenderList(circleGameObject);
-	addToRenderList(cubeGameObject);
-	addToRenderList(sphereGameObject);
-	addToRenderList(icosphereGameObject);
-	addToRenderList(cylinderGameObject);
-	addToRenderList(coneGameObject);
-	addToRenderList(planeGameObject);
+	addToRenderList(teapotNode);
+	addToRenderList(triangleNode);
+	addToRenderList(quadNode);
+	addToRenderList(circleNode);
+	addToRenderList(cubeNode);
+	addToRenderList(sphereNode);
+	addToRenderList(icosphereNode);
+	addToRenderList(cylinderNode);
+	addToRenderList(coneNode);
+	addToRenderList(planeNode);
 
 
 
@@ -120,11 +88,3 @@ void TestScene::init()
 {
 }
 
-void TestScene::update(float deltaTime)
-{
-}
-
-void TestScene::render()
-{
-
-}

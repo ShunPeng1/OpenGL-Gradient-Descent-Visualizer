@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/GameObjects/Container.h"
+#include "Engine/Nodes/Container.h"
 #include <QOpenGLExtraFunctions>
 
 class Camera : public Container, public QOpenGLExtraFunctions
@@ -16,7 +16,7 @@ public:
 	void setFov(float fov);
 	void setNear(float near);
 	void setFar(float far);
-	void setAspectRatio(float aspectRatio);
+	void setAspectRatio(float width, float height);
 	void setIsOrtho(bool isOrtho);
 	void setWidth(float width);
 

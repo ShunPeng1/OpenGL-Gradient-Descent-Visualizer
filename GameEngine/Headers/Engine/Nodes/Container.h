@@ -2,10 +2,10 @@
 #define CONTAINER_H
 
 
-#include "Engine/Scenes/GameObject.h"
-#include "Engine/Components/Transform.h"
+#include "Engine/Scenes/Node.h"
+#include "Engine/Nodes/Transform.h"
 
-class Container : public GameObject  
+class Container : public Node  
 {  
 public:  
 	Container();  

@@ -1,4 +1,4 @@
-#include "Engine/GameObjects/Camera.h"
+#include "Engine/Nodes/Camera.h"
 
 Camera::Camera()
 {
@@ -60,9 +60,12 @@ void Camera::setFar(float far)
 	mDirty = true;
 }
 
-void Camera::setAspectRatio(float aspectRatio)
+void Camera::setAspectRatio(float width, float height)
 {
-	mAspectRatio = aspectRatio;
+	// Update the projection matrix
+	glViewport(0, 0, width, height);
+
+	mAspectRatio = width / height;
 	mDirty = true;
 }
 

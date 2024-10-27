@@ -1,5 +1,5 @@
 
-#include "Engine/GameObjects/MeshRenderer.h"
+#include "Engine/Nodes/MeshRenderer.h"
 
 MeshRenderer::MeshRenderer()
 {

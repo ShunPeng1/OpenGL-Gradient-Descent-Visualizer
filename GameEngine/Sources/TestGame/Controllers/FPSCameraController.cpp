@@ -13,17 +13,17 @@ FPSCameraController::FPSCameraController(Camera* camera)
 	mKeyStates[Qt::Key_E] = false;
 }
 
-void FPSCameraController::handleKeyPress(QKeyEvent* event)
+void FPSCameraController::updateKeyPress(QKeyEvent* event)
 {
     mKeyStates[event->key()] = true;
 }
 
-void FPSCameraController::handleKeyRelease(QKeyEvent* event)
+void FPSCameraController::updateKeyRelease(QKeyEvent* event)
 {
     mKeyStates[event->key()] = false;
 }
 
-void FPSCameraController::handleMouseMove(QMouseEvent* event)
+void FPSCameraController::updateMouse(QMouseEvent* event)
 {
     if (mFirstMouse) {
         mLastX = event->position().x();
@@ -54,6 +54,12 @@ void FPSCameraController::handleMouseMove(QMouseEvent* event)
     mCamera->transform.setLocalRotation(orientation);
 }
 
+void FPSCameraController::updateResizeGL(int w, int h)
+{
+    mCamera->setAspectRatio(w, h);
+}
+
+
 void FPSCameraController::update(float deltaTime)
 {
     float cameraSpeed = mSpeed * deltaTime;
@@ -76,4 +82,7 @@ void FPSCameraController::update(float deltaTime)
         position += cameraSpeed * up;
 
     mCamera->transform.setLocalPosition(position);
+
+    
 }
+

@@ -2,8 +2,8 @@
 #define FPS_CAMERA_CONTROLLER_H
 
 
-
-#include "Engine/GameObjects/Camera.h"
+#include "Qt/Inputs/InputSubscriber.h"
+#include "Engine/Nodes/Camera.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QElapsedTimer>
@@ -11,18 +11,20 @@
 #include <QQuaternion>
 #include <unordered_map>
 
-class FPSCameraController
+class FPSCameraController : public InputSubscriber
 {
 public:
     FPSCameraController(Camera* camera);
-    void handleKeyPress(QKeyEvent* event);
-    void handleKeyRelease(QKeyEvent* event);
-    void handleMouseMove(QMouseEvent* event);
-    void update(float deltaTime);
+
+    void updateKeyPress(QKeyEvent* event) override;
+	void updateKeyRelease(QKeyEvent* event) override;
+    void updateMouse(QMouseEvent* event) override;
+    void updateResizeGL(int w, int h) override;
+    void update(float deltaTime) override;
 
 private:
     Camera* mCamera;
-    std::unordered_map<int, bool> mKeyStates;
+
     float mYaw;
     float mPitch;
     bool mFirstMouse;
@@ -30,6 +32,8 @@ private:
     float mLastY;
     float mSensitivity;
     float mSpeed;
+
+    std::unordered_map<int, bool> mKeyStates;
 };
 
 

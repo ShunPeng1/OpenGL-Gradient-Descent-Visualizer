@@ -2,18 +2,16 @@
 #define TRANSFORM_H
 
 
-#include "Engine/Scenes/Component.h"
-
 #include <qvector3d.h>
 #include <qquaternion.h>
 #include <qmatrix4x4.h>
 #include <vector>
 
 
-class Transform : public Component
+class Transform
 {
 public:
-	Transform(GameObject* gameObject);
+	Transform();
 	virtual ~Transform();
 
 	void position(const QVector3D& position);
@@ -45,8 +43,6 @@ public:
 
 	QMatrix4x4 getWorldMatrix();
 	QMatrix4x4 getLocalMatrix();
-
-	Transform* clone() override;
 
 private:
 

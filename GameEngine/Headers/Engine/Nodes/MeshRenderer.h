@@ -5,7 +5,8 @@
 #include <memory>
 
 #include "Engine/Enums/RenderMode.h"
-#include "Engine/GameObjects/Container.h"
+#include "Engine/Nodes/Container.h"
+#include "Engine/Renders/Mesh.h"
 
 class MeshRenderer : public Container, public QOpenGLExtraFunctions
 {

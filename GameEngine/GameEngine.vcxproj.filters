@@ -65,22 +65,22 @@
     <ClCompile Include="Sources\Engine\Scenes\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp">
+    <ClCompile Include="Sources\Engine\Scenes\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\Components\Transform.cpp">
+    <ClCompile Include="Sources\Engine\Nodes\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\GameObjects\Container.cpp">
+    <ClCompile Include="Sources\Engine\Nodes\Container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\GameObjects\MeshRenderer.cpp">
+    <ClCompile Include="Sources\Engine\Nodes\MeshRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\Components\Renderer.cpp">
+    <ClCompile Include="Sources\Engine\Nodes\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\GameObjects\Camera.cpp">
+    <ClCompile Include="Sources\Engine\Nodes\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\TestGame\Scenes\TestScene.cpp">
@@ -89,7 +89,10 @@
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Engine\Scenes\Component.cpp">
+    <ClCompile Include="Sources\Qt\Inputs\InputPublisher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Inputs\InputSubscriber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,34 +124,43 @@
     <ClInclude Include="Headers\Engine\Scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Scenes\GameObject.h">
+    <ClInclude Include="Headers\Engine\Scenes\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Components\Transform.h">
+    <ClInclude Include="Headers\Engine\Nodes\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\GameObjects\Container.h">
+    <ClInclude Include="Headers\Engine\Nodes\Container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\GameObjects\MeshRenderer.h">
+    <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Components\Renderer.h">
+    <ClInclude Include="Headers\Engine\Nodes\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Engine\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\GameObjects\Camera.h">
+    <ClInclude Include="Headers\Engine\Nodes\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Scenes\Component.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\TestGame\Scenes\TestScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Qt\Inputs\InputState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Qt\Inputs\InputPublisher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Qt\Inputs\InputSubscriber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

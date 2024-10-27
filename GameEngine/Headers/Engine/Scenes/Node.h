@@ -1,14 +1,14 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "Engine/Scenes/Scene.h"
+#include "Engine/Engine.h"
 #include "Engine/Renders/ShaderProgram.h"
 
-class GameObject
+class Node
 {
 public:
-	GameObject();
-	virtual ~GameObject();
+	Node();
+	virtual ~Node();
 
 	virtual void init(Scene* scene) = 0;
 	virtual void update(float deltaTime) = 0;

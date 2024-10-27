@@ -125,27 +125,29 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Engine\GameObjects\Camera.cpp" />
-    <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
-    <ClCompile Include="Sources\Engine\GameObjects\MeshRenderer.cpp" />
-    <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\Camera.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\Renderer.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\MeshRenderer.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\Transform.cpp" />
+    <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />
-    <ClInclude Include="Headers\Engine\Scenes\Component.h" />
-    <ClCompile Include="Sources\Engine\GameObjects\Container.cpp" />
-    <ClCompile Include="Sources\Engine\Scenes\Component.cpp" />
-    <ClCompile Include="Sources\Engine\Scenes\GameObject.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\Container.cpp" />
+    <ClCompile Include="Sources\Engine\Scenes\Node.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\Scene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClInclude Include="Headers\Qt\Inputs\InputPublisher.h" />
+    <ClInclude Include="Headers\Qt\Inputs\InputSubscriber.h" />
+    <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
     <ClInclude Include="Headers\Engine\Engine.h" />
-    <ClInclude Include="Headers\Engine\GameObjects\Camera.h" />
-    <ClInclude Include="Headers\Engine\GameObjects\MeshRenderer.h" />
-    <ClInclude Include="Headers\Engine\Components\Transform.h" />
-    <ClInclude Include="Headers\Engine\GameObjects\Container.h" />
-    <ClInclude Include="Headers\Engine\Components\Renderer.h" />
+    <ClInclude Include="Headers\Engine\Nodes\Camera.h" />
+    <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h" />
+    <ClInclude Include="Headers\Engine\Nodes\Transform.h" />
+    <ClInclude Include="Headers\Engine\Nodes\Container.h" />
+    <ClInclude Include="Headers\Engine\Nodes\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />
@@ -155,9 +157,11 @@
     <ClInclude Include="Headers\Engine\Renders\VBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Vertex.h" />
     <QtMoc Include="Headers\Qt\OpenGLWidget.h" />
-    <ClInclude Include="Headers\Engine\Scenes\GameObject.h" />
+    <ClInclude Include="Headers\Engine\Scenes\Node.h" />
     <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
+    <ClCompile Include="Sources\Qt\Inputs\InputPublisher.cpp" />
+    <ClCompile Include="Sources\Qt\Inputs\InputSubscriber.cpp" />
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
     <ClInclude Include="Headers\stdafx.h" />
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp" />

@@ -9,9 +9,10 @@
 #include "Engine/Renders/ShaderProgram.h"
 #include "Engine/Renders/Mesh.h"
 #include "Engine/Loaders/ModelLoader.h"
-#include "Engine/GameObjects/Camera.h"
+#include "Engine/Nodes/Camera.h"
+
+#include "TestGame/Scenes/TestScene.h"
 #include "TestGame/Controllers/FPSCameraController.h"
-#include "Engine/Enums/RenderMode.h"
 
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -27,37 +28,15 @@ protected:
     void paintGL() override;
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
-    void updateInput();
     void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
-    ShaderProgram* defaultShader;
-    ModelLoader* loader;
-    Mesh* teapot;
-	Mesh* triangle;
-	Mesh* quad;
-    Mesh* circle;
-	Mesh* cube;
-	Mesh* sphere;
-	Mesh* icosphere;
-	Mesh* cylinder;
-	Mesh* cone;
-    Mesh* plane;
-	
-
-    // Add other models...
-    Camera* camera;
-    FPSCameraController* cameraController;
-
-    bool firstMouse;
     float deltaTime;
     float lastFrame;
-    bool spacePressed;
-    int currentModel;
-    PolygonMode currentRenderMode;
-  
     QElapsedTimer* elapsedTimer;
-    QMap<int, bool> keyStates;
+    
+	Scene* mCurrentScene;
+
 };
 
 #endif // OPENGLWIDGET_H

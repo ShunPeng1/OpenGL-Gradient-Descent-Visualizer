@@ -2,20 +2,17 @@
 #define RENDERER_H
 
 #include "Engine/Engine.h"
-#include "Engine/Scenes/Component.h"
 
 #include <qvector3d.h>
 
-class Renderer : public Component
+class Renderer
 {
 public:
-	Renderer(GameObject* gameObject);
+	Renderer();
 	virtual ~Renderer();
 
 	void setMaterial(const QVector3D& material);
 	QVector3D getMaterial();
-
-	Renderer* clone() override;
 
 private:
 	QVector3D mMaterial;

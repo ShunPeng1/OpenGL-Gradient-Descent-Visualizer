@@ -1,7 +1,7 @@
-#include "Engine/Components/Transform.h"
+#include "Engine/Nodes/Transform.h"
 
 
-Transform::Transform(GameObject* gameObject) : Component(gameObject), mParent(nullptr)
+Transform::Transform() : mParent(nullptr)
 {
 	mWorldPosition = QVector3D(0.0f, 0.0f, 0.0f);
 	mWorldRotation = QQuaternion(1.0f, 0.0f, 0.0f, 0.0f);
@@ -239,10 +239,4 @@ void Transform::updateChildrenWorldMatrix()
 		child->setWorldScale(child->getLocalScale());
 	}
 
-}
-
-
-Transform* Transform::clone()
-{
-	return nullptr;
 }

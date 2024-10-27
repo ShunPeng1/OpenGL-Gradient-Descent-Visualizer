@@ -1,9 +1,13 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Engine/Engine.h"
-
 #include "Engine/Renders/Mesh.h"
+#include "Qt/Inputs/InputPublisher.h"
+
+
+#include "Engine/Scenes/Node.h"
+
+#include "Engine/Nodes/Camera.h"
 
 #include <vector>
 #include <memory>
@@ -21,12 +25,12 @@ public:
 	virtual void render();
 
 	int addMesh(std::shared_ptr<Mesh> mesh);
-	void addToUpdateList(std::shared_ptr<GameObject> gameObject);
-	void addToRenderList(std::shared_ptr<GameObject> gameObject);
+	void addToUpdateList(std::shared_ptr<Node> nodes);
+	void addToRenderList(std::shared_ptr<Node> nodes);
 
 	void removeMesh(std::shared_ptr<Mesh> mesh);
-	void removeFromUpdateList(std::shared_ptr<GameObject> gameObject);
-	void removeFromRenderList(std::shared_ptr<GameObject> gameObject);
+	void removeFromUpdateList(std::shared_ptr<Node> nodes);
+	void removeFromRenderList(std::shared_ptr<Node> nodes);
 
 	std::shared_ptr<Mesh> getMesh(int index) const;
 
@@ -34,9 +38,14 @@ public:
 protected:
 	std::shared_ptr<ShaderProgram> mDefaultShader;
 	std::vector<std::shared_ptr<Mesh>> mMeshes;
-	std::vector<std::shared_ptr<GameObject>> mUpdateLists;
-	std::vector<std::shared_ptr<GameObject>> mRenderLists;
+	std::vector<std::shared_ptr<Node>> mUpdateLists;
+	std::vector<std::shared_ptr<Node>> mRenderLists;
+
+public: 
+	InputPublisher* inputPublisher;
+	Camera* camera;
+
+
 };
 
-
-#endif // !SCENE_H
+#endif // SCENE_H

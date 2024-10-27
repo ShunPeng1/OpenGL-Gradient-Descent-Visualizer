@@ -2,9 +2,9 @@
 #define ENGINE_H
 
 class Scene;
-class GameObject;
+class Node;
 class Component;
-
+class Camera;
 
 #include <QVector3D>
 #include <QQuaternion>
