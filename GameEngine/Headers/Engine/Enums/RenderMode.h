@@ -2,9 +2,9 @@
 
 
 enum class PolygonMode {
-    FILL = 0x1B00,
+    FILL = 0x1B02,
     LINE = 0x1B01,
-    POINT = 0x1B02
+    POINT = 0x1B00
 };
 
 enum class DrawBufferMode {

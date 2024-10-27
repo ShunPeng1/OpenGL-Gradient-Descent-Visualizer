@@ -16,7 +16,6 @@ public:
 
 	virtual void updateKeyPress(QKeyEvent* event) {};
 	virtual void updateKeyRelease(QKeyEvent* event) {};
-	virtual void updateMouse(QMouseEvent* event) {};
 	virtual void updateResize(QResizeEvent* event) {};
     virtual void updateMousePress(QMouseEvent* event) {};
     virtual void updateMouseRelease(QMouseEvent* event) {};

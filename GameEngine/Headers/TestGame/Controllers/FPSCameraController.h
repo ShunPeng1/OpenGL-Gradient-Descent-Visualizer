@@ -18,7 +18,7 @@ public:
 
     void updateKeyPress(QKeyEvent* event) override;
 	void updateKeyRelease(QKeyEvent* event) override;
-    void updateMouse(QMouseEvent* event) override;
+    void updateMouseMove(QMouseEvent* event) override;
     void updateResizeGL(int w, int h) override;
     void update(float deltaTime) override;
 

@@ -48,6 +48,18 @@ TestScene::TestScene() : Scene()
 	std::shared_ptr<MeshRenderer> coneNode = std::make_shared<MeshRenderer>(cone);
 	std::shared_ptr<MeshRenderer> planeNode = std::make_shared<MeshRenderer>(plane);
 
+	teapotNode->transform.setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
+	triangleNode->transform.setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
+	quadNode->transform.setLocalPosition(QVector3D(3.0f, 0.0f, 0.0f));
+	circleNode->transform.setLocalPosition(QVector3D(5.0f, 0.0f, 0.0f));
+	cubeNode->transform.setLocalPosition(QVector3D(7.0f, 0.0f, 0.0f));
+	sphereNode->transform.setLocalPosition(QVector3D(9.0f, 0.0f, 0.0f));
+	icosphereNode->transform.setLocalPosition(QVector3D(11.0f, 0.0f, 0.0f));
+	cylinderNode->transform.setLocalPosition(QVector3D(13.0f, 0.0f, 0.0f));
+	coneNode->transform.setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
+	planeNode->transform.setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
+
+
 	addToUpdateList(teapotNode);
 	addToUpdateList(triangleNode);
 	addToUpdateList(quadNode);
@@ -77,11 +89,6 @@ TestScene::TestScene() : Scene()
 	QMatrix4x4 proj = camera->getProjectionMatrix();
 	QVector2D texScale(1.0f, 1.0f);
 
-	//mDefaultShader->setUniformValue("mWorld", world);
-	//mDefaultShader->setUniformValue("mProj", proj);
-	//mDefaultShader->setUniformValue("mTexScale", texScale);
-	//mDefaultShader->setUniformValue("mUseTexture", false);
-	//mDefaultShader->setUniformValue("mUseColor", true);
 }
 
 TestScene::~TestScene()

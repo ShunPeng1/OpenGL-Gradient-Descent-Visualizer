@@ -23,7 +23,7 @@ void FPSCameraController::updateKeyRelease(QKeyEvent* event)
     mKeyStates[event->key()] = false;
 }
 
-void FPSCameraController::updateMouse(QMouseEvent* event)
+void FPSCameraController::updateMouseMove(QMouseEvent* event)
 {
     if (mFirstMouse) {
         mLastX = event->position().x();
