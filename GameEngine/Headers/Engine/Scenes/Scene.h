@@ -19,7 +19,7 @@ public:
 	virtual ~Scene();
 
 	virtual void load() = 0;
-	virtual void init() = 0;
+	virtual void init();
 
 	virtual void update(float deltaTime);
 	virtual void render();

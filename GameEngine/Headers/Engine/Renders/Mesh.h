@@ -16,6 +16,7 @@ public:
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode);
+    virtual void init();
     virtual void draw(ShaderProgram& shader);
 protected:
     //  render data

@@ -14,7 +14,9 @@ public:
 };
 
 class InputPublisher  {
-
+public:
+    InputPublisher();
+	virtual ~InputPublisher();
 private: 
 
     QList<InputSubscriber*> mSubscribers;

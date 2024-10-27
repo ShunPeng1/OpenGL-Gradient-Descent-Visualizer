@@ -2,6 +2,16 @@
 
 
 
+InputPublisher::InputPublisher()
+{
+	mSubscribers = QList<InputSubscriber*>();
+}
+
+InputPublisher::~InputPublisher()
+{
+	clear();
+}
+
 void InputPublisher::subscribe(InputSubscriber* subscriber) {
     mSubscribers.append(subscriber);
 }

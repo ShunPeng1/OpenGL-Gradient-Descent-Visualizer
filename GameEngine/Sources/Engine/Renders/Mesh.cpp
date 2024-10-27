@@ -7,10 +7,6 @@ Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vecto
     this->indices = indices;
     this->textures = textures;
 	this->mDrawMode = GL_TRIANGLES;
-
-	if (vertices.size() > 0)
-		setupMesh();
-
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode)
@@ -19,13 +15,17 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	this->indices = indices;
 	this->textures = textures;
 	this->mDrawMode = drawMode;
+}
+
+void Mesh::init()
+{
+	initializeOpenGLFunctions();
 
 	if (vertices.size() > 0)
 		setupMesh();
 }
 
 void Mesh::setupMesh() {
-	initializeOpenGLFunctions();
 
     glGenVertexArrays(1, &mVAO);
     glGenBuffers(1, &mVBO);

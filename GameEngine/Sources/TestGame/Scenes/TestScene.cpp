@@ -5,8 +5,7 @@ TestScene::TestScene() : Scene()
 	mCameraController = new FPSCameraController(camera);
 	inputPublisher->subscribe(mCameraController);
 
-	mDefaultShader = std::shared_ptr<ShaderProgram>(new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag"));
-
+	
     ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
     std::shared_ptr<Mesh> teapot = std::shared_ptr<Mesh>(tempLoader.loadObjFile(":/Resources/Models/teapot.obj"));
@@ -19,13 +18,23 @@ TestScene::TestScene() : Scene()
     std::shared_ptr<Mesh> cylinder = std::shared_ptr<Mesh>(tempLoader.loadCylinder(36));
     std::shared_ptr<Mesh> cone = std::shared_ptr<Mesh>(tempLoader.loadCone(36));
 
-
     ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
     ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
     std::shared_ptr<Mesh> plane = std::shared_ptr<Mesh>(tempLoader.loadPlane([](float x, float y) -> float {
         return std::sin(x) * std::sin(y);
         }, xRange, yRange));
 
+
+	addMesh(teapot);
+	addMesh(triangle);
+	addMesh(quad);
+	addMesh(circle);
+	addMesh(cube);
+	addMesh(sphere);
+	addMesh(icosphere);
+	addMesh(cylinder);
+	addMesh(cone);
+	addMesh(plane);
 
 
     std::shared_ptr<MeshRenderer> teapotNode = std::make_shared<MeshRenderer>(teapot);
@@ -86,5 +95,6 @@ void TestScene::load()
 
 void TestScene::init()
 {
+	Scene::init();
 }
 

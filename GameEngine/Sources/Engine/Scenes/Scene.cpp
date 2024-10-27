@@ -6,13 +6,39 @@ Scene::Scene()
 	mUpdateLists = std::vector<std::shared_ptr<Node>>();
 	mRenderLists = std::vector<std::shared_ptr<Node>>();
 
-
+	inputPublisher = new InputPublisher();
 	camera = new Camera();
 }
 
 Scene::~Scene()
 {
 
+}
+
+void Scene::init()
+{
+
+	ShaderProgram *defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
+	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
+	mDefaultShader->bind();
+	mDefaultShader->setUniformValue("mProjection", camera->getProjectionMatrix());
+	mDefaultShader->setUniformValue("mView", camera->getViewMatrix()); 
+	mDefaultShader->setUniformValue("mUseTexture", false);
+	mDefaultShader->setUniformValue("mUseColor", true);
+	mDefaultShader->release();
+
+
+	for (auto& mesh : mMeshes)
+	{
+		mesh->init();
+	}
+
+	for (auto& node : mUpdateLists)
+	{
+		node->init(this);
+	}
+
+	camera->init(this);
 }
 
 void Scene::update(float deltaTime)
@@ -29,6 +55,8 @@ void Scene::update(float deltaTime)
 void Scene::render()
 {
 	mDefaultShader->bind();
+	camera->render(*mDefaultShader);
+
 	for (auto& node : mRenderLists)
 	{
 		if (node->getIsAlive())
