@@ -2,7 +2,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QApplication>
-#include "Qt/OpenGLWidget.h"
+#include "Qt/MainWindow.h"
 
 int main(int argc, char* argv[])
 {
@@ -12,8 +12,8 @@ int main(int argc, char* argv[])
 
     QApplication app(argc, argv);
 
-    OpenGLWidget openGLWidget;
-    openGLWidget.showMaximized();
+    MainWindow mainWindow;
+    mainWindow.showMaximized();
 
     return app.exec();
 }
