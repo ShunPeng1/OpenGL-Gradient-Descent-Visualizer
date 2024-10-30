@@ -17,6 +17,15 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	this->mDrawMode = drawMode;
 }
 
+void Mesh::tryInit()
+{
+	if (!mIsInitialized)
+	{
+		init();
+		mIsInitialized = true;
+	}
+}
+
 void Mesh::init()
 {
 	initializeOpenGLFunctions();

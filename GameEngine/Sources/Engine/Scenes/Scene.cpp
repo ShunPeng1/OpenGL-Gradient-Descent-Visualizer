@@ -42,7 +42,7 @@ void Scene::init()
 
 	for (auto& mesh : mMeshes)
 	{
-		mesh->init();
+		mesh->tryInit();
 	}
 
 	camera->tryInit(this);
