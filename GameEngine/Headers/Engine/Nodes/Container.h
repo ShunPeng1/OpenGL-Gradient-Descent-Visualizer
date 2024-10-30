@@ -9,7 +9,9 @@ class Container : public Node
 {  
 public:  
 	Container();  
-	virtual ~Container() noexcept; // Add noexcept to match the base class destructor
+	virtual ~Container() noexcept;
+
+	virtual void setParent(Node* parent) override;
 
 public:  
 	Transform transform;

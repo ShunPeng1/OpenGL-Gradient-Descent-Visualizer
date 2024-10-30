@@ -9,8 +9,6 @@ public:
 	TestScene();
 	virtual ~TestScene();
 
-	void load() override;
-	void init() override;
 
 private:
 	FPSCameraController* mCameraController;

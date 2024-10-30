@@ -6,7 +6,7 @@
 #include <qquaternion.h>
 #include <qmatrix4x4.h>
 #include <vector>
-
+#include <memory> 
 
 class Transform
 {
@@ -46,7 +46,7 @@ public:
 
 private:
 
-	void addChild(Transform* child);
+	void addChild(std::unique_ptr<Transform> child);
 	void removeChild(Transform* child);
 	void updateChildrenWorldMatrix();
 
@@ -55,7 +55,8 @@ private:
 	QVector3D mWorldScale;
 
 	Transform* mParent;
-	std::vector<Transform*> mChildren;
+	std::vector<std::unique_ptr<Transform>> mChildren; // Use unique_ptr for children
+
 };
 
 

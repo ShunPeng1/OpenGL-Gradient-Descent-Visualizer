@@ -3,8 +3,9 @@
 Scene::Scene()
 {
 	mMeshes = std::vector<std::shared_ptr<Mesh>>();
-	mUpdateLists = std::vector<std::shared_ptr<Node>>();
-	mRenderLists = std::vector<std::shared_ptr<Node>>();
+	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
+
+
 
 	inputPublisher = new InputPublisher();
 	camera = new Camera();
@@ -12,57 +13,58 @@ Scene::Scene()
 
 Scene::~Scene()
 {
+}
 
+void Scene::load()
+{
+}
+
+void Scene::create()
+{
+	ShaderProgram* defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
+	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
+	mDefaultShader->bind();
+	mDefaultShader->setUniformValue("mProjection", camera->getProjectionMatrix());
+	mDefaultShader->setUniformValue("mView", camera->getViewMatrix());
+	mDefaultShader->setUniformValue("mUseTexture", false);
+	mDefaultShader->setUniformValue("mUseColor", true);
+	mDefaultShader->release();
 }
 
 void Scene::init()
 {
+	
 
-	ShaderProgram *defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
-	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
-	mDefaultShader->bind();
-	mDefaultShader->setUniformValue("mProjection", camera->getProjectionMatrix());
-	mDefaultShader->setUniformValue("mView", camera->getViewMatrix()); 
-	mDefaultShader->setUniformValue("mUseTexture", false);
-	mDefaultShader->setUniformValue("mUseColor", true);
-	mDefaultShader->release();
-
+	for (auto& node : mChildrenNodes)
+	{
+		node->tryInit(this);
+	}
 
 	for (auto& mesh : mMeshes)
 	{
 		mesh->init();
 	}
 
-	for (auto& node : mUpdateLists)
-	{
-		node->init(this);
-	}
-
-	camera->init(this);
+	camera->tryInit(this);
 }
 
 void Scene::update(float deltaTime)
 {
-	for (auto& node : mUpdateLists)
+	camera->tryUpdate(deltaTime);
+	for (auto& node : mChildrenNodes)
 	{
-		if (node->getIsAlive()) 
-		{
-			node->update(deltaTime);
-		}
+		node->tryUpdate(deltaTime);
 	}
 }
 
 void Scene::render()
 {
 	mDefaultShader->bind();
-	camera->render(*mDefaultShader);
+	camera->tryRender(*mDefaultShader);
 
-	for (auto& node : mRenderLists)
+	for (auto& node : mChildrenNodes)
 	{
-		if (node->getIsAlive())
-		{
-			node->render(*mDefaultShader);
-		}
+		node->tryRender(*mDefaultShader);
 	}
 	mDefaultShader->release();
 }
@@ -73,29 +75,25 @@ int Scene::addMesh(std::shared_ptr<Mesh> mesh)
 	return mMeshes.size() - 1;
 }
 
-void Scene::addToUpdateList(std::shared_ptr<Node> node)
-{
-	mUpdateLists.push_back(node);
-}
-
-void Scene::addToRenderList(std::shared_ptr<Node> node)
-{
-	mRenderLists.push_back(node);
-}
-
 void Scene::removeMesh(std::shared_ptr<Mesh> mesh)
 {
 	mMeshes.erase(std::remove(mMeshes.begin(), mMeshes.end(), mesh), mMeshes.end());
 }
 
-void Scene::removeFromUpdateList(std::shared_ptr<Node> node)
+void Scene::addNode(Node* node)
 {
-	mUpdateLists.erase(std::remove(mUpdateLists.begin(), mUpdateLists.end(), node), mUpdateLists.end());
+	mChildrenNodes.push_back(std::unique_ptr<Node>(node));
 }
 
-void Scene::removeFromRenderList(std::shared_ptr<Node> node)
+void Scene::removeNode(Node* node)
 {
-	mRenderLists.erase(std::remove(mRenderLists.begin(), mRenderLists.end(), node), mRenderLists.end());
+	auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
+		[node](const std::unique_ptr<Node>& ptr) {
+			return ptr.get() == node;
+		});
+	if (it != mChildrenNodes.end()) {
+		mChildrenNodes.erase(it, mChildrenNodes.end());
+	}
 }
 
 std::shared_ptr<Mesh> Scene::getMesh(int index) const

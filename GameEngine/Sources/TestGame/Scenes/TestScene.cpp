@@ -37,16 +37,16 @@ TestScene::TestScene() : Scene()
 	addMesh(plane);
 
 
-    std::shared_ptr<MeshRenderer> teapotNode = std::make_shared<MeshRenderer>(teapot);
-	std::shared_ptr<MeshRenderer> triangleNode = std::make_shared<MeshRenderer>(triangle);
-	std::shared_ptr<MeshRenderer> quadNode = std::make_shared<MeshRenderer>(quad);
-	std::shared_ptr<MeshRenderer> circleNode = std::make_shared<MeshRenderer>(circle);
-	std::shared_ptr<MeshRenderer> cubeNode = std::make_shared<MeshRenderer>(cube);
-	std::shared_ptr<MeshRenderer> sphereNode = std::make_shared<MeshRenderer>(sphere);
-	std::shared_ptr<MeshRenderer> icosphereNode = std::make_shared<MeshRenderer>(icosphere);
-	std::shared_ptr<MeshRenderer> cylinderNode = std::make_shared<MeshRenderer>(cylinder);
-	std::shared_ptr<MeshRenderer> coneNode = std::make_shared<MeshRenderer>(cone);
-	std::shared_ptr<MeshRenderer> planeNode = std::make_shared<MeshRenderer>(plane);
+    MeshRenderer* teapotNode = new MeshRenderer(teapot);
+	MeshRenderer* triangleNode = new MeshRenderer(triangle);
+	MeshRenderer* quadNode = new MeshRenderer(quad);
+	MeshRenderer* circleNode = new MeshRenderer(circle);
+	MeshRenderer* cubeNode = new MeshRenderer(cube);
+	MeshRenderer* sphereNode = new MeshRenderer(sphere);
+	MeshRenderer* icosphereNode = new MeshRenderer(icosphere);
+	MeshRenderer* cylinderNode = new MeshRenderer(cylinder);
+	MeshRenderer* coneNode = new MeshRenderer(cone);
+	MeshRenderer* planeNode = new MeshRenderer(plane);
 
 	teapotNode->transform.setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform.setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
@@ -59,35 +59,17 @@ TestScene::TestScene() : Scene()
 	coneNode->transform.setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
 	planeNode->transform.setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
 
+	addNode(teapotNode);
+	addNode(triangleNode);
+	addNode(quadNode);
+	addNode(circleNode);
+	addNode(cubeNode);
+	addNode(sphereNode);
+	addNode(icosphereNode);
+	addNode(cylinderNode);
+	addNode(coneNode);
+	addNode(planeNode);
 
-	addToUpdateList(teapotNode);
-	addToUpdateList(triangleNode);
-	addToUpdateList(quadNode);
-	addToUpdateList(circleNode);
-	addToUpdateList(cubeNode);
-	addToUpdateList(sphereNode);
-	addToUpdateList(icosphereNode);
-	addToUpdateList(cylinderNode);
-	addToUpdateList(coneNode);
-	addToUpdateList(planeNode);
-
-	addToRenderList(teapotNode);
-	addToRenderList(triangleNode);
-	addToRenderList(quadNode);
-	addToRenderList(circleNode);
-	addToRenderList(cubeNode);
-	addToRenderList(sphereNode);
-	addToRenderList(icosphereNode);
-	addToRenderList(cylinderNode);
-	addToRenderList(coneNode);
-	addToRenderList(planeNode);
-
-
-
-	QMatrix4x4 world;
-	world.setToIdentity();
-	QMatrix4x4 proj = camera->getProjectionMatrix();
-	QVector2D texScale(1.0f, 1.0f);
 
 }
 
@@ -96,12 +78,5 @@ TestScene::~TestScene()
 	delete camera;
 }
 
-void TestScene::load()
-{
-}
 
-void TestScene::init()
-{
-	Scene::init();
-}
 

@@ -38,13 +38,15 @@ OpenGLWidget::~OpenGLWidget()
 void OpenGLWidget::initializeGL() {
     initializeOpenGLFunctions();
     
-
-	mCurrentScene->init();
-
+	mCurrentScene->create();
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {
     if (h == 0) h = 1;
+
+    // Update the projection matrix
+    glViewport(0, 0, w, h);
+
 	mCurrentScene->inputPublisher->resizeGLEvent(w, h);
 
 }
@@ -53,6 +55,8 @@ void OpenGLWidget::paintGL() {
  	qint64 currentFrame = elapsedTimer->elapsed();
     deltaTime = (currentFrame - lastFrame) / 1000.0f; // Convert milliseconds to seconds
     lastFrame = currentFrame;
+
+    mCurrentScene->init();
 
 	mCurrentScene->inputPublisher->update(deltaTime);
 	mCurrentScene->update(deltaTime);

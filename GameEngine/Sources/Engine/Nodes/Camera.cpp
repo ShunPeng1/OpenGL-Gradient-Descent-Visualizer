@@ -62,9 +62,6 @@ void Camera::setFar(float far)
 
 void Camera::setAspectRatio(float width, float height)
 {
-	// Update the projection matrix
-	glViewport(0, 0, width, height);
-
 	mAspectRatio = width / height;
 	mDirty = true;
 }

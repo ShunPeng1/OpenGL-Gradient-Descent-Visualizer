@@ -7,7 +7,7 @@ Transform::Transform() : mParent(nullptr)
 	mWorldRotation = QQuaternion(1.0f, 0.0f, 0.0f, 0.0f);
 	mWorldScale = QVector3D(1.0f, 1.0f, 1.0f);
 
-	mChildren = std::vector<Transform*>();
+	mChildren = std::vector<std::unique_ptr<Transform>>();
 }
 
 Transform::~Transform()
@@ -157,7 +157,9 @@ void Transform::setParent(Transform* parent)
 
 	if (mParent)
 	{
-		mParent->addChild(this);
+		// Create a unique_ptr for this child and add it to the new parent
+		std::unique_ptr<Transform> thisChild(this);
+		mParent->addChild(std::move(thisChild));
 	}
 }
 
@@ -166,17 +168,19 @@ Transform* Transform::getParent() const
 	return mParent;
 }
 
-void Transform::addChild(Transform* child)
-{
-	mChildren.push_back(child);
+void Transform::addChild(std::unique_ptr<Transform> child) {
+	child->setParent(this);
+	mChildren.push_back(std::move(child));
 }
 
-void Transform::removeChild(Transform* child)
-{
-	int index = getChildIndex(child);
-	if (index != -1)
-	{
-		mChildren.erase(mChildren.begin() + index);
+void Transform::removeChild(Transform* child) {
+	auto it = std::remove_if(mChildren.begin(), mChildren.end(),
+		[child](const std::unique_ptr<Transform>& ptr) {
+			return ptr.get() == child;
+		});
+	if (it != mChildren.end()) {
+		(*it)->setParent(nullptr);
+		mChildren.erase(it, mChildren.end());
 	}
 }
 
@@ -185,25 +189,20 @@ int Transform::getChildCount() const
 	return mChildren.size();
 }
 
-Transform* Transform::getChild(int index) const
-{
-	if (index >= 0 && index < mChildren.size())
-	{
-		return mChildren[index];
-	}
-	return nullptr;
+Transform* Transform::getChild(int index) const {
+    if (index < 0 || index >= static_cast<int>(mChildren.size())) {
+        return nullptr;
+    }
+    return mChildren[index].get();
 }
 
-int Transform::getChildIndex(Transform* child) const
-{
-	for (int i = 0; i < mChildren.size(); i++)
-	{
-		if (mChildren[i] == child)
-		{
-			return i;
-		}
-	}
-	return -1;
+int Transform::getChildIndex(Transform* child) const {
+    for (size_t i = 0; i < mChildren.size(); ++i) {
+        if (mChildren[i].get() == child) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
 }
 
 QMatrix4x4 Transform::getWorldMatrix()
@@ -232,11 +231,10 @@ QMatrix4x4 Transform::getLocalMatrix()
 
 void Transform::updateChildrenWorldMatrix()
 {
-	for (Transform* child : mChildren)
+	for (const auto& child : mChildren)
 	{
 		child->setWorldPosition(child->getLocalPosition());
 		child->setWorldRotation(child->getLocalRotation());
 		child->setWorldScale(child->getLocalScale());
 	}
-
 }
