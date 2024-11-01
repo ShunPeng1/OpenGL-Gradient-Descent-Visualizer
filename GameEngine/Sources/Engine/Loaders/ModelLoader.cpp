@@ -87,19 +87,19 @@ Mesh* ModelLoader::loadObjFile(const char* path)
 
             for (size_t i = 0; i < vertexIndices.size(); i++) {
                 Vertex vertex = {};
-                vertex.positions = temp_positions[vertexIndices[i] - 1];
+                vertex.position = temp_positions[vertexIndices[i] - 1];
                 if (texcoordIndices[i] > 0 && texcoordIndices[i] <= temp_texcoords.size()) {
-                    vertex.texCoords = temp_texcoords[texcoordIndices[i] - 1];
+                    vertex.texCoord = temp_texcoords[texcoordIndices[i] - 1];
                 }
                 else {
-                    vertex.texCoords = QVector2D(0.0f, 0.0f);
+                    vertex.texCoord = QVector2D(0.0f, 0.0f);
                 }
 
                 if (normalIndices[i] > 0 && normalIndices[i] <= temp_normals.size()) {
-                    vertex.normals = temp_normals[normalIndices[i] - 1];
+                    vertex.normal = temp_normals[normalIndices[i] - 1];
                 }
                 else {
-                    vertex.normals = QVector3D(0.0f, 0.0f, 0.0f);
+                    vertex.normal = QVector3D(0.0f, 0.0f, 0.0f);
                 }
 
                 vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
@@ -144,9 +144,9 @@ Mesh* ModelLoader::loadTriangle()
 	std::vector<Vertex> vertices;
 	for (size_t i = 0; i < positions.size(); i++) {
 		Vertex vertex = {};
-		vertex.positions = positions[i];
-		vertex.normals = normals[i];
-		vertex.texCoords = texcoords[i];
+		vertex.position = positions[i];
+		vertex.normal = normals[i];
+		vertex.texCoord = texcoords[i];
 	
         if (mUseNormalColor) {
 			vertex.color = normalColors[i];
@@ -197,9 +197,9 @@ Mesh* ModelLoader::loadQuad()
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < positions.size(); i++) {
         Vertex vertex = {};
-        vertex.positions = positions[i];
-        vertex.normals = normals[i];
-        vertex.texCoords = texcoords[i];
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.texCoord = texcoords[i];
 
         if (mUseNormalColor) {
             vertex.color = normalColors[i];
@@ -269,9 +269,9 @@ Mesh* ModelLoader::loadCube()
     std::vector<Vertex> vertices;
     for (size_t i = 0; i < positions.size(); i++) {
         Vertex vertex = {};
-        vertex.positions = positions[i];
-        vertex.normals = normals[i];
-        vertex.texCoords = texcoords[i];
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.texCoord = texcoords[i];
 
         if (mUseNormalColor) {
             vertex.color = normalColors[i];
@@ -314,9 +314,9 @@ Mesh* ModelLoader::loadCircle(int sector)
 		normalColors.push_back(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
 		Vertex vertex = {};
-		vertex.positions = positions[i];
-		vertex.normals = normals[i];
-		vertex.texCoords = texcoords[i];
+		vertex.position = positions[i];
+		vertex.normal = normals[i];
+		vertex.texCoord = texcoords[i];
 		vertex.color = normalColors[i];
 
 		vertices.push_back(vertex);
@@ -373,9 +373,9 @@ Mesh* ModelLoader::loadCylinder(int sector)
     // Create vertices and indices
     for (size_t i = 0; i < positions.size(); ++i) {
         Vertex vertex = {};
-        vertex.positions = positions[i];
-        vertex.normals = normals[i];
-        vertex.texCoords = texcoords[i];
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.texCoord = texcoords[i];
         vertex.color = normalColors[i];
         vertices.push_back(vertex);
     }
@@ -467,9 +467,9 @@ Mesh* ModelLoader::loadSphere(int sector, int stack)
     // Create vertices and indices
     for (size_t i = 0; i < positions.size(); ++i) {
         Vertex vertex = {};
-        vertex.positions = positions[i];
-        vertex.normals = normals[i];
-        vertex.texCoords = texcoords[i];
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.texCoord = texcoords[i];
         vertex.color = normalColors[i];
         vertices.push_back(vertex);
     }
@@ -619,9 +619,9 @@ Mesh* ModelLoader::loadIcosphere(int subdivision)
 
     for (const auto& pos : positions) {
         Vertex vertex;
-        vertex.positions = pos;
-        vertex.normals = pos;
-        vertex.texCoords = QVector2D(0.0f, 0.0f); // Placeholder, you can calculate proper UVs if needed
+        vertex.position = pos;
+        vertex.normal = pos;
+        vertex.texCoord = QVector2D(0.0f, 0.0f); // Placeholder, you can calculate proper UVs if needed
         if (mUseNormalColor) {
             vertex.color = QVector4D(getNormalFromOrigin(QVector3D(0.0f, 0.0f, 0.0f), QVector3D(pos)), 1);
         }
@@ -679,9 +679,9 @@ Mesh* ModelLoader::loadCone(int sector)
     // Create vertices and indices
     for (size_t i = 0; i < positions.size(); ++i) {
         Vertex vertex = {};
-        vertex.positions = positions[i];
-        vertex.normals = normals[i];
-        vertex.texCoords = texcoords[i];
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.texCoord = texcoords[i];
         vertex.color = normalColors[i];
         vertices.push_back(vertex);
     }
@@ -799,9 +799,9 @@ Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& 
             int index = j + i * (yStep + 1);
 
             Vertex vertex = {};
-            vertex.positions = positions[index];
-            vertex.normals = normals[index];
-            vertex.texCoords = texcoords[index];
+            vertex.position = positions[index];
+            vertex.normal = normals[index];
+            vertex.texCoord = texcoords[index];
             vertex.color = normalColors[index];
             vertices.push_back(vertex);
         }

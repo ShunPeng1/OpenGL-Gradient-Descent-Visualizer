@@ -16,9 +16,9 @@ const int TEX_COORD_OFFSET = NORMAL_LENGTH + NORMAL_OFFSET;
 const int VERTEX_LENGTH = POSITION_LENGTH + NORMAL_LENGTH + TEX_COORD_LENGTH;
 
 struct Vertex {
-    QVector3D positions;
-    QVector3D normals;
-    QVector2D texCoords;
+    QVector3D position;
+    QVector3D normal;
+    QVector2D texCoord;
     QVector4D color;
 };
 
