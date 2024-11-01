@@ -1,16 +1,22 @@
 #include "Engine/Renders/Mesh.h"
 
-Mesh::
-Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh() : mIsInitialized(false), mVAO(0), mVBO(0), mEBO(0), mDrawMode(GL_TRIANGLES) 
 {
+
+}
+
+Mesh::Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+{
+	this->path = path;
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
 	this->mDrawMode = GL_TRIANGLES;
 }
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode)
+Mesh::Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode)
 {
+	this->path = path;
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
@@ -54,6 +60,64 @@ void Mesh::setupMesh() {
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
     glBindVertexArray(0);
+}
+
+void Mesh::write(QJsonObject& json) const {
+    json[SERIALIZE_MESH_PATH] = path;
+
+    QJsonArray verticesArray;
+    for (const auto& vertex : vertices) {
+        QJsonObject vertexObject;
+        vertex.write(vertexObject); // Assuming Vertex class has a write method
+        verticesArray.append(vertexObject);
+    }
+    json[SERIALIZE_MESH_VERTICES] = verticesArray;
+
+    QJsonArray indicesArray;
+    for (const auto& index : indices) {
+        indicesArray.append(static_cast<int>(index));
+    }
+    json[SERIALIZE_MESH_INDICES] = indicesArray;
+
+    QJsonArray texturesArray;
+    for (const auto& texture : textures) {
+        QJsonObject textureObject;
+        //texture.write(textureObject); // Assuming Texture class has a write method
+        //texturesArray.append(textureObject);
+    }
+    json[SERIALIZE_MESH_TEXTURES] = texturesArray;
+
+    json[SERIALIZE_MESH_DRAW_MODE] = static_cast<int>(mDrawMode);
+}
+
+void Mesh::read(const QJsonObject& json) {
+    path = json[SERIALIZE_MESH_PATH].toString();
+
+    vertices.clear();
+    QJsonArray verticesArray = json[SERIALIZE_MESH_VERTICES].toArray();
+    for (int i = 0; i < verticesArray.size(); ++i) {
+        QJsonObject vertexObject = verticesArray[i].toObject();
+        Vertex vertex;
+        vertex.read(vertexObject); // Assuming Vertex class has a read method
+        vertices.push_back(vertex);
+    }
+
+    indices.clear();
+    QJsonArray indicesArray = json[SERIALIZE_MESH_INDICES].toArray();
+    for (int i = 0; i < indicesArray.size(); ++i) {
+        indices.push_back(static_cast<unsigned int>(indicesArray[i].toInt()));
+    }
+
+    textures.clear();
+    QJsonArray texturesArray = json[SERIALIZE_MESH_TEXTURES].toArray();
+    for (int i = 0; i < texturesArray.size(); ++i) {
+        QJsonObject textureObject = texturesArray[i].toObject();
+        //Texture texture;
+        //texture.read(textureObject); // Assuming Texture class has a read method
+        //textures.push_back(texture);
+    }
+
+    mDrawMode = static_cast<GLenum>(json[SERIALIZE_MESH_DRAW_MODE].toInt());
 }
 
 void Mesh::draw(ShaderProgram& shader) {
