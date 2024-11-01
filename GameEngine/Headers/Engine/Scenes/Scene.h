@@ -5,14 +5,18 @@
 #include "Qt/Inputs/InputPublisher.h"
 
 
+#include "Engine/Interfaces/ISerializable.h"
 #include "Engine/Scenes/Node.h"
-
 #include "Engine/Nodes/Camera.h"
 
 #include <vector>
 #include <memory>
 
-class Scene
+
+#include <QJsonObject>
+#include <QJsonArray>
+
+class Scene : public ISerializable
 {
 public:
 	Scene();
@@ -25,6 +29,8 @@ public:
 	virtual void update(float deltaTime);
 	virtual void render();
 
+	virtual void write(QJsonObject& json) const;
+	virtual void read(const QJsonObject& json);
 
 	int addMesh(std::shared_ptr<Mesh> mesh);
 	void removeMesh(std::shared_ptr<Mesh> mesh);

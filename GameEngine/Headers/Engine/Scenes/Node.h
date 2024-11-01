@@ -4,7 +4,9 @@
 #include "Engine/Engine.h"
 #include "Engine/Renders/ShaderProgram.h"
 
-class Node
+#include "Engine/Interfaces/ISerializable.h"
+
+class Node : public ISerializable
 {
 public:
 	Node();
@@ -31,10 +33,13 @@ public:
 	int getChildCount() const;
 	Node* getChild(int index) const;
 
+	virtual void write(QJsonObject& json) const;
+	virtual void read(const QJsonObject& json);
+
 protected:
-	virtual void init(Scene* scene) = 0;
-	virtual void update(float deltaTime) = 0;
-	virtual void render(ShaderProgram& shaderProgram) = 0;
+	virtual void init(Scene* scene);
+	virtual void update(float deltaTime);
+	virtual void render(ShaderProgram& shaderProgram);
 
 	void addChild(std::unique_ptr<Node> child);
 	void removeChild(Node* child);

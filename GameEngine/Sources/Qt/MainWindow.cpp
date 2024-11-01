@@ -6,6 +6,11 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     createDockWidgets();
 }
@@ -81,3 +86,4 @@ void MainWindow::updateInspectorView(QTreeWidgetItem* item) {
 
     inspectorView->setLayout(layout);
 }
+

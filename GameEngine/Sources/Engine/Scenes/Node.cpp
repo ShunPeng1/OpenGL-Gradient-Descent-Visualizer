@@ -110,6 +110,47 @@ Node* Node::getChild(int index) const {
     return mChildren[index].get();
 }
 
+void Node::write(QJsonObject& json) const {
+    json[SERIALIZE_NODE_NAME] = mName;
+    json[SERIALIZE_NODE_IS_ALIVE] = mIsAlive;
+
+    QJsonArray childrenArray;
+    for (const auto& child : mChildren) {
+        QJsonObject childObject;
+        child->write(childObject);
+        childrenArray.append(childObject);
+    }
+    json[SERIALIZE_NODE_CHILDREN] = childrenArray;
+}
+
+void Node::read(const QJsonObject& json) {
+    mName = json[SERIALIZE_NODE_NAME].toString();
+    mIsAlive = json[SERIALIZE_NODE_IS_ALIVE].toBool();
+
+    QJsonArray childrenArray = json[SERIALIZE_NODE_CHILDREN].toArray();
+    for (int i = 0; i < childrenArray.size(); ++i) {
+        QJsonObject childObject = childrenArray[i].toObject();
+        std::unique_ptr<Node> child = std::make_unique<Node>();
+        child->read(childObject);
+        addChild(std::move(child));
+    }
+}
+
+void Node::init(Scene* scene)
+{
+	mScenePtr = scene;
+}
+
+void Node::update(float deltaTime)
+{
+
+}
+
+void Node::render(ShaderProgram& shaderProgram)
+{
+
+}
+
 void Node::addChild(std::unique_ptr<Node> child) {
     mChildren.push_back(std::move(child));
 }

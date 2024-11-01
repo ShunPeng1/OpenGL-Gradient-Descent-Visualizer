@@ -27,8 +27,8 @@ void Mesh::tryInit()
 {
 	if (!mIsInitialized)
 	{
+        mIsInitialized = true;
 		init();
-		mIsInitialized = true;
 	}
 }
 

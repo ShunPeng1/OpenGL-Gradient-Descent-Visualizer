@@ -1,4 +1,5 @@
 #include "Engine/Scenes/Scene.h"
+#include "Engine/Constants/SerializePath.h"
 
 Scene::Scene()
 {
@@ -67,6 +68,52 @@ void Scene::render()
 		node->tryRender(*mDefaultShader);
 	}
 	mDefaultShader->release();
+}
+
+void Scene::write(QJsonObject& json) const {
+	QJsonArray nodesArray;
+	for (const auto& node : mChildrenNodes) {
+		QJsonObject nodeObject;
+		node->write(nodeObject);
+		nodesArray.append(nodeObject);
+	}
+	json[SERIALIZE_SCENE_NODES] = nodesArray;
+
+	QJsonArray meshesArray;
+	for (const auto& mesh : mMeshes) {
+		QJsonObject meshObject;
+		// Assuming Mesh class has a write method
+		mesh->write(meshObject);
+		meshesArray.append(meshObject);
+	}
+	json[SERIALIZE_SCENE_MESHES] = meshesArray;
+
+
+}
+
+void Scene::read(const QJsonObject& json) {
+
+	mMeshes.clear();
+	QJsonArray meshesArray = json[SERIALIZE_SCENE_MESHES].toArray();
+	for (int i = 0; i < meshesArray.size(); ++i) {
+		QJsonObject meshObject = meshesArray[i].toObject();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		// Assuming Mesh class has a read method
+		mesh->read(meshObject);
+		addMesh(mesh);
+	}
+
+	mChildrenNodes.clear();
+	QJsonArray nodesArray = json[SERIALIZE_SCENE_NODES].toArray();
+	for (int i = 0; i < nodesArray.size(); ++i) {
+		QJsonObject nodeObject = nodesArray[i].toObject();
+		std::unique_ptr<Node> node = std::make_unique<Node>();
+		node->read(nodeObject);
+		addNode(node.release());
+	}
+
+
+	// Deserialize other properties if needed
 }
 
 int Scene::addMesh(std::shared_ptr<Mesh> mesh)
