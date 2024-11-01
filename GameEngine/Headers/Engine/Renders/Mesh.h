@@ -30,7 +30,10 @@ public:
 
 
 protected:
+    void init();
+
     //  render data
+	bool mIsInitialized;
     unsigned int mVAO, mVBO, mEBO;
     GLenum mDrawMode; // Member variable to store the drawing mode
 

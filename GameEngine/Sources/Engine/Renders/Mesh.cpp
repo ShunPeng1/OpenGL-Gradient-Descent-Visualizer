@@ -77,7 +77,7 @@ void Mesh::write(QJsonObject& json) const {
     QJsonArray verticesArray;
     for (const auto& vertex : vertices) {
         QJsonObject vertexObject;
-        vertex.write(vertexObject); // Assuming Vertex class has a write method
+        //vertex.write(vertexObject); // Assuming Vertex class has a write method
         verticesArray.append(vertexObject);
     }
     json[SERIALIZE_MESH_VERTICES] = verticesArray;
@@ -107,7 +107,7 @@ void Mesh::read(const QJsonObject& json) {
     for (int i = 0; i < verticesArray.size(); ++i) {
         QJsonObject vertexObject = verticesArray[i].toObject();
         Vertex vertex;
-        vertex.read(vertexObject); // Assuming Vertex class has a read method
+        //vertex.read(vertexObject); // Assuming Vertex class has a read method
         vertices.push_back(vertex);
     }
 
