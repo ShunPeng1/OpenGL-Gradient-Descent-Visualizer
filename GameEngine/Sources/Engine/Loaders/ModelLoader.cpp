@@ -20,7 +20,8 @@ Mesh* ModelLoader::loadObjFile(const char* path)
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         std::cerr << "Failed to open file: " << path << std::endl;
-        return new Mesh(vertices, indices, textures);
+
+		return nullptr;
     }
 
     QTextStream in(&file);
@@ -110,7 +111,7 @@ Mesh* ModelLoader::loadObjFile(const char* path)
     }
 
     file.close();
-    return new Mesh(vertices, indices, textures);
+    return new Mesh(path, vertices, indices, textures);
 }
 
 
@@ -160,7 +161,7 @@ Mesh* ModelLoader::loadTriangle()
 		0, 1, 2
 	};
 
-	return new Mesh(vertices, indices, {});
+	return new Mesh(MODEL_TRIANGLE, vertices, indices, {});
 }
 
 Mesh* ModelLoader::loadQuad()
@@ -213,7 +214,7 @@ Mesh* ModelLoader::loadQuad()
         0, 1, 2, 3
     };
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_QUAD, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 // https://stackoverflow.com/questions/28375338/cube-using-single-gl-triangle-strip
@@ -285,7 +286,7 @@ Mesh* ModelLoader::loadCube()
         3, 2, 6, 7, 4, 2, 0, 3, 1, 6, 5, 4, 1, 0
     };
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_CUBE, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh* ModelLoader::loadCircle(int sector)
@@ -323,7 +324,7 @@ Mesh* ModelLoader::loadCircle(int sector)
 		indices.push_back(i);
 
 	}
-	return new Mesh(vertices, indices, {}, GL_TRIANGLE_FAN);
+	return new Mesh(MODEL_CIRCLE, vertices, indices, {}, GL_TRIANGLE_FAN);
 }
 
 Mesh* ModelLoader::loadCylinder(int sector)
@@ -421,7 +422,7 @@ Mesh* ModelLoader::loadCylinder(int sector)
 	indices.push_back(1);
 	
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_CYLINDER, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh* ModelLoader::loadSphere(int sector, int stack)
@@ -506,7 +507,7 @@ Mesh* ModelLoader::loadSphere(int sector, int stack)
 	}
 
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_SPHERE, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<QVector3D>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
@@ -630,7 +631,7 @@ Mesh* ModelLoader::loadIcosphere(int subdivision)
         vertices.push_back(vertex);
     }
 
-	return new Mesh(vertices, indices, {}, GL_TRIANGLES);
+	return new Mesh(MODEL_ICOSPHERE, vertices, indices, {}, GL_TRIANGLES);
 
 }
 
@@ -640,7 +641,7 @@ Mesh* ModelLoader::loadCubeSphere(int subdivision)
 
 
 
-    return new Mesh({}, {}, {});
+    return new Mesh("", {}, {}, {});
 }
 
 Mesh* ModelLoader::loadCone(int sector)
@@ -716,7 +717,7 @@ Mesh* ModelLoader::loadCone(int sector)
 
 
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_CONE, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 void getHeatMapColor(float value, float* red, float* green, float* blue)
@@ -821,7 +822,7 @@ Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& 
         }
     }
 
-    return new Mesh(vertices, indices, {}, GL_TRIANGLE_STRIP);
+    return new Mesh(MODEL_PLANE, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 QVector3D ModelLoader::getNormalFromOrigin(QVector3D origin, QVector3D point)

@@ -3,6 +3,7 @@
 
 
 #include "Engine/Renders/Mesh.h"
+#include "Engine/Constants/ResourcePath.h"
 #include <functional>
 
 class ModelLoader {

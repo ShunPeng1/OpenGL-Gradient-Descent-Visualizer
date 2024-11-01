@@ -95,6 +95,9 @@
     <ClCompile Include="Sources\Qt\Inputs\InputSubscriber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -163,6 +166,15 @@
     <ClInclude Include="Headers\Qt\Inputs\InputSubscriber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Engine\Constants\ResourcePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Constants\SerializePath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
@@ -175,6 +187,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Headers\Qt\OpenGLWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
