@@ -2,27 +2,33 @@
 
 TestScene::TestScene() : Scene()
 {
+	
+}
+
+void TestScene::load()
+{
+	Scene::load();
+
 	mCameraController = new FPSCameraController(camera);
 	inputPublisher->subscribe(mCameraController);
 
-	
-    ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
+	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
-    std::shared_ptr<Mesh> teapot = std::shared_ptr<Mesh>(tempLoader.loadObjFile(":/Resources/Models/teapot.obj"));
-    std::shared_ptr<Mesh> triangle = std::shared_ptr<Mesh>(tempLoader.loadTriangle());
-    std::shared_ptr<Mesh> quad = std::shared_ptr<Mesh>(tempLoader.loadQuad());
-    std::shared_ptr<Mesh> circle = std::shared_ptr<Mesh>(tempLoader.loadCircle(36));
-    std::shared_ptr<Mesh> cube = std::shared_ptr<Mesh>(tempLoader.loadCube());
-    std::shared_ptr<Mesh> sphere = std::shared_ptr<Mesh>(tempLoader.loadSphere(40, 40));
-    std::shared_ptr<Mesh> icosphere = std::shared_ptr<Mesh>(tempLoader.loadIcosphere(5));
-    std::shared_ptr<Mesh> cylinder = std::shared_ptr<Mesh>(tempLoader.loadCylinder(36));
-    std::shared_ptr<Mesh> cone = std::shared_ptr<Mesh>(tempLoader.loadCone(36));
+	std::shared_ptr<Mesh> teapot = std::shared_ptr<Mesh>(tempLoader.loadObjFile(":/Resources/Models/teapot.obj"));
+	std::shared_ptr<Mesh> triangle = std::shared_ptr<Mesh>(tempLoader.loadTriangle());
+	std::shared_ptr<Mesh> quad = std::shared_ptr<Mesh>(tempLoader.loadQuad());
+	std::shared_ptr<Mesh> circle = std::shared_ptr<Mesh>(tempLoader.loadCircle(36));
+	std::shared_ptr<Mesh> cube = std::shared_ptr<Mesh>(tempLoader.loadCube());
+	std::shared_ptr<Mesh> sphere = std::shared_ptr<Mesh>(tempLoader.loadSphere(40, 40));
+	std::shared_ptr<Mesh> icosphere = std::shared_ptr<Mesh>(tempLoader.loadIcosphere(5));
+	std::shared_ptr<Mesh> cylinder = std::shared_ptr<Mesh>(tempLoader.loadCylinder(36));
+	std::shared_ptr<Mesh> cone = std::shared_ptr<Mesh>(tempLoader.loadCone(36));
 
-    ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-    ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-    std::shared_ptr<Mesh> plane = std::shared_ptr<Mesh>(tempLoader.loadPlane([](float x, float y) -> float {
-        return std::sin(x) * std::sin(y);
-        }, xRange, yRange));
+	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
+	ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
+	std::shared_ptr<Mesh> plane = std::shared_ptr<Mesh>(tempLoader.loadPlane([](float x, float y) -> float {
+		return std::sin(x) * std::sin(y);
+		}, xRange, yRange));
 
 
 	addMesh(teapot);
@@ -37,7 +43,7 @@ TestScene::TestScene() : Scene()
 	addMesh(plane);
 
 
-    MeshRenderer* teapotNode = new MeshRenderer(teapot);
+	MeshRenderer* teapotNode = new MeshRenderer(teapot);
 	MeshRenderer* triangleNode = new MeshRenderer(triangle);
 	MeshRenderer* quadNode = new MeshRenderer(quad);
 	MeshRenderer* circleNode = new MeshRenderer(circle);
@@ -69,7 +75,6 @@ TestScene::TestScene() : Scene()
 	addNode(cylinderNode);
 	addNode(coneNode);
 	addNode(planeNode);
-
 
 }
 

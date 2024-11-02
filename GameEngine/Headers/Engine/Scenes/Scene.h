@@ -1,11 +1,13 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "Engine/Interfaces/IScene.h"
+#include "Engine/Interfaces/ISerializable.h"
+
 #include "Engine/Renders/Mesh.h"
 #include "Qt/Inputs/InputPublisher.h"
 
 
-#include "Engine/Interfaces/ISerializable.h"
 #include "Engine/Scenes/Node.h"
 #include "Engine/Nodes/Camera.h"
 
@@ -16,7 +18,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-class Scene : public ISerializable
+class Scene : public IScene, public ISerializable
 {
 public:
 	Scene();
@@ -28,6 +30,8 @@ public:
 	void init();
 	virtual void update(float deltaTime);
 	virtual void render();
+	
+	virtual IScene* clone() const;
 
 	virtual void write(QJsonObject& json) const;
 	virtual void read(const QJsonObject& json);
@@ -39,17 +43,21 @@ public:
 	void addNode(Node* node);
 	void removeNode(Node* node);
 
-protected:
 
+	void setInputPublisher(InputPublisher* inputPublisher);
+	InputPublisher* getInputPublisher() const;
+
+	void setCamera(Camera* camera);
+	Camera* getCamera() const;
+
+protected:
 
 	std::shared_ptr<ShaderProgram> mDefaultShader;
 
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
-
 	std::vector<std::shared_ptr<Mesh>> mMeshes;
 
 
-public: 
 	InputPublisher* inputPublisher;
 	Camera* camera;
 

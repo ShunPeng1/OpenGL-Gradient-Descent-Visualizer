@@ -3,16 +3,8 @@
 
 #include <QString>
 
-// Vertex
-const QString SERIALIZE_VERTEX_POSITION = "position";
-const QString SERIALIZE_VERTEX_NORMAL = "normal";
-const QString SERIALIZE_VERTEX_TEX_COORD = "texCoord";
-const QString SERIALIZE_VERTEX_COLOR = "color";
-
 // Mesh
 const QString SERIALIZE_MESH_PATH = "path";
-const QString SERIALIZE_MESH_VERTICES = "vertices";
-const QString SERIALIZE_MESH_INDICES = "indices";
 const QString SERIALIZE_MESH_TEXTURES = "textures";
 const QString SERIALIZE_MESH_DRAW_MODE = "draw_mode";
 

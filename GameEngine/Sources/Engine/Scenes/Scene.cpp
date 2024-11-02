@@ -6,9 +6,6 @@ Scene::Scene()
 	mMeshes = std::vector<std::shared_ptr<Mesh>>();
 	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
 
-
-
-	inputPublisher = new InputPublisher();
 	camera = new Camera();
 }
 
@@ -34,16 +31,15 @@ void Scene::create()
 
 void Scene::init()
 {
-	
-
-	for (auto& node : mChildrenNodes)
-	{
-		node->tryInit(this);
-	}
 
 	for (auto& mesh : mMeshes)
 	{
 		mesh->tryInit();
+	}
+
+	for (auto& node : mChildrenNodes)
+	{
+		node->tryInit(this);
 	}
 
 	camera->tryInit(this);
@@ -68,6 +64,16 @@ void Scene::render()
 		node->tryRender(*mDefaultShader);
 	}
 	mDefaultShader->release();
+}
+
+IScene* Scene::clone() const
+{
+	Scene* scene = new Scene();
+	scene->mMeshes = mMeshes;
+
+	scene->inputPublisher = inputPublisher;
+
+	return scene;
 }
 
 void Scene::write(QJsonObject& json) const {
@@ -141,6 +147,26 @@ void Scene::removeNode(Node* node)
 	if (it != mChildrenNodes.end()) {
 		mChildrenNodes.erase(it, mChildrenNodes.end());
 	}
+}
+
+void Scene::setInputPublisher(InputPublisher* inputPublisher)
+{
+	this->inputPublisher = inputPublisher;
+}
+
+InputPublisher* Scene::getInputPublisher() const
+{
+	return this->inputPublisher;
+}
+
+void Scene::setCamera(Camera* camera)
+{
+	this->camera = camera;
+}
+
+Camera* Scene::getCamera() const
+{
+	return this->camera;
 }
 
 std::shared_ptr<Mesh> Scene::getMesh(int index) const

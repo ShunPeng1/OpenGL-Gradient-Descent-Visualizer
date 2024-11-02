@@ -5,46 +5,60 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QHBoxLayout>
 
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+#include "TestGame/Scenes/TestScene.h"
+
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mPlayingScene(new Scene()), mEditingScene(nullptr) {
+
+    mEditingScene = new TestScene();
+
     createDockWidgets();
+    createControlButtons();
+
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+    delete mPlayingScene;
+    if (mEditingScene) {
+        delete mEditingScene;
+    }
+}
 
 void MainWindow::createDockWidgets() {
     // Create the hierarchy dock widget
-    hierarchyDock = new QDockWidget(tr("Hierarchy"), this);
-    hierarchyView = new QTreeWidget();
-    hierarchyView->setHeaderLabel("Nodes");
-    hierarchyDock->setWidget(hierarchyView);
-    hierarchyDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    mHierarchyDock = new QDockWidget(tr("Hierarchy"), this);
+    mHierarchyTree = new QTreeWidget();
+    mHierarchyTree->setHeaderLabel("Nodes");
+    mHierarchyDock->setWidget(mHierarchyTree);
+    mHierarchyDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Create the camera view dock widget
-    cameraViewDock = new QDockWidget(tr("Camera View"), this);
-    OpenGLWidget* openGLWidget = new OpenGLWidget(this); // Create an instance of OpenGLWidget
-    cameraViewDock->setWidget(openGLWidget);
-    cameraViewDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    mCameraViewDock = new QDockWidget(tr("Camera View"), this);
+    OpenGLWidget* openGLWidget = new OpenGLWidget(mEditingScene, this); // Create an instance of OpenGLWidget
+    mCameraViewDock->setWidget(openGLWidget);
+    mCameraViewDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Create the inspector dock widget
-    inspectorDock = new QDockWidget(tr("Inspector"), this);
-    inspectorView = new QWidget();
-    inspectorDock->setWidget(inspectorView);
-    inspectorDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    mInspectorDock = new QDockWidget(tr("Inspector"), this);
+    mInspectorView = new QWidget();
+    mInspectorDock->setWidget(mInspectorView);
+    mInspectorDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Add dock widgets to the main window
-    addDockWidget(Qt::RightDockWidgetArea, hierarchyDock);
-    addDockWidget(Qt::LeftDockWidgetArea, cameraViewDock);
-    addDockWidget(Qt::RightDockWidgetArea, inspectorDock);
+    addDockWidget(Qt::RightDockWidgetArea, mHierarchyDock);
+    addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock);
+    addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
 
     // Connect signals
-    connect(hierarchyView, &QTreeWidget::itemSelectionChanged, [this]() {
-        QTreeWidgetItem* selectedItem = hierarchyView->currentItem();
+    connect(mHierarchyTree, &QTreeWidget::itemSelectionChanged, [this]() {
+        QTreeWidgetItem* selectedItem = mHierarchyTree->currentItem();
         if (selectedItem) {
             updateInspectorView(selectedItem);
         }
@@ -54,18 +68,35 @@ void MainWindow::createDockWidgets() {
     populateHierarchyView();
 }
 
+void MainWindow::createControlButtons() {
+    QWidget* controlWidget = new QWidget(this);
+    QHBoxLayout* controlLayout = new QHBoxLayout(controlWidget);
+
+    QPushButton* playButton = new QPushButton("Play", this);
+    QPushButton* pauseButton = new QPushButton("Pause", this);
+
+    controlLayout->addWidget(playButton);
+    controlLayout->addWidget(pauseButton);
+    controlLayout->setAlignment(Qt::AlignCenter);
+
+    controlWidget->setLayout(controlLayout);
+    setCentralWidget(controlWidget);
+
+    connect(playButton, &QPushButton::clicked, this, &MainWindow::onPlayButtonClicked);
+    connect(pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
+}
+
 void MainWindow::populateHierarchyView() {
     // Example nodes, replace with actual nodes from your scene
-    QTreeWidgetItem* rootItem = new QTreeWidgetItem(hierarchyView, QStringList("Root"));
+    QTreeWidgetItem* rootItem = new QTreeWidgetItem(mHierarchyTree, QStringList("Root"));
     QTreeWidgetItem* childItem1 = new QTreeWidgetItem(rootItem, QStringList("Child 1"));
     QTreeWidgetItem* childItem2 = new QTreeWidgetItem(rootItem, QStringList("Child 2"));
-    hierarchyView->addTopLevelItem(rootItem);
+    mHierarchyTree->addTopLevelItem(rootItem);
 }
 
 void MainWindow::updateInspectorView(QTreeWidgetItem* item) {
     // Clear the inspector view
-    QLayout* layout = inspectorView->layout();
-    
+    QLayout* layout = mInspectorView->layout();
 
     if (layout) {
         QWidget* widget = layout->widget();
@@ -84,6 +115,22 @@ void MainWindow::updateInspectorView(QTreeWidgetItem* item) {
     QLabel* nameLabel = new QLabel("Name: " + item->text(0));
     layout->addWidget(nameLabel);
 
-    inspectorView->setLayout(layout);
+    mInspectorView->setLayout(layout);
 }
 
+void MainWindow::onPlayButtonClicked() {
+    if (!mEditingScene) {
+        mEditingScene = mPlayingScene->clone(); // Duplicate the current scene
+    }
+    // Start the game logic
+}
+
+void MainWindow::onPauseButtonClicked() {
+    if (mEditingScene) {
+        delete mPlayingScene;
+        mPlayingScene = mEditingScene->clone(); // Restore the backup scene
+        delete mEditingScene;
+        mEditingScene = nullptr;
+    }
+    // Pause the game logic
+}

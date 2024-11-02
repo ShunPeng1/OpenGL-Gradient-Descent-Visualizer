@@ -175,6 +175,9 @@
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Engine\Interfaces\IScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />

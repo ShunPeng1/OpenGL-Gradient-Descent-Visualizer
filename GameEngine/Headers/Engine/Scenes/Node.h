@@ -1,57 +1,58 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#ifndef NODE_H
+#define NODE_H
 
 #include "Engine/Engine.h"
 #include "Engine/Renders/ShaderProgram.h"
-
 #include "Engine/Interfaces/ISerializable.h"
+#include <vector>
+#include <memory>
 
 class Node : public ISerializable
 {
 public:
-	Node();
-	virtual ~Node();
+    Node();
+    virtual ~Node();
 
-	virtual void tryInit(Scene* scene) final;
-	virtual void tryUpdate(float deltaTime) final;
-	virtual void tryRender(ShaderProgram& shaderProgram) final;
+    virtual void tryInit(Scene* scene) final;
+    virtual void tryUpdate(float deltaTime) final;
+    virtual void tryRender(ShaderProgram& shaderProgram) final;
 
-	virtual void kill();
-	virtual void revive();
-	bool getIsAlive() const;
+    virtual void kill();
+    virtual void revive();
+    bool getIsAlive() const;
 
 public:
-	void setName(const QString& name);
-	QString getName() const;
-	
-	void setScene(Scene* scene);
-	Scene* getScene() const;
+    void setName(const QString& name);
+    QString getName() const;
 
-	virtual void setParent(Node* parent);
-	Node* getParent() const;
-	
-	int getChildCount() const;
-	Node* getChild(int index) const;
+    void setScene(Scene* scene);
+    Scene* getScene() const;
 
-	virtual void write(QJsonObject& json) const;
-	virtual void read(const QJsonObject& json);
+    virtual void setParent(Node* parent);
+    Node* getParent() const;
 
-protected:
-	virtual void init(Scene* scene);
-	virtual void update(float deltaTime);
-	virtual void render(ShaderProgram& shaderProgram);
+    int getChildCount() const;
+    Node* getChild(int index) const;
 
-	void addChild(std::unique_ptr<Node> child);
-	void removeChild(Node* child);
+    virtual void write(QJsonObject& json) const;
+    virtual void read(const QJsonObject& json);
 
 protected:
-	bool mIsAlive;
-	bool mIsInitialized;
-	Scene* mScenePtr;
-	QString mName;
+    virtual void init(Scene* scene);
+    virtual void update(float deltaTime);
+    virtual void render(ShaderProgram& shaderProgram);
 
-	Node* mParent;
-	std::vector<std::unique_ptr<Node>> mChildren;
+    void addChild(std::unique_ptr<Node> child);
+    void removeChild(Node* child);
+
+protected:
+    bool mIsAlive;
+    bool mIsInitialized;
+    Scene* mScenePtr;
+    QString mName;
+
+    Node* mParent;
+    std::vector<std::unique_ptr<Node>> mChildren;
 };
 
-#endif // GAMEOBJECT_H
+#endif // NODE_H

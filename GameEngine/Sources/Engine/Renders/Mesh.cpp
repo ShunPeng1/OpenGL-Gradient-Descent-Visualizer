@@ -25,7 +25,7 @@ Mesh::Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int>
 
 void Mesh::tryInit()
 {
-	if (!mIsInitialized)
+	if (!mIsInitialized && path != "")
 	{
         mIsInitialized = true;
 		init();
@@ -36,8 +36,7 @@ void Mesh::init()
 {
 	initializeOpenGLFunctions();
 
-	if (vertices.size() > 0)
-		setupMesh();
+    setupMesh();
 }
 
 void Mesh::setupMesh() {
@@ -74,19 +73,6 @@ void Mesh::setupMesh() {
 void Mesh::write(QJsonObject& json) const {
     json[SERIALIZE_MESH_PATH] = path;
 
-    QJsonArray verticesArray;
-    for (const auto& vertex : vertices) {
-        QJsonObject vertexObject;
-        //vertex.write(vertexObject); // Assuming Vertex class has a write method
-        verticesArray.append(vertexObject);
-    }
-    json[SERIALIZE_MESH_VERTICES] = verticesArray;
-
-    QJsonArray indicesArray;
-    for (const auto& index : indices) {
-        indicesArray.append(static_cast<int>(index));
-    }
-    json[SERIALIZE_MESH_INDICES] = indicesArray;
 
     QJsonArray texturesArray;
     for (const auto& texture : textures) {
@@ -103,21 +89,11 @@ void Mesh::read(const QJsonObject& json) {
     path = json[SERIALIZE_MESH_PATH].toString();
 
     vertices.clear();
-    QJsonArray verticesArray = json[SERIALIZE_MESH_VERTICES].toArray();
-    for (int i = 0; i < verticesArray.size(); ++i) {
-        QJsonObject vertexObject = verticesArray[i].toObject();
-        Vertex vertex;
-        //vertex.read(vertexObject); // Assuming Vertex class has a read method
-        vertices.push_back(vertex);
-    }
-
     indices.clear();
-    QJsonArray indicesArray = json[SERIALIZE_MESH_INDICES].toArray();
-    for (int i = 0; i < indicesArray.size(); ++i) {
-        indices.push_back(static_cast<unsigned int>(indicesArray[i].toInt()));
-    }
-
     textures.clear();
+
+
+
     QJsonArray texturesArray = json[SERIALIZE_MESH_TEXTURES].toArray();
     for (int i = 0; i < texturesArray.size(); ++i) {
         QJsonObject textureObject = texturesArray[i].toObject();

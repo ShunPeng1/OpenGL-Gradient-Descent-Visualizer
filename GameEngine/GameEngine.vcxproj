@@ -131,6 +131,7 @@
     <ClCompile Include="Sources\Engine\Nodes\Transform.cpp" />
     <ClInclude Include="Headers\Engine\Constants\ResourcePath.h" />
     <ClInclude Include="Headers\Engine\Constants\SerializePath.h" />
+    <ClInclude Include="Headers\Engine\Interfaces\IScene.h" />
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />

@@ -6,20 +6,15 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTimer>
-#include "Engine/Renders/ShaderProgram.h"
-#include "Engine/Renders/Mesh.h"
-#include "Engine/Loaders/ModelLoader.h"
-#include "Engine/Nodes/Camera.h"
 
-#include "TestGame/Scenes/TestScene.h"
-#include "TestGame/Controllers/FPSCameraController.h"
+#include <Engine/Interfaces/IScene.h>
 
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     Q_OBJECT
 
 public:
-    OpenGLWidget(QWidget* parent = nullptr);
+    OpenGLWidget(IScene* scene, QWidget* parent = nullptr);
 	~OpenGLWidget();
 
 protected:
@@ -35,7 +30,8 @@ private:
     float lastFrame;
     QElapsedTimer* elapsedTimer;
     
-	Scene* mCurrentScene;
+    IScene* mCurrentScene;
+	InputPublisher* mInputPublisher;
 
 };
 
