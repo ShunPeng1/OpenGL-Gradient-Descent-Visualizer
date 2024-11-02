@@ -12,8 +12,8 @@
 class ShaderProgram : public QOpenGLShaderProgram, protected QOpenGLExtraFunctions
 {
 public:
-	const QString vertexPath;
-	const QString fragmentPath;
+	QString vertexPath;
+	QString fragmentPath;
 
 	QString vertexCode;
 	QString fragmentCode;
@@ -21,7 +21,7 @@ public:
     bool mIsStarted;
 
     // constructor reads and builds the shader
-    ShaderProgram(const QString vertexPath, const QString fragmentPath);
+    ShaderProgram(QString vertexPath, QString fragmentPath);
     void init();
     void start();
 

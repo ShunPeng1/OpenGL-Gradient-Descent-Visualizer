@@ -3,7 +3,7 @@
 #include <QTextStream>
 
 
-ShaderProgram::ShaderProgram(const QString vertexPath, const QString fragmentPath) : QOpenGLShaderProgram()
+ShaderProgram::ShaderProgram(QString vertexPath, QString fragmentPath) : QOpenGLShaderProgram()
 {
     mIsStarted = false;
 
@@ -27,6 +27,9 @@ ShaderProgram::ShaderProgram(const QString vertexPath, const QString fragmentPat
         // read file's buffer contents into strings
         vertexCode = vShaderStream.readAll();
         fragmentCode = fShaderStream.readAll();
+
+		this->vertexPath = vertexPath;
+        this->fragmentPath = fragmentPath;
 
         // close file handlers
         vShaderFile.close();
