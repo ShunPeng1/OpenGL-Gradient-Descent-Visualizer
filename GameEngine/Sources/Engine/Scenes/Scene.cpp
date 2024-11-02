@@ -15,34 +15,52 @@ Scene::~Scene()
 
 void Scene::load()
 {
+	ShaderProgram* defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
+	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
+
+}
+
+void Scene::init()
+{
+	mDefaultShader->init();
+
+	for (auto& mesh : mMeshes)
+	{
+		mesh->init();
+	}
+
+	for (auto& node : mChildrenNodes)
+	{
+		node->init();
+	}
+
+	camera->init();
+	
 }
 
 void Scene::create()
 {
-	ShaderProgram* defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
-	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
+	mDefaultShader->start();
 	mDefaultShader->bind();
-	mDefaultShader->setUniformValue("mProjection", camera->getProjectionMatrix());
-	mDefaultShader->setUniformValue("mView", camera->getViewMatrix());
 	mDefaultShader->setUniformValue("mUseTexture", false);
 	mDefaultShader->setUniformValue("mUseColor", true);
 	mDefaultShader->release();
 }
 
-void Scene::init()
+void Scene::start()
 {
 
 	for (auto& mesh : mMeshes)
 	{
-		mesh->tryInit();
+		mesh->tryStart();
 	}
 
 	for (auto& node : mChildrenNodes)
 	{
-		node->tryInit(this);
+		node->tryStart(this);
 	}
 
-	camera->tryInit(this);
+	camera->tryStart(this);
 }
 
 void Scene::update(float deltaTime)

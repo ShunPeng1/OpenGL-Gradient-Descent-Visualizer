@@ -3,14 +3,13 @@
 #include <QTextStream>
 
 
-ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragmentPath) : QOpenGLShaderProgram()
+ShaderProgram::ShaderProgram(const QString vertexPath, const QString fragmentPath) : QOpenGLShaderProgram()
 {
-    initializeOpenGLFunctions();
-
+    mIsStarted = false;
 
     // 1. retrieve the vertex/fragment source code from filePath
-    std::string vertexCode;
-    std::string fragmentCode;
+    
+
     try
     {
         // open files
@@ -26,8 +25,8 @@ ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragmentPath) :
         QTextStream fShaderStream(&fShaderFile);
 
         // read file's buffer contents into strings
-        vertexCode = vShaderStream.readAll().toStdString();
-        fragmentCode = fShaderStream.readAll().toStdString();
+        vertexCode = vShaderStream.readAll();
+        fragmentCode = fShaderStream.readAll();
 
         // close file handlers
         vShaderFile.close();
@@ -38,15 +37,27 @@ ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragmentPath) :
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
     }
 
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
-    // 2. compile shaders
 
-    if (!addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode.c_str()))
+}
+
+void ShaderProgram::init()
+{
+    initializeOpenGLFunctions();
+}
+
+void ShaderProgram::start()
+{
+
+    if (mIsStarted)
+        return;
+
+    mIsStarted = true;
+
+    if (!addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode))
     {
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << log().toStdString() << std::endl;
     }
-    if (!addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentCode.c_str()))
+    if (!addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentCode))
     {
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << log().toStdString() << std::endl;
     }
@@ -54,6 +65,5 @@ ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragmentPath) :
     {
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << log().toStdString() << std::endl;
     }
-
 }
 

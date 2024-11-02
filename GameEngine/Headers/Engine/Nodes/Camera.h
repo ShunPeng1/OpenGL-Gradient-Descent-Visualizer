@@ -9,7 +9,8 @@ public:
 	Camera();
 	virtual ~Camera() noexcept;
 
-	
+	virtual void init() override;
+
 	void setFov(float fov);
 	void setNear(float near);
 	void setFar(float far);
@@ -28,7 +29,7 @@ public:
 	QMatrix4x4 getProjectionMatrix();
 
 protected: 
-	virtual void init(Scene* scene) override;
+	virtual void start(Scene* scene) override;
 	virtual void update(float deltaTime) override;
 	virtual void render(ShaderProgram& shaderProgram) override;
 

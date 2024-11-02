@@ -7,6 +7,7 @@ class TestScene : public Scene
 {
 public:
 	void load() override;
+	void create() override;
 
 	TestScene();
 	virtual ~TestScene();

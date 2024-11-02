@@ -13,9 +13,13 @@ Camera::~Camera() noexcept
 {
 }
 
-void Camera::init(Scene* scene)
+void Camera::init()
 {
 	initializeOpenGLFunctions();
+}
+
+void Camera::start(Scene* scene)
+{
 
 	glEnable(GL_DEPTH_TEST);
 }

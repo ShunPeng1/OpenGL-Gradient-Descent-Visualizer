@@ -14,6 +14,11 @@ MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID)
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
 }
 
+void MeshRenderer::init()
+{
+	initializeOpenGLFunctions();
+}
+
 MeshRenderer::~MeshRenderer() noexcept
 {
 }
@@ -34,9 +39,8 @@ void MeshRenderer::setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBuf
 	mDrawBufferMode = drawBufferMode;
 }
 
-void MeshRenderer::init(Scene* scene)
+void MeshRenderer::start(Scene* scene)
 {
-	initializeOpenGLFunctions();
 }
 
 void MeshRenderer::update(float deltaTime)

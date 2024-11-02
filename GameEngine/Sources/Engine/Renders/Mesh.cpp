@@ -1,6 +1,6 @@
 #include "Engine/Renders/Mesh.h"
 
-Mesh::Mesh() : mIsInitialized(false), mVAO(0), mVBO(0), mEBO(0), mDrawMode(GL_TRIANGLES) 
+Mesh::Mesh() : mIsStarted(false), mVAO(0), mVBO(0), mEBO(0), mDrawMode(GL_TRIANGLES) 
 {
 
 }
@@ -23,18 +23,22 @@ Mesh::Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int>
 	this->mDrawMode = drawMode;
 }
 
-void Mesh::tryInit()
+void Mesh::init() 
 {
-	if (!mIsInitialized && path != "")
+    initializeOpenGLFunctions();
+}
+
+void Mesh::tryStart()
+{
+	if (!mIsStarted && !path.isEmpty())
 	{
-        mIsInitialized = true;
-		init();
+        mIsStarted = true;
+		start();
 	}
 }
 
-void Mesh::init()
+void Mesh::start()
 {
-	initializeOpenGLFunctions();
 
     setupMesh();
 }

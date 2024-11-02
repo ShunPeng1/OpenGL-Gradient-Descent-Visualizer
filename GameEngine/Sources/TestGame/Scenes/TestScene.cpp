@@ -9,8 +9,6 @@ void TestScene::load()
 {
 	Scene::load();
 
-	mCameraController = new FPSCameraController(camera);
-	inputPublisher->subscribe(mCameraController);
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
@@ -76,6 +74,14 @@ void TestScene::load()
 	addNode(coneNode);
 	addNode(planeNode);
 
+}
+
+void TestScene::create()
+{
+	Scene::create();
+
+	mCameraController = new FPSCameraController(camera);
+	inputPublisher->subscribe(mCameraController);
 }
 
 TestScene::~TestScene()

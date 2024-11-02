@@ -22,7 +22,9 @@ public:
     Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     Mesh(QString path, std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, GLenum drawMode);
     
-    void tryInit();
+
+    void init();
+    void tryStart();
     virtual void write(QJsonObject& json) const;
     virtual void read(const QJsonObject& json);
 
@@ -30,10 +32,10 @@ public:
 
 
 protected:
-    void init();
+	virtual void start();
 
     //  render data
-	bool mIsInitialized;
+	bool mIsStarted;
     unsigned int mVAO, mVBO, mEBO;
     GLenum mDrawMode; // Member variable to store the drawing mode
 

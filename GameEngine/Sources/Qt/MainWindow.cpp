@@ -18,9 +18,10 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mPlayingScene(new Scene()), mEditingScene(nullptr) {
 
     mEditingScene = new TestScene();
+    mEditingScene->load();
 
-    createDockWidgets();
     createControlButtons();
+    createDockWidgets();
 
 }
 
@@ -70,7 +71,7 @@ void MainWindow::createDockWidgets() {
 
 void MainWindow::createControlButtons() {
     QWidget* controlWidget = new QWidget(this);
-    QHBoxLayout* controlLayout = new QHBoxLayout(controlWidget);
+    QHBoxLayout* controlLayout = new QHBoxLayout();
 
     QPushButton* playButton = new QPushButton("Play", this);
     QPushButton* pauseButton = new QPushButton("Pause", this);
@@ -80,7 +81,8 @@ void MainWindow::createControlButtons() {
     controlLayout->setAlignment(Qt::AlignCenter);
 
     controlWidget->setLayout(controlLayout);
-    setCentralWidget(controlWidget);
+	setMenuWidget(controlWidget);
+
 
     connect(playButton, &QPushButton::clicked, this, &MainWindow::onPlayButtonClicked);
     connect(pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);

@@ -13,9 +13,10 @@ public:
     Node();
     virtual ~Node();
 
-    virtual void tryInit(Scene* scene) final;
-    virtual void tryUpdate(float deltaTime) final;
-    virtual void tryRender(ShaderProgram& shaderProgram) final;
+    virtual void init();
+    void tryStart(Scene* scene);
+    void tryUpdate(float deltaTime);
+    void tryRender(ShaderProgram& shaderProgram);
 
     virtual void kill();
     virtual void revive();
@@ -38,7 +39,7 @@ public:
     virtual void read(const QJsonObject& json);
 
 protected:
-    virtual void init(Scene* scene);
+    virtual void start(Scene* scene);
     virtual void update(float deltaTime);
     virtual void render(ShaderProgram& shaderProgram);
 
@@ -47,7 +48,7 @@ protected:
 
 protected:
     bool mIsAlive;
-    bool mIsInitialized;
+    bool mIsStarted;
     Scene* mScenePtr;
     QString mName;
 

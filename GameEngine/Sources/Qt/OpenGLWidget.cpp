@@ -22,10 +22,8 @@ OpenGLWidget::OpenGLWidget(IScene* scene, QWidget* parent) : QOpenGLWidget(paren
 
 	mCurrentScene = scene;
 	mCurrentScene->setInputPublisher(mInputPublisher);
-	mCurrentScene->load();
 
     elapsedTimer = new QElapsedTimer();
-    elapsedTimer->start();
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -35,8 +33,13 @@ OpenGLWidget::~OpenGLWidget()
 
 void OpenGLWidget::initializeGL() {
     initializeOpenGLFunctions();
+
+    mInputPublisher->clear();
+
+	mCurrentScene->init();
+    mCurrentScene->create();
     
-	mCurrentScene->create();
+    elapsedTimer->start();
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {
@@ -54,7 +57,7 @@ void OpenGLWidget::paintGL() {
     deltaTime = (currentFrame - lastFrame) / 1000.0f; // Convert milliseconds to seconds
     lastFrame = currentFrame;
 
-    mCurrentScene->init();
+    mCurrentScene->start();
 
     mInputPublisher->update(deltaTime);
 	mCurrentScene->update(deltaTime);

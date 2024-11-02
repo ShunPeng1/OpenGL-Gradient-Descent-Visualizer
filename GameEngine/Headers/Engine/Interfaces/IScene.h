@@ -21,6 +21,7 @@ public:
     virtual void load() = 0;
     virtual void create() = 0;
     virtual void init() = 0;
+    virtual void start() = 0;
     virtual void update(float deltaTime) = 0;
     virtual void render() = 0;
 

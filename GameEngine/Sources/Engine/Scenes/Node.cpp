@@ -10,17 +10,22 @@ Node::~Node()
 
 }
 
-void Node::tryInit(Scene* scene)
+void Node::init()
 {
-	if (!mIsInitialized)
+
+}
+
+void Node::tryStart(Scene* scene)
+{
+	if (!mIsStarted)
 	{
-		init(scene);
-		mIsInitialized = true;
+		start(scene);
+		mIsStarted = true;
 	}
 
 	for (auto& child : mChildren)
 	{
-		child->tryInit(scene);
+		child->tryStart(scene);
 	}
 }
 
@@ -136,7 +141,7 @@ void Node::read(const QJsonObject& json) {
     }
 }
 
-void Node::init(Scene* scene)
+void Node::start(Scene* scene)
 {
 	mScenePtr = scene;
 }
