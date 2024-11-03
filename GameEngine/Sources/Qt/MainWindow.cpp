@@ -32,13 +32,12 @@ MainWindow::~MainWindow() {
     }
 }
 
+
 void MainWindow::createDockWidgets() {
     // Create the hierarchy dock widget
-    mHierarchyDock = new QDockWidget(tr("Hierarchy"), this);
-    mHierarchyTree = new QTreeWidget();
-    mHierarchyTree->setHeaderLabel("Nodes");
-    mHierarchyDock->setWidget(mHierarchyTree);
-    mHierarchyDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    mHierarchyWidget = new HierarchyWidget(this);
+    mHierarchyWidget->populateHierarchyView(mEditingScene);
+    addDockWidget(Qt::RightDockWidgetArea, mHierarchyWidget);
 
     // Create the camera view dock widget
     mCameraViewDock = new QDockWidget(tr("Camera View"), this);
@@ -53,20 +52,11 @@ void MainWindow::createDockWidgets() {
     mInspectorDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Add dock widgets to the main window
-    addDockWidget(Qt::RightDockWidgetArea, mHierarchyDock);
     addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock);
     addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
 
     // Connect signals
-    connect(mHierarchyTree, &QTreeWidget::itemSelectionChanged, [this]() {
-        QTreeWidgetItem* selectedItem = mHierarchyTree->currentItem();
-        if (selectedItem) {
-            updateInspectorView(selectedItem);
-        }
-        });
-
-    // Populate the hierarchy view
-    populateHierarchyView();
+    connect(mHierarchyWidget, &HierarchyWidget::itemSelectionChanged, this, &MainWindow::updateInspectorView);
 }
 
 void MainWindow::createControlButtons() {
@@ -86,14 +76,6 @@ void MainWindow::createControlButtons() {
 
     connect(playButton, &QPushButton::clicked, this, &MainWindow::onPlayButtonClicked);
     connect(pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
-}
-
-void MainWindow::populateHierarchyView() {
-    // Example nodes, replace with actual nodes from your scene
-    QTreeWidgetItem* rootItem = new QTreeWidgetItem(mHierarchyTree, QStringList("Root"));
-    QTreeWidgetItem* childItem1 = new QTreeWidgetItem(rootItem, QStringList("Child 1"));
-    QTreeWidgetItem* childItem2 = new QTreeWidgetItem(rootItem, QStringList("Child 2"));
-    mHierarchyTree->addTopLevelItem(rootItem);
 }
 
 void MainWindow::updateInspectorView(QTreeWidgetItem* item) {

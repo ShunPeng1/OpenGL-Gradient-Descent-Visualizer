@@ -1,17 +1,21 @@
 
 #include "Engine/Nodes/MeshRenderer.h"
 
-MeshRenderer::MeshRenderer()
+MeshRenderer::MeshRenderer() : Container()
 {
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
+
+	setName("Mesh Renderer");
 }
 
-MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID)
+MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID) : Container()
 {
 	mMesh = meshID;
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
+
+	setName("Mesh Renderer");
 }
 
 void MeshRenderer::init()

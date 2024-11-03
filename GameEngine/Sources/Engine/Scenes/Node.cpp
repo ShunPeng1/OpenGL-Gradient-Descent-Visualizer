@@ -126,6 +126,17 @@ Node* Node::getChild(int index) const {
     return mChildren[index].get();
 }
 
+std::vector<Node*> Node::getChildren() const
+{
+	std::vector<Node*> children;
+	for (const auto& child : mChildren)
+	{
+		children.push_back(child.get());
+	}
+
+	return children;
+}
+
 void Node::write(QJsonObject& json) const {
     json[SERIALIZE_NODE_NAME] = mName;
     json[SERIALIZE_NODE_IS_ALIVE] = mIsAlive;

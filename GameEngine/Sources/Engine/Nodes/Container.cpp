@@ -3,6 +3,7 @@
 Container::Container() : Node(), transform(Transform())
 {
 
+    setName("Container");
 }
 
 Container::~Container() noexcept

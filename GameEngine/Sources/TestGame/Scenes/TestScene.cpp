@@ -2,7 +2,7 @@
 
 TestScene::TestScene() : Scene()
 {
-	
+	setName("TestScene");
 }
 
 void TestScene::load()

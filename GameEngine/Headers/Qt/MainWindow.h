@@ -1,11 +1,11 @@
-// MainWindow.h
+#pragma once
+
 #include <Engine/Engine.h>
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QTabWidget>
-#include <QTreeWidget>
-
 #include "Engine/Interfaces/IScene.h"
+#include "Qt/Hierarchy/HierarchyWidget.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -18,22 +18,18 @@ private slots:
     void onPlayButtonClicked();
     void onPauseButtonClicked();
 
-
 private:
     void createDockWidgets();
     void createControlButtons();
-    void populateHierarchyView();
     void updateInspectorView(QTreeWidgetItem* item);
 
-
 private:
-    QDockWidget* mHierarchyDock;
     QDockWidget* mCameraViewDock;
     QDockWidget* mInspectorDock;
-    QTreeWidget* mHierarchyTree;
     QWidget* mInspectorView;
-
 
     IScene* mPlayingScene;
     IScene* mEditingScene;
+
+    HierarchyWidget* mHierarchyWidget;
 };

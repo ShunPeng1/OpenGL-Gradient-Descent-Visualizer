@@ -38,13 +38,16 @@ public:
 	virtual void write(QJsonObject& json) const;
 	virtual void read(const QJsonObject& json);
 
+	QString getName() const;
+	void setName(const QString& name);
+
 	int addMesh(std::shared_ptr<Mesh> mesh);
 	void removeMesh(std::shared_ptr<Mesh> mesh);
 	std::shared_ptr<Mesh> getMesh(int index) const;
 
 	void addNode(Node* node);
 	void removeNode(Node* node);
-
+	virtual std::vector<Node*> getNodes() const;
 
 	void setInputPublisher(InputPublisher* inputPublisher);
 	InputPublisher* getInputPublisher() const;
@@ -53,6 +56,7 @@ public:
 	Camera* getCamera() const;
 
 protected:
+	QString mName;
 
 	std::shared_ptr<ShaderProgram> mDefaultShader;
 

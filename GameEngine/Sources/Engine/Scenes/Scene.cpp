@@ -163,6 +163,16 @@ void Scene::read(const QJsonObject& json) {
 	// Deserialize other properties if needed
 }
 
+QString Scene::getName() const
+{
+	return mName;
+}
+
+void Scene::setName(const QString& name)
+{
+	mName = name;
+}
+
 int Scene::addMesh(std::shared_ptr<Mesh> mesh)
 {
 	mMeshes.push_back(mesh);
@@ -188,6 +198,17 @@ void Scene::removeNode(Node* node)
 	if (it != mChildrenNodes.end()) {
 		mChildrenNodes.erase(it, mChildrenNodes.end());
 	}
+}
+
+std::vector<Node*> Scene::getNodes() const
+{
+	std::vector<Node*> children;
+	for (const auto& child : mChildrenNodes)
+	{
+		children.push_back(child.get());
+	}
+
+	return children;
 }
 
 void Scene::setInputPublisher(InputPublisher* inputPublisher)

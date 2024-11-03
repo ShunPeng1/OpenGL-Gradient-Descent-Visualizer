@@ -125,6 +125,8 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp" />
+    <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\Camera.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\Renderer.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\MeshRenderer.cpp" />
@@ -133,6 +135,8 @@
     <ClInclude Include="Headers\Engine\Constants\SerializePath.h" />
     <ClInclude Include="Headers\Engine\Interfaces\IScene.h" />
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h" />
+    <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h" />
+    <QtMoc Include="Headers\Qt\Hierarchy\HierarchyItem.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />
     <ClCompile Include="Sources\Engine\Nodes\Container.cpp" />

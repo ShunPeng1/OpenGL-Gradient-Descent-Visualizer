@@ -35,6 +35,7 @@ public:
 
     int getChildCount() const;
     Node* getChild(int index) const;
+	std::vector<Node*> getChildren() const;
 
     virtual void write(QJsonObject& json) const;
     virtual void read(const QJsonObject& json);
