@@ -32,14 +32,16 @@ OpenGLWidget::~OpenGLWidget()
 }
 
 void OpenGLWidget::initializeGL() {
-    initializeOpenGLFunctions();
 
+    initializeOpenGLFunctions();
     mInputPublisher->clear();
+    mCurrentScene->clear();
 
 	mCurrentScene->init();
     mCurrentScene->create();
-    
+
     elapsedTimer->start();
+
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {

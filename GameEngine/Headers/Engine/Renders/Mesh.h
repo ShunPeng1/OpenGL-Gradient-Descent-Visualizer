@@ -27,6 +27,7 @@ public:
     void tryStart();
     virtual void write(QJsonObject& json) const;
     virtual void read(const QJsonObject& json);
+	virtual void clear();
 
     virtual void draw(ShaderProgram& shader);
 

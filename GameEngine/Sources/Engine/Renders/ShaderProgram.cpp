@@ -1,15 +1,11 @@
 #include "Engine/Renders/ShaderProgram.h"
 #include <QFile>
 #include <QTextStream>
+#include <iostream>
 
-
-ShaderProgram::ShaderProgram(QString vertexPath, QString fragmentPath) : QOpenGLShaderProgram()
+ShaderProgram::ShaderProgram(QString vertexPath, QString fragmentPath)
+    : mIsStarted(false), mProgram(nullptr)
 {
-    mIsStarted = false;
-
-    // 1. retrieve the vertex/fragment source code from filePath
-    
-
     try
     {
         // open files
@@ -28,7 +24,7 @@ ShaderProgram::ShaderProgram(QString vertexPath, QString fragmentPath) : QOpenGL
         vertexCode = vShaderStream.readAll();
         fragmentCode = fShaderStream.readAll();
 
-		this->vertexPath = vertexPath;
+        this->vertexPath = vertexPath;
         this->fragmentPath = fragmentPath;
 
         // close file handlers
@@ -39,8 +35,6 @@ ShaderProgram::ShaderProgram(QString vertexPath, QString fragmentPath) : QOpenGL
     {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
     }
-
-
 }
 
 void ShaderProgram::init()
@@ -50,23 +44,163 @@ void ShaderProgram::init()
 
 void ShaderProgram::start()
 {
-
     if (mIsStarted)
         return;
 
     mIsStarted = true;
 
-    if (!addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode))
+    mProgram = new QOpenGLShaderProgram();
+
+    if (!mProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode))
     {
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << log().toStdString() << std::endl;
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
-    if (!addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentCode))
+    if (!mProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentCode))
     {
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << log().toStdString() << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
-    if (!link())
+    if (!mProgram->link())
     {
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << log().toStdString() << std::endl;
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
 }
 
+void ShaderProgram::clear()
+{
+    if (mProgram)
+    {
+        mProgram->release();
+        delete mProgram;
+        mProgram = nullptr;
+    }
+
+    mIsStarted = false;
+}
+
+void ShaderProgram::bind()
+{
+	if (mProgram)
+	{
+		mProgram->bind();
+	}
+}
+
+void ShaderProgram::release()
+{
+	if (mProgram)
+	{
+		mProgram->release();
+	}
+}
+
+void ShaderProgram::bindAttributeLocation(const char* name, int location)
+{
+    if (mProgram)
+    {
+        mProgram->bindAttributeLocation(name, location);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, bool value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, int value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, float value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QMatrix4x4& value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QVector2D& value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QVector3D& value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QVector4D& value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QColor& color)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, color);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QPoint& point)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, point);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QPointF& point)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, point);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QSize& size)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, size);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QSizeF& size)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, size);
+    }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QTransform& value)
+{
+    if (mProgram)
+    {
+        mProgram->setUniformValue(name, value);
+    }
+}

@@ -109,6 +109,18 @@ void Mesh::read(const QJsonObject& json) {
     mDrawMode = static_cast<GLenum>(json[SERIALIZE_MESH_DRAW_MODE].toInt());
 }
 
+void Mesh::clear()
+{
+	if (mIsStarted)
+	{
+		glDeleteVertexArrays(1, &mVAO);
+		glDeleteBuffers(1, &mVBO);
+		glDeleteBuffers(1, &mEBO);
+	}
+
+}
+
+
 void Mesh::draw(ShaderProgram& shader) {
 	/*unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -125,11 +137,9 @@ void Mesh::draw(ShaderProgram& shader) {
 		shader.setUniformInt((name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].ID);
 	}*/
-
 	glBindVertexArray(mVAO);
 	glDrawElements(mDrawMode, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	glActiveTexture(GL_TEXTURE0);
 }
-

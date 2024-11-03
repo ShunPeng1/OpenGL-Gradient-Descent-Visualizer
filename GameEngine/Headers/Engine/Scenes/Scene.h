@@ -24,13 +24,14 @@ public:
 	Scene();
 	virtual ~Scene();
 
-	// load -> init -> create -> (start -> update -> render)*
+	// load -> init -> create -> (start -> update -> render)* -> clear
 	virtual void load(); // Load from path, such as shaders, textures, meshes, etc.
 	virtual void init(); // Initialize initializeOpenGLFunctions() and other OpenGL related stuff
 	virtual void create(); 
 	virtual void start();
 	virtual void update(float deltaTime);
 	virtual void render();
+	virtual void clear(); // Clear all context of current OpenGL context
 	
 	virtual IScene* clone() const;
 

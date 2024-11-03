@@ -17,6 +17,7 @@ public:
     void tryStart(Scene* scene);
     void tryUpdate(float deltaTime);
     void tryRender(ShaderProgram& shaderProgram);
+	virtual void clear();
 
     virtual void kill();
     virtual void revive();

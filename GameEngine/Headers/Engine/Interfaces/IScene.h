@@ -24,6 +24,7 @@ public:
     virtual void start() = 0;
     virtual void update(float deltaTime) = 0;
     virtual void render() = 0;
+	virtual void clear() = 0;
 
     virtual int addMesh(std::shared_ptr<Mesh> mesh) = 0;
     virtual void removeMesh(std::shared_ptr<Mesh> mesh) = 0;

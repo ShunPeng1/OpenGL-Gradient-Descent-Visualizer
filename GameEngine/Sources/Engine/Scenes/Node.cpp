@@ -55,6 +55,17 @@ void Node::tryRender(ShaderProgram& shaderProgram)
 	}
 }
 
+void Node::clear()
+{
+	for (auto& child : mChildren)
+	{
+		child->clear();
+	}
+
+	mChildren.clear();
+
+}
+
 void Node::setName(const QString& name)
 {
 	mName = name;

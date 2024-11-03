@@ -40,6 +40,12 @@ void Scene::init()
 
 void Scene::create()
 {
+	// Bind attribute locations before linking
+	mDefaultShader->bindAttributeLocation("position", 0);
+	mDefaultShader->bindAttributeLocation("normal", 1);
+	mDefaultShader->bindAttributeLocation("texCoord", 2);
+	mDefaultShader->bindAttributeLocation("color", 3);
+
 	mDefaultShader->start();
 	mDefaultShader->bind();
 	mDefaultShader->setUniformValue("mUseTexture", false);
@@ -82,6 +88,23 @@ void Scene::render()
 		node->tryRender(*mDefaultShader);
 	}
 	mDefaultShader->release();
+}
+
+void Scene::clear()
+{
+	for (auto& mesh : mMeshes)
+	{
+		mesh->clear();
+	}
+
+	for (auto& node : mChildrenNodes)
+	{
+		node->clear();
+	}
+
+	camera->clear();
+
+	mDefaultShader->clear();
 }
 
 IScene* Scene::clone() const
