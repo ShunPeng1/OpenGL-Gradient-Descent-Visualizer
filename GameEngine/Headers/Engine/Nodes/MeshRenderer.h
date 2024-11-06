@@ -21,9 +21,14 @@ public:
 	std::shared_ptr<Mesh> getMesh() const;
 	void setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBufferMode = DrawBufferMode::FRONT_AND_BACK);
 
-	virtual void start(Scene* scene) override;
+	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
 	virtual void render(ShaderProgram& shaderProgram) override;
+
+public: // Interfaces
+	virtual void write(QJsonObject& json) const override;
+	virtual void read(const QJsonObject& json) override;
+	virtual void* accept(INodeVisitor* visitor) override;
 
 protected:
 	std::shared_ptr<Mesh> mMesh;

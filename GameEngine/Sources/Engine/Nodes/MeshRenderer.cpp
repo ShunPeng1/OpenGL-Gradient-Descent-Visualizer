@@ -43,7 +43,7 @@ void MeshRenderer::setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBuf
 	mDrawBufferMode = drawBufferMode;
 }
 
-void MeshRenderer::start(Scene* scene)
+void MeshRenderer::start(IScene* scene)
 {
 }
 
@@ -60,4 +60,17 @@ void MeshRenderer::render(ShaderProgram& shaderProgram)
 	mMesh->draw(shaderProgram);
 
 	glPolygonMode(static_cast<GLenum>(mDrawBufferMode), static_cast<GLenum>(mPolygonMode));
+}
+
+void MeshRenderer::write(QJsonObject& json) const
+{
+}
+
+void MeshRenderer::read(const QJsonObject& json)
+{
+}
+
+void* MeshRenderer::accept(INodeVisitor* visitor)
+{
+	return visitor->visitMeshRenderer(this);
 }

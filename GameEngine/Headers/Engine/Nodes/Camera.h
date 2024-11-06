@@ -28,8 +28,13 @@ public:
 	QMatrix4x4 getViewMatrix();
 	QMatrix4x4 getProjectionMatrix();
 
+public: // Interfaces
+	virtual void write(QJsonObject& json) const override;
+	virtual void read(const QJsonObject& json) override;
+	virtual void* accept(INodeVisitor* visitor) override;
+
 protected: 
-	virtual void start(Scene* scene) override;
+	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
 	virtual void render(ShaderProgram& shaderProgram) override;
 

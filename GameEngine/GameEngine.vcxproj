@@ -128,11 +128,12 @@
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\Camera.cpp" />
-    <ClCompile Include="Sources\Engine\Nodes\Renderer.cpp" />
+    <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\MeshRenderer.cpp" />
-    <ClCompile Include="Sources\Engine\Nodes\Transform.cpp" />
+    <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
     <ClInclude Include="Headers\Engine\Constants\ResourcePath.h" />
     <ClInclude Include="Headers\Engine\Constants\SerializePath.h" />
+    <ClInclude Include="Headers\Engine\Interfaces\INodeVisitable.h" />
     <ClInclude Include="Headers\Engine\Interfaces\IScene.h" />
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h" />
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Headers\Qt\Inputs\InputPublisher.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputSubscriber.h" />
     <QtMoc Include="Headers\Qt\MainWindow.h" />
+    <ClInclude Include="Headers\Engine\Interfaces\INodeVisitor.h" />
     <QtMoc Include="Headers\Qt\Inspector\InspectorWidget.h" />
     <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />
     <None Include="Resources\Shaders\default.frag" />
@@ -155,9 +157,9 @@
     <ClInclude Include="Headers\Engine\Engine.h" />
     <ClInclude Include="Headers\Engine\Nodes\Camera.h" />
     <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h" />
-    <ClInclude Include="Headers\Engine\Nodes\Transform.h" />
+    <ClInclude Include="Headers\Engine\Components\Transform.h" />
     <ClInclude Include="Headers\Engine\Nodes\Container.h" />
-    <ClInclude Include="Headers\Engine\Nodes\Renderer.h" />
+    <ClInclude Include="Headers\Engine\Components\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />

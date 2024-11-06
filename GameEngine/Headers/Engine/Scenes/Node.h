@@ -2,19 +2,23 @@
 #define NODE_H
 
 #include "Engine/Engine.h"
-#include "Engine/Renders/ShaderProgram.h"
 #include "Engine/Interfaces/ISerializable.h"
+#include "Engine/Interfaces/INodeVisitable.h"
+#include "Engine/Interfaces/INodeVisitor.h"
+
+#include "Engine/Renders/ShaderProgram.h"
+
 #include <vector>
 #include <memory>
 
-class Node : public ISerializable
+class Node : public ISerializable, public INodeVisitable
 {
 public:
     Node();
     virtual ~Node();
 
     virtual void init();
-    void tryStart(Scene* scene);
+    void tryStart(IScene* scene);
     void tryUpdate(float deltaTime);
     void tryRender(ShaderProgram& shaderProgram);
 	virtual void clear();
@@ -27,8 +31,8 @@ public:
     void setName(const QString& name);
     QString getName() const;
 
-    void setScene(Scene* scene);
-    Scene* getScene() const;
+    void setScene(IScene* scene);
+    IScene* getScene() const;
 
     virtual void setParent(Node* parent);
     Node* getParent() const;
@@ -37,11 +41,13 @@ public:
     Node* getChild(int index) const;
 	std::vector<Node*> getChildren() const;
 
+public: // Interfaces
     virtual void write(QJsonObject& json) const;
     virtual void read(const QJsonObject& json);
+    virtual void* accept(INodeVisitor* visitor);
 
 protected:
-    virtual void start(Scene* scene);
+    virtual void start(IScene* scene);
     virtual void update(float deltaTime);
     virtual void render(ShaderProgram& shaderProgram);
 
@@ -51,7 +57,7 @@ protected:
 protected:
     bool mIsAlive;
     bool mIsStarted;
-    Scene* mScenePtr;
+    IScene* mScenePtr;
     QString mName;
 
     Node* mParent;

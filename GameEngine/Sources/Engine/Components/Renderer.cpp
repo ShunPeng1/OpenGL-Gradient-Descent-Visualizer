@@ -1,4 +1,4 @@
-#include "Engine/Nodes/Renderer.h"
+#include "Engine/Components/Renderer.h"
 
 Renderer::Renderer()
 {

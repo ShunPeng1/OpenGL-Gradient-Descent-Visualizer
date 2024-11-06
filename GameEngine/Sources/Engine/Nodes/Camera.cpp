@@ -20,7 +20,7 @@ void Camera::init()
 	initializeOpenGLFunctions();
 }
 
-void Camera::start(Scene* scene)
+void Camera::start(IScene* scene)
 {
 
 	glEnable(GL_DEPTH_TEST);
@@ -141,4 +141,17 @@ QMatrix4x4 Camera::getProjectionMatrix()
 	}
 
 	return projection;
+}
+
+void Camera::write(QJsonObject& json) const
+{
+}
+
+void Camera::read(const QJsonObject& json)
+{
+}
+
+void* Camera::accept(INodeVisitor* visitor)
+{
+	return visitor->visitCamera(this);
 }

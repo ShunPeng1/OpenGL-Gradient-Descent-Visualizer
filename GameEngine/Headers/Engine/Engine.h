@@ -1,14 +1,23 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-class Scene;
-class Node;
-class Component;
-class Camera;
+// Interfaces
+class IScene;
+class INodeVisitable;
+class INodeVisitor;
+class ISerializable;
 
-#include <QVector3D>
-#include <QQuaternion>
-#include <QMatrix4x4>
-#include <vector>
+
+// Components
+class Node;
+class Transform;
+class Renderer;
+
+// Nodes
+class Camera;
+class Container;
+class MeshRenderer;
+class Mesh;
+
 
 #endif // ENGINE_H

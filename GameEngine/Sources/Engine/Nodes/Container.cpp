@@ -25,3 +25,16 @@ void Container::setParent(Node* parent)
         transform.setParent(nullptr);
     }
 }
+
+void Container::write(QJsonObject& json) const
+{
+}
+
+void Container::read(const QJsonObject& json)
+{
+}
+
+void* Container::accept(INodeVisitor* visitor)
+{
+    return visitor->visitContainer(this);
+}

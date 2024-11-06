@@ -15,7 +15,7 @@ void Node::init()
 
 }
 
-void Node::tryStart(Scene* scene)
+void Node::tryStart(IScene* scene)
 {
 	if (!mIsStarted)
 	{
@@ -91,11 +91,11 @@ bool Node::getIsAlive() const
 	return mIsAlive;
 }
 
-void Node::setScene(Scene* scene) {
+void Node::setScene(IScene* scene) {
     mScenePtr = scene;
 }
 
-Scene* Node::getScene() const {
+IScene* Node::getScene() const {
     return mScenePtr;
 }
 
@@ -163,7 +163,12 @@ void Node::read(const QJsonObject& json) {
     }
 }
 
-void Node::start(Scene* scene)
+void* Node::accept(INodeVisitor* visitor)
+{
+	return visitor->visitNode(this);
+}
+
+void Node::start(IScene* scene)
 {
 	mScenePtr = scene;
 }
