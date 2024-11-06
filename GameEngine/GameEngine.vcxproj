@@ -146,6 +146,7 @@
     <ClInclude Include="Headers\Qt\Inputs\InputPublisher.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputSubscriber.h" />
     <QtMoc Include="Headers\Qt\MainWindow.h" />
+    <QtMoc Include="Headers\Qt\Inspector\InspectorWidget.h" />
     <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
     <ClCompile Include="Sources\Qt\Inputs\InputPublisher.cpp" />
     <ClCompile Include="Sources\Qt\Inputs\InputSubscriber.cpp" />
+    <ClCompile Include="Sources\Qt\Inspector\InspectorWidget.cpp" />
     <ClCompile Include="Sources\Qt\MainWindow.cpp" />
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
     <ClInclude Include="Headers\stdafx.h" />

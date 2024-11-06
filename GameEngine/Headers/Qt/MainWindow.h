@@ -1,11 +1,27 @@
 #pragma once
 
 #include <Engine/Engine.h>
+
+#include "Qt/Hierarchy/HierarchyWidget.h"
+#include "Qt/Inspector/InspectorWidget.h"
+#include "Qt/OpenGLWidget.h"
+
+#include "Engine/Interfaces/IScene.h"
+
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QTabWidget>
-#include "Engine/Interfaces/IScene.h"
-#include "Qt/Hierarchy/HierarchyWidget.h"
+#include <QTextEdit>
+#include <QTreeWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QHBoxLayout>
+
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,15 +37,14 @@ private slots:
 private:
     void createDockWidgets();
     void createControlButtons();
-    void updateInspectorView(QTreeWidgetItem* item);
 
 private:
     QDockWidget* mCameraViewDock;
     QDockWidget* mInspectorDock;
-    QWidget* mInspectorView;
 
     IScene* mPlayingScene;
     IScene* mEditingScene;
 
     HierarchyWidget* mHierarchyWidget;
+    InspectorWidget* mInspectorWidget;
 };

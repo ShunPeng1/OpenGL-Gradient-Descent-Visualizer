@@ -98,6 +98,15 @@
     <ClCompile Include="Sources\Qt\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\InspectorWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -193,6 +202,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Hierarchy\HierarchyItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\InspectorWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

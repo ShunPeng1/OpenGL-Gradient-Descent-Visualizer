@@ -1,17 +1,5 @@
 // MainWindow.cpp
 #include "Qt/MainWindow.h"
-#include "Qt/OpenGLWidget.h"
-#include <QTextEdit>
-#include <QTreeWidget>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QHBoxLayout>
-
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
 
 #include "TestGame/Scenes/TestScene.h"
 
@@ -47,8 +35,8 @@ void MainWindow::createDockWidgets() {
 
     // Create the inspector dock widget
     mInspectorDock = new QDockWidget(tr("Inspector"), this);
-    mInspectorView = new QWidget();
-    mInspectorDock->setWidget(mInspectorView);
+    mInspectorWidget = new InspectorWidget(this);
+    mInspectorDock->setWidget(mInspectorWidget);
     mInspectorDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Add dock widgets to the main window
@@ -56,7 +44,7 @@ void MainWindow::createDockWidgets() {
     addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
 
     // Connect signals
-    connect(mHierarchyWidget, &HierarchyWidget::itemSelectionChanged, this, &MainWindow::updateInspectorView);
+    connect(mHierarchyWidget, &HierarchyWidget::itemSelectionChanged, mInspectorWidget, &InspectorWidget::updateInspectorView);
 }
 
 void MainWindow::createControlButtons() {
@@ -76,30 +64,6 @@ void MainWindow::createControlButtons() {
 
     connect(playButton, &QPushButton::clicked, this, &MainWindow::onPlayButtonClicked);
     connect(pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
-}
-
-void MainWindow::updateInspectorView(QTreeWidgetItem* item) {
-    // Clear the inspector view
-    QLayout* layout = mInspectorView->layout();
-
-    if (layout) {
-        QWidget* widget = layout->widget();
-        QLayoutItem* child;
-        while ((child = layout->takeAt(0)) != nullptr) {
-            delete child->widget(); // Delete the widget
-            delete child; // Delete the layout item
-        }
-        delete layout; // Delete the layout itself
-    }
-
-    layout = new QVBoxLayout();
-    layout->setAlignment(Qt::AlignTop);
-
-    // Example properties, replace with actual properties of the selected node
-    QLabel* nameLabel = new QLabel("Name: " + item->text(0));
-    layout->addWidget(nameLabel);
-
-    mInspectorView->setLayout(layout);
 }
 
 void MainWindow::onPlayButtonClicked() {
