@@ -21,7 +21,6 @@ OpenGLWidget::OpenGLWidget(IScene* scene, QWidget* parent) : QOpenGLWidget(paren
 	mInputPublisher = new InputPublisher();
 
 	mCurrentScene = scene;
-	mCurrentScene->setInputPublisher(mInputPublisher);
 
     elapsedTimer = new QElapsedTimer();
 }
@@ -51,6 +50,7 @@ void OpenGLWidget::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
 
     mInputPublisher->resizeGLEvent(w, h);
+	mCurrentScene->getInputPublisher()->resizeGLEvent(w, h);
 
 }
 
@@ -62,20 +62,23 @@ void OpenGLWidget::paintGL() {
     mCurrentScene->start();
 
     mInputPublisher->update(deltaTime);
+	mCurrentScene->getInputPublisher()->update(deltaTime);
 	mCurrentScene->update(deltaTime);
 	mCurrentScene->render();
 }
 
 void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
 	mInputPublisher->keyPressEvent(event);
-    
+	mCurrentScene->getInputPublisher()->keyPressEvent(event);
 }
 
 void OpenGLWidget::keyReleaseEvent(QKeyEvent* event) {
     mInputPublisher->keyReleaseEvent(event);
+	mCurrentScene->getInputPublisher()->keyReleaseEvent(event);
 }
 
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event) {
     mInputPublisher->mouseMoveEvent(event);
+	mCurrentScene->getInputPublisher()->mouseMoveEvent(event);
 }

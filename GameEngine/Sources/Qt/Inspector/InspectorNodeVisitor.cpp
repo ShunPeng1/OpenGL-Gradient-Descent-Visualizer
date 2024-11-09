@@ -64,6 +64,7 @@ void* InspectorNodeVisitor::visitMeshRenderer(MeshRenderer* node) {
 void* InspectorNodeVisitor::visitCamera(Camera* node) {
 
     CameraWidget* transformWidget = new CameraWidget(node);
+    mStackItems.append(transformWidget);
 
 	visitContainer(node);
 

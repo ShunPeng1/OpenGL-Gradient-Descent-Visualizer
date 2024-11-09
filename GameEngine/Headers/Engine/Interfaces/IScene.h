@@ -38,10 +38,8 @@ public:
     virtual std::vector<Node*> getNodes() const = 0;
 
 	virtual void setInputPublisher(InputPublisher* inputPublisher) = 0;
-	virtual void setCamera(Camera* camera) = 0;
-
     virtual InputPublisher* getInputPublisher() const = 0;
-    virtual Camera* getCamera() const = 0;
+
 };
 
 #endif // ISCENE_H

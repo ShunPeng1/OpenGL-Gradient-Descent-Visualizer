@@ -138,6 +138,7 @@
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h" />
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h" />
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyItem.h" />
+    <ClInclude Include="Headers\Engine\Scenes\SceneManager.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />
     <ClCompile Include="Sources\Engine\Nodes\Container.cpp" />

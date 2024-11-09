@@ -10,6 +10,13 @@ void TestScene::load()
 	Scene::load();
 
 
+	Camera* camera = new Camera();
+	addNode(camera);
+
+	mCameraController = new FPSCameraController(camera);
+	inputPublisher->subscribe(mCameraController);
+
+
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
 	std::shared_ptr<Mesh> teapot = std::shared_ptr<Mesh>(tempLoader.loadObjFile(":/Resources/Models/teapot.obj"));
@@ -80,13 +87,11 @@ void TestScene::create()
 {
 	Scene::create();
 
-	mCameraController = new FPSCameraController(camera);
-	inputPublisher->subscribe(mCameraController);
 }
 
 TestScene::~TestScene()
 {
-	delete camera;
+	delete mCameraController;
 }
 
 

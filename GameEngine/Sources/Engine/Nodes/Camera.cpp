@@ -7,6 +7,7 @@ Camera::Camera()
 	mFar = 1000.0f;
 	mAspectRatio = 16.0f/9.0f;
 	mIsOrtho = false;
+	mDirty = true;
 
 	setName("Camera");
 }

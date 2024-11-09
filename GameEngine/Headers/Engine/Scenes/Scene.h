@@ -52,9 +52,6 @@ public:
 	void setInputPublisher(InputPublisher* inputPublisher);
 	InputPublisher* getInputPublisher() const;
 
-	void setCamera(Camera* camera);
-	Camera* getCamera() const;
-
 protected:
 	QString mName;
 
@@ -63,10 +60,7 @@ protected:
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
 	std::vector<std::shared_ptr<Mesh>> mMeshes;
 
-
 	InputPublisher* inputPublisher;
-	Camera* camera;
-
 
 };
 

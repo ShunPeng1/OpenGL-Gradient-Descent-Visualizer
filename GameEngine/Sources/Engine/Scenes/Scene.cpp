@@ -5,8 +5,6 @@ Scene::Scene()
 {
 	mMeshes = std::vector<std::shared_ptr<Mesh>>();
 	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
-
-	camera = new Camera();
 }
 
 Scene::~Scene()
@@ -18,6 +16,8 @@ void Scene::load()
 	ShaderProgram* defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
 	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
 
+	// Input publisher
+	inputPublisher = new InputPublisher();
 }
 
 void Scene::init()
@@ -33,9 +33,6 @@ void Scene::init()
 	{
 		node->init();
 	}
-
-	camera->init();
-	
 }
 
 void Scene::create()
@@ -51,6 +48,7 @@ void Scene::create()
 	mDefaultShader->setUniformValue("mUseTexture", false);
 	mDefaultShader->setUniformValue("mUseColor", true);
 	mDefaultShader->release();
+
 }
 
 void Scene::start()
@@ -65,13 +63,10 @@ void Scene::start()
 	{
 		node->tryStart(this);
 	}
-
-	camera->tryStart(this);
 }
 
 void Scene::update(float deltaTime)
 {
-	camera->tryUpdate(deltaTime);
 	for (auto& node : mChildrenNodes)
 	{
 		node->tryUpdate(deltaTime);
@@ -81,7 +76,6 @@ void Scene::update(float deltaTime)
 void Scene::render()
 {
 	mDefaultShader->bind();
-	camera->tryRender(*mDefaultShader);
 
 	for (auto& node : mChildrenNodes)
 	{
@@ -101,8 +95,6 @@ void Scene::clear()
 	{
 		node->clear();
 	}
-
-	camera->clear();
 
 	mDefaultShader->clear();
 }
@@ -219,16 +211,6 @@ void Scene::setInputPublisher(InputPublisher* inputPublisher)
 InputPublisher* Scene::getInputPublisher() const
 {
 	return this->inputPublisher;
-}
-
-void Scene::setCamera(Camera* camera)
-{
-	this->camera = camera;
-}
-
-Camera* Scene::getCamera() const
-{
-	return this->camera;
 }
 
 std::shared_ptr<Mesh> Scene::getMesh(int index) const
