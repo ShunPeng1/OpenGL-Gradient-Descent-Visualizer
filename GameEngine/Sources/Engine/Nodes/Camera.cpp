@@ -72,6 +72,12 @@ void Camera::setAspectRatio(float width, float height)
 	mDirty = true;
 }
 
+void Camera::setAspectRatio(float aspectRatio)
+{
+	mAspectRatio = aspectRatio;
+	mDirty = true;
+}
+
 void Camera::setIsOrtho(bool isOrtho)
 {
 	mIsOrtho = isOrtho;

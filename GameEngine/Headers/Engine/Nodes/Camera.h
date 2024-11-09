@@ -15,6 +15,7 @@ public:
 	void setNear(float near);
 	void setFar(float far);
 	void setAspectRatio(float width, float height);
+	void setAspectRatio(float aspectRatio);
 	void setIsOrtho(bool isOrtho);
 	void setWidth(float width);
 

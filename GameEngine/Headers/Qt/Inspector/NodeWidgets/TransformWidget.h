@@ -1,6 +1,6 @@
 // TransformWidget.h
-#ifndef TRANSFORMWIDGET_H
-#define TRANSFORMWIDGET_H
+#ifndef TRANSFORM_WIDGET_H
+#define TRANSFORM_WIDGET_H
 
 #include <QWidget>
 #include <QVector3D>
