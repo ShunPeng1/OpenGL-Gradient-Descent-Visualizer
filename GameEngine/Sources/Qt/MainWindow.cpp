@@ -25,7 +25,8 @@ void MainWindow::createDockWidgets() {
     // Create the hierarchy dock widget
     mHierarchyWidget = new HierarchyWidget(this);
     mHierarchyWidget->populateHierarchyView(mEditingScene);
-    addDockWidget(Qt::RightDockWidgetArea, mHierarchyWidget);
+    mHierarchyWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
+
 
     // Create the camera view dock widget
     mCameraViewDock = new QDockWidget(tr("Camera View"), this);
@@ -41,7 +42,12 @@ void MainWindow::createDockWidgets() {
 
     // Add dock widgets to the main window
     addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock);
+    addDockWidget(Qt::RightDockWidgetArea, mHierarchyWidget);
     addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
+
+	//  
+    setDockNestingEnabled(true);
+
 
     // Connect signals
     connect(mHierarchyWidget, &HierarchyWidget::itemSelectionChanged, mInspectorWidget, &InspectorWidget::updateInspectorView);
