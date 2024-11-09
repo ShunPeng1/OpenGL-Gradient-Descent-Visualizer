@@ -4,9 +4,12 @@ InspectorWidget::InspectorWidget(QWidget* parent) : QWidget(parent) {
     mLayout = new QVBoxLayout();
     mLayout->setAlignment(Qt::AlignTop);
     setLayout(mLayout);
+
+
+	mVisitor = new InspectorNodeVisitor();
 }
 
-void InspectorWidget::updateInspectorView(QTreeWidgetItem* item) {
+void InspectorWidget::updateInspectorView(HierarchyItem* item) {
     // Clear the inspector view
     QLayoutItem* child;
     while ((child = mLayout->takeAt(0)) != nullptr) {
@@ -14,8 +17,17 @@ void InspectorWidget::updateInspectorView(QTreeWidgetItem* item) {
         delete child; // Delete the layout item
     }
 
-    // Example properties, replace with actual properties of the selected node
-    QLabel* nameLabel = new QLabel("Name: " + item->text(0));
-    mLayout->addWidget(nameLabel);
+    Node* node = item->getNode();
+    if (node) {
+        mVisitor->clearStackItems();
+
+        node->accept(mVisitor);
+
+        const QList<QWidget*>& stackItems = mVisitor->getStackItems();
+        for (QWidget* widget : stackItems) {
+            mLayout->addWidget(widget);
+        }
+    
+    }
 }
 

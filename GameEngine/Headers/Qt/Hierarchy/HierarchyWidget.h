@@ -14,10 +14,9 @@ public:
     ~HierarchyWidget();
 
     void populateHierarchyView(IScene* scene);
-    void updateInspectorView(QTreeWidgetItem* item);
 
 signals:
-    void itemSelectionChanged(QTreeWidgetItem* item);
+    void itemSelectionChanged(HierarchyItem* item);
 
 private:
 	void addChildren(QTreeWidgetItem* parent, Node* node);

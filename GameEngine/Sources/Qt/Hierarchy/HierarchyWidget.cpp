@@ -8,10 +8,14 @@ HierarchyWidget::HierarchyWidget(QWidget* parent) : QDockWidget(tr("Hierarchy"),
 
     connect(mHierarchyTree, &QTreeWidget::itemSelectionChanged, [this]() {
         QTreeWidgetItem* selectedItem = mHierarchyTree->currentItem();
-        if (selectedItem) {
-            emit itemSelectionChanged(selectedItem);
-        }
-        });
+		if (!selectedItem) return;
+
+		HierarchyItem* item = dynamic_cast<HierarchyItem*>(selectedItem);
+        
+        if (!item) return;
+
+        emit itemSelectionChanged(item);
+    });
 
 }
 
@@ -48,6 +52,3 @@ void HierarchyWidget::populateHierarchyView(IScene* scene) {
     }
 }
 
-void HierarchyWidget::updateInspectorView(QTreeWidgetItem* item) {
-    // Implementation for updating the inspector view
-}
