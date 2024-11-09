@@ -151,6 +151,7 @@
     <QtMoc Include="Headers\Qt\Inspector\InspectorWidget.h" />
     <ClInclude Include="Headers\Qt\Inspector\InspectorNodeVisitor.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\TransformWidget.h" />
+    <QtMoc Include="Headers\Qt\Widgets\SectionWidget.h" />
     <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Sources\Qt\Inspector\InspectorWidget.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\TransformWidget.cpp" />
     <ClCompile Include="Sources\Qt\MainWindow.cpp" />
+    <ClCompile Include="Sources\Qt\Widgets\SectionWidget.cpp" />
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
     <ClInclude Include="Headers\stdafx.h" />
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp" />

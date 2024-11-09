@@ -12,6 +12,8 @@
 #include <memory> 
 
 #include "Engine/Components/Transform.h"
+#include "Qt/Widgets/SectionWidget.h"
+
 
 class TransformWidget : public QWidget {
     Q_OBJECT
@@ -36,7 +38,7 @@ private slots:
 
 private:
     std::weak_ptr<Transform> mTransform;
-
+	SectionWidget* mSection;
     QDoubleSpinBox* createDoubleSpinBox(double min, double max, double step, double value);
 
     QDoubleSpinBox* mPosX;

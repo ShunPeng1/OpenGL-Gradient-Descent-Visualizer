@@ -3,7 +3,13 @@
 #include <cmath>
 
 TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform() {
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    QVBoxLayout* widgetLayout = new QVBoxLayout(this);
+
+    SectionWidget* section = new SectionWidget("Transform", 0, this);
+    mSection = section;
+    widgetLayout->addWidget(section);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(section);
 
     // Position
     QHBoxLayout* posLayout = new QHBoxLayout();
@@ -37,6 +43,9 @@ TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform(
     scaleLayout->addWidget(mScaleY);
     scaleLayout->addWidget(mScaleZ);
     mainLayout->addLayout(scaleLayout);
+
+
+    section->setContentLayout(*mainLayout);
 
     connect(mPosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
 	connect(mPosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);

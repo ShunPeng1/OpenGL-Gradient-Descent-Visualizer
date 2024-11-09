@@ -113,6 +113,9 @@
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\TransformWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Widgets\SectionWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -229,6 +232,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\TransformWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Widgets\SectionWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
