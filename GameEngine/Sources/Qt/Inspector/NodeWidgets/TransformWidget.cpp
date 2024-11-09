@@ -2,15 +2,15 @@
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include <cmath>
 
-TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent) {
+TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform() {
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
 
     // Position
     QHBoxLayout* posLayout = new QHBoxLayout();
     posLayout->addWidget(new QLabel("Position:"));
-    mPosX = createDoubleSpinBox(-1000.0, 1000.0, 0.1, 0.0);
-    mPosY = createDoubleSpinBox(-1000.0, 1000.0, 0.1, 0.0);
-    mPosZ = createDoubleSpinBox(-1000.0, 1000.0, 0.1, 0.0);
+    mPosX = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
+    mPosY = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
+    mPosZ = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
     posLayout->addWidget(mPosX);
     posLayout->addWidget(mPosY);
     posLayout->addWidget(mPosZ);
@@ -18,7 +18,7 @@ TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent) {
 
     // Rotation
     QHBoxLayout* rotLayout = new QHBoxLayout();
-    rotLayout->addWidget(new QLabel("Rotation (Euler):"));
+    rotLayout->addWidget(new QLabel("Rotation:"));
     mRotX = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
     mRotY = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
     mRotZ = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
@@ -30,41 +30,72 @@ TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent) {
     // Scale
     QHBoxLayout* scaleLayout = new QHBoxLayout();
     scaleLayout->addWidget(new QLabel("Scale:"));
-    mScaleX = createDoubleSpinBox(0.0, 1000.0, 0.1, 1.0);
-    mScaleY = createDoubleSpinBox(0.0, 1000.0, 0.1, 1.0);
-    mScaleZ = createDoubleSpinBox(0.0, 1000.0, 0.1, 1.0);
+    mScaleX = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
+    mScaleY = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
+    mScaleZ = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
     scaleLayout->addWidget(mScaleX);
     scaleLayout->addWidget(mScaleY);
     scaleLayout->addWidget(mScaleZ);
     mainLayout->addLayout(scaleLayout);
 
-    connect(mPosX, SIGNAL(valueChanged(double)), this, SLOT(onPositionChanged()));
-    connect(mPosY, SIGNAL(valueChanged(double)), this, SLOT(onPositionChanged()));
-    connect(mPosZ, SIGNAL(valueChanged(double)), this, SLOT(onPositionChanged()));
+    connect(mPosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
+	connect(mPosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
+	connect(mPosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
 
-    connect(mRotX, SIGNAL(valueChanged(double)), this, SLOT(onRotationChanged()));
-    connect(mRotY, SIGNAL(valueChanged(double)), this, SLOT(onRotationChanged()));
-    connect(mRotZ, SIGNAL(valueChanged(double)), this, SLOT(onRotationChanged()));
+    connect(mRotX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onRotationChanged);
+    connect(mRotY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onRotationChanged);
+    connect(mRotZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onRotationChanged);
 
-    connect(mScaleX, SIGNAL(valueChanged(double)), this, SLOT(onScaleChanged()));
-    connect(mScaleY, SIGNAL(valueChanged(double)), this, SLOT(onScaleChanged()));
-    connect(mScaleZ, SIGNAL(valueChanged(double)), this, SLOT(onScaleChanged()));
+    connect(mScaleX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onScaleChanged);
+    connect(mScaleY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onScaleChanged);
+    connect(mScaleZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onScaleChanged);
 }
 
-void TransformWidget::setTransform(const QVector3D& position, const QQuaternion& rotation, const QVector3D& scale) {
-    mPosX->setValue(position.x());
-    mPosY->setValue(position.y());
-    mPosZ->setValue(position.z());
+TransformWidget::~TransformWidget()
+{
 
-    QVector3D euler = rotation.toEulerAngles();
-    mRotX->setValue(euler.x());
-    mRotY->setValue(euler.y());
-    mRotZ->setValue(euler.z());
-
-    mScaleX->setValue(scale.x());
-    mScaleY->setValue(scale.y());
-    mScaleZ->setValue(scale.z());
 }
+
+void TransformWidget::setTransform(std::shared_ptr<Transform> transform) {
+    mTransform = transform;
+    if (auto t = mTransform.lock()) {
+		QVector3D position = t->getWorldPosition();
+		QQuaternion rotation = t->getWorldRotation();
+		QVector3D scale = t->getWorldScale();
+
+		mPosX->setValue(position.x());
+		mPosY->setValue(position.y());
+		mPosZ->setValue(position.z());
+
+		QVector3D euler = rotation.toEulerAngles();
+		mRotX->setValue(euler.x());
+		mRotY->setValue(euler.y());
+		mRotZ->setValue(euler.z());
+
+		mScaleX->setValue(scale.x());
+		mScaleY->setValue(scale.y());
+		mScaleZ->setValue(scale.z());
+	}
+
+}
+
+void TransformWidget::clearTransform()
+{
+    mTransform.reset();
+	mPosX->setValue(0.0);
+	mPosY->setValue(0.0);
+	mPosZ->setValue(0.0);
+
+	mRotX->setValue(0.0);
+	mRotY->setValue(0.0);
+	mRotZ->setValue(0.0);
+
+	mScaleX->setValue(1.0);
+	mScaleY->setValue(1.0);
+	mScaleZ->setValue(1.0);
+
+}
+
 
 QVector3D TransformWidget::getPosition() const {
     return QVector3D(mPosX->value(), mPosY->value(), mPosZ->value());
@@ -79,14 +110,23 @@ QVector3D TransformWidget::getScale() const {
 }
 
 void TransformWidget::onPositionChanged() {
+    if (auto transform = mTransform.lock()) {
+        transform->setWorldPosition(getPosition());
+    }
     emit transformChanged();
 }
 
 void TransformWidget::onRotationChanged() {
+	if (auto transform = mTransform.lock()) {
+		transform->setWorldRotation(getRotation());
+	}
     emit transformChanged();
 }
 
 void TransformWidget::onScaleChanged() {
+	if (auto transform = mTransform.lock()) {
+		transform->setWorldScale(getScale());
+	}
     emit transformChanged();
 }
 

@@ -1,8 +1,8 @@
 #include "Engine/Nodes/Container.h"
 
-Container::Container() : Node(), transform(Transform())
+Container::Container() : Node()
 {
-
+    transform = std::make_shared<Transform>(); // Initialize with make_shared
     setName("Container");
 }
 
@@ -12,17 +12,17 @@ Container::~Container() noexcept
 
 void Container::setParent(Node* parent)
 {
-	Node::setParent(parent);
+    Node::setParent(parent);
 
     // Check if the parent is an instance of Container
     Container* parentContainer = dynamic_cast<Container*>(parent);
     if (parentContainer)
     {
-        transform.setParent(&parentContainer->transform);
+        transform->setParent(parentContainer->transform.get());
     }
     else
     {
-        transform.setParent(nullptr);
+        transform->setParent(nullptr);
     }
 }
 

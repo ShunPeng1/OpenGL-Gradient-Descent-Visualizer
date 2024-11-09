@@ -7,7 +7,7 @@ Transform::Transform() : mParent(nullptr)
 	mWorldRotation = QQuaternion(1.0f, 0.0f, 0.0f, 0.0f);
 	mWorldScale = QVector3D(1.0f, 1.0f, 1.0f);
 
-	mChildren = std::vector<std::unique_ptr<Transform>>();
+	mChildren = std::vector<Transform*>();
 }
 
 Transform::~Transform()
@@ -157,9 +157,7 @@ void Transform::setParent(Transform* parent)
 
 	if (mParent)
 	{
-		// Create a unique_ptr for this child and add it to the new parent
-		std::unique_ptr<Transform> thisChild(this);
-		mParent->addChild(std::move(thisChild));
+		mParent->addChild(this);
 	}
 }
 
@@ -168,15 +166,19 @@ Transform* Transform::getParent() const
 	return mParent;
 }
 
-void Transform::addChild(std::unique_ptr<Transform> child) {
+void Transform::addChild(Transform* child) {
+	if (child == nullptr) {
+		return;
+	}
+
 	child->setParent(this);
-	mChildren.push_back(std::move(child));
+	mChildren.push_back(child);
 }
 
 void Transform::removeChild(Transform* child) {
 	auto it = std::remove_if(mChildren.begin(), mChildren.end(),
-		[child](const std::unique_ptr<Transform>& ptr) {
-			return ptr.get() == child;
+		[child](const Transform* ptr) {
+			return ptr == child;
 		});
 	if (it != mChildren.end()) {
 		(*it)->setParent(nullptr);
@@ -186,19 +188,19 @@ void Transform::removeChild(Transform* child) {
 
 int Transform::getChildCount() const
 {
-	return mChildren.size();
+	return static_cast<int>(mChildren.size());
 }
 
 Transform* Transform::getChild(int index) const {
     if (index < 0 || index >= static_cast<int>(mChildren.size())) {
         return nullptr;
     }
-    return mChildren[index].get();
+	return mChildren[index];
 }
 
 int Transform::getChildIndex(Transform* child) const {
     for (size_t i = 0; i < mChildren.size(); ++i) {
-        if (mChildren[i].get() == child) {
+        if (mChildren[i] == child) {
             return static_cast<int>(i);
         }
     }

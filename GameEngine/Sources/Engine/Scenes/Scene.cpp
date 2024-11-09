@@ -176,7 +176,7 @@ void Scene::setName(const QString& name)
 int Scene::addMesh(std::shared_ptr<Mesh> mesh)
 {
 	mMeshes.push_back(mesh);
-	return mMeshes.size() - 1;
+	return static_cast<int>(mMeshes.size()) - 1;
 }
 
 void Scene::removeMesh(std::shared_ptr<Mesh> mesh)

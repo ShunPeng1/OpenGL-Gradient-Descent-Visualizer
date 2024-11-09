@@ -9,13 +9,19 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <memory> 
+
+#include "Engine/Components/Transform.h"
 
 class TransformWidget : public QWidget {
     Q_OBJECT
 
 public:
     TransformWidget(QWidget* parent = nullptr);
-    void setTransform(const QVector3D& position, const QQuaternion& rotation, const QVector3D& scale);
+    ~TransformWidget();
+    void setTransform(std::shared_ptr<Transform> transform);
+    void clearTransform();
+
     QVector3D getPosition() const;
     QQuaternion getRotation() const;
     QVector3D getScale() const;
@@ -29,6 +35,8 @@ private slots:
     void onScaleChanged();
 
 private:
+    std::weak_ptr<Transform> mTransform;
+
     QDoubleSpinBox* createDoubleSpinBox(double min, double max, double step, double value);
 
     QDoubleSpinBox* mPosX;

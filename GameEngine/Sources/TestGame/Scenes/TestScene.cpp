@@ -52,16 +52,16 @@ void TestScene::load()
 	MeshRenderer* coneNode = new MeshRenderer(cone);
 	MeshRenderer* planeNode = new MeshRenderer(plane);
 
-	teapotNode->transform.setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
-	triangleNode->transform.setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
-	quadNode->transform.setLocalPosition(QVector3D(3.0f, 0.0f, 0.0f));
-	circleNode->transform.setLocalPosition(QVector3D(5.0f, 0.0f, 0.0f));
-	cubeNode->transform.setLocalPosition(QVector3D(7.0f, 0.0f, 0.0f));
-	sphereNode->transform.setLocalPosition(QVector3D(9.0f, 0.0f, 0.0f));
-	icosphereNode->transform.setLocalPosition(QVector3D(11.0f, 0.0f, 0.0f));
-	cylinderNode->transform.setLocalPosition(QVector3D(13.0f, 0.0f, 0.0f));
-	coneNode->transform.setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
-	planeNode->transform.setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
+	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
+	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
+	quadNode->transform->setLocalPosition(QVector3D(3.0f, 0.0f, 0.0f));
+	circleNode->transform->setLocalPosition(QVector3D(5.0f, 0.0f, 0.0f));
+	cubeNode->transform->setLocalPosition(QVector3D(7.0f, 0.0f, 0.0f));
+	sphereNode->transform->setLocalPosition(QVector3D(9.0f, 0.0f, 0.0f));
+	icosphereNode->transform->setLocalPosition(QVector3D(11.0f, 0.0f, 0.0f));
+	cylinderNode->transform->setLocalPosition(QVector3D(13.0f, 0.0f, 0.0f));
+	coneNode->transform->setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
+	planeNode->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
 
 	addNode(teapotNode);
 	addNode(triangleNode);

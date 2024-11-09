@@ -44,10 +44,10 @@ void* InspectorNodeVisitor::visitNode(Node* node) {
 void* InspectorNodeVisitor::visitContainer(Container* node) {
     
     // Create and add the TransformWidget
-    Transform& transform = node->transform;
+    std::shared_ptr<Transform> transform = node->transform;
     TransformWidget* transformWidget = new TransformWidget();
-    transformWidget->setTransform(transform.getWorldPosition(), transform.getWorldRotation(), transform.getWorldScale());
-    
+    transformWidget->setTransform(transform);
+
     mStackItems.append(transformWidget);
 
 	visitNode(node);

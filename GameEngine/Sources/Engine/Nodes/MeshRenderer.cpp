@@ -54,7 +54,7 @@ void MeshRenderer::update(float deltaTime)
 
 void MeshRenderer::render(ShaderProgram& shaderProgram)
 {
-	QMatrix4x4 world = transform.getWorldMatrix();
+	QMatrix4x4 world = transform->getWorldMatrix();
 	shaderProgram.setUniformValue("mWorld", world);
 
 	mMesh->draw(shaderProgram);

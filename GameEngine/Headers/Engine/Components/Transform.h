@@ -46,7 +46,7 @@ public:
 
 private:
 
-	void addChild(std::unique_ptr<Transform> child);
+	void addChild(Transform* child);
 	void removeChild(Transform* child);
 	void updateChildrenWorldMatrix();
 
@@ -55,7 +55,7 @@ private:
 	QVector3D mWorldScale;
 
 	Transform* mParent;
-	std::vector<std::unique_ptr<Transform>> mChildren; // Use unique_ptr for children
+	std::vector<Transform*> mChildren; // Use unique_ptr for children
 
 };
 

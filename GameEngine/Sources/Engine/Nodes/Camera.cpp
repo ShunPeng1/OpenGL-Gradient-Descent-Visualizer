@@ -117,9 +117,9 @@ float Camera::getWidth() const
 QMatrix4x4 Camera::getViewMatrix()
 {
 	QMatrix4x4 view;
-	QVector3D mPosition = transform.getWorldPosition();
-	QVector3D mFront = transform.getWorldRotation() * QVector3D(0.0f, 0.0f, -1.0f);
-	QVector3D mUp = transform.getWorldRotation() * QVector3D(0.0f, 1.0f, 0.0f);
+	QVector3D mPosition = transform->getWorldPosition();
+	QVector3D mFront = transform->getWorldRotation() * QVector3D(0.0f, 0.0f, -1.0f);
+	QVector3D mUp = transform->getWorldRotation() * QVector3D(0.0f, 1.0f, 0.0f);
 
 	view.lookAt(mPosition, mPosition + mFront, mUp);
 	return view;

@@ -51,7 +51,7 @@ void FPSCameraController::updateMouseMove(QMouseEvent* event)
     QQuaternion pitchRotation = QQuaternion::fromAxisAndAngle(QVector3D(1.0f, 0.0f, 0.0f), mPitch);
     QQuaternion orientation = yawRotation * pitchRotation;
 
-    mCamera->transform.setLocalRotation(orientation);
+    mCamera->transform->setLocalRotation(orientation);
 }
 
 void FPSCameraController::updateResizeGL(int w, int h)
@@ -63,8 +63,8 @@ void FPSCameraController::updateResizeGL(int w, int h)
 void FPSCameraController::update(float deltaTime)
 {
     float cameraSpeed = mSpeed * deltaTime;
-    QVector3D position = mCamera->transform.getLocalPosition();
-	QQuaternion orientation = mCamera->transform.getLocalRotation();
+    QVector3D position = mCamera->transform->getLocalPosition();
+	QQuaternion orientation = mCamera->transform->getLocalRotation();
 	QVector3D front = orientation.rotatedVector(QVector3D(0.0f, 0.0f, -1.0f));
 	QVector3D up = orientation.rotatedVector(QVector3D(0.0f, 1.0f, 0.0f));
 
@@ -81,7 +81,7 @@ void FPSCameraController::update(float deltaTime)
     if (mKeyStates[Qt::Key_E])
         position += cameraSpeed * up;
 
-    mCamera->transform.setLocalPosition(position);
+    mCamera->transform->setLocalPosition(position);
 
     
 }
