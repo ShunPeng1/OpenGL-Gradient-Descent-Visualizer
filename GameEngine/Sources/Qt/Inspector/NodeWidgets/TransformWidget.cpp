@@ -12,44 +12,31 @@ TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform(
     QVBoxLayout* mainLayout = new QVBoxLayout(section);
 
     // Position
-    QHBoxLayout* posLayout = new QHBoxLayout();
-    posLayout->addWidget(new QLabel("Position:"));
-    mPosX = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
-    mPosY = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
-    mPosZ = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0);
-    posLayout->addWidget(mPosX);
-    posLayout->addWidget(mPosY);
-    posLayout->addWidget(mPosZ);
+    VectorFieldLayout* posLayout = new VectorFieldLayout("Position:", std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 1.0, 0.0, 3, this);
+    mPosX = posLayout->getSpinBoxes()[0];
+    mPosY = posLayout->getSpinBoxes()[1];
+    mPosZ = posLayout->getSpinBoxes()[2];
     mainLayout->addLayout(posLayout);
 
     // Rotation
-    QHBoxLayout* rotLayout = new QHBoxLayout();
-    rotLayout->addWidget(new QLabel("Rotation:"));
-    mRotX = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
-    mRotY = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
-    mRotZ = createDoubleSpinBox(-360.0, 360.0, 1.0, 0.0);
-    rotLayout->addWidget(mRotX);
-    rotLayout->addWidget(mRotY);
-    rotLayout->addWidget(mRotZ);
+    VectorFieldLayout* rotLayout = new VectorFieldLayout("Rotation:", -360.0, 360.0, 1.0, 0.0, 3, this);
+    mRotX = rotLayout->getSpinBoxes()[0];
+    mRotY = rotLayout->getSpinBoxes()[1];
+    mRotZ = rotLayout->getSpinBoxes()[2];
     mainLayout->addLayout(rotLayout);
 
     // Scale
-    QHBoxLayout* scaleLayout = new QHBoxLayout();
-    scaleLayout->addWidget(new QLabel("Scale:"));
-    mScaleX = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
-    mScaleY = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
-    mScaleZ = createDoubleSpinBox(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0);
-    scaleLayout->addWidget(mScaleX);
-    scaleLayout->addWidget(mScaleY);
-    scaleLayout->addWidget(mScaleZ);
+    VectorFieldLayout* scaleLayout = new VectorFieldLayout("Scale:", std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), 0.1, 1.0, 3, this);
+    mScaleX = scaleLayout->getSpinBoxes()[0];
+    mScaleY = scaleLayout->getSpinBoxes()[1];
+    mScaleZ = scaleLayout->getSpinBoxes()[2];
     mainLayout->addLayout(scaleLayout);
-
 
     section->setContentLayout(*mainLayout);
 
     connect(mPosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
-	connect(mPosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
-	connect(mPosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
+    connect(mPosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
+    connect(mPosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
 
     connect(mRotX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onRotationChanged);
     connect(mRotY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onRotationChanged);
@@ -139,10 +126,3 @@ void TransformWidget::onScaleChanged() {
     emit transformChanged();
 }
 
-QDoubleSpinBox* TransformWidget::createDoubleSpinBox(double min, double max, double step, double value) {
-    QDoubleSpinBox* spinBox = new QDoubleSpinBox();
-    spinBox->setRange(min, max);
-    spinBox->setSingleStep(step);
-    spinBox->setValue(value);
-    return spinBox;
-}

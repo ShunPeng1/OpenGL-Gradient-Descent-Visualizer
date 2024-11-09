@@ -13,6 +13,7 @@
 
 #include "Engine/Components/Transform.h"
 #include "Qt/Widgets/SectionWidget.h"
+#include "Qt/Layouts/VectorFieldLayout.h"
 
 
 class TransformWidget : public QWidget {
@@ -39,7 +40,6 @@ private slots:
 private:
     std::weak_ptr<Transform> mTransform;
 	SectionWidget* mSection;
-    QDoubleSpinBox* createDoubleSpinBox(double min, double max, double step, double value);
 
     QDoubleSpinBox* mPosX;
     QDoubleSpinBox* mPosY;

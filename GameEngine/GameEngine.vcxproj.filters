@@ -116,6 +116,9 @@
     <ClCompile Include="Sources\Qt\Widgets\SectionWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Layouts\VectorFieldLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -203,6 +206,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Qt\Inspector\InspectorNodeVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Qt\Layouts\VectorFieldLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
