@@ -20,7 +20,7 @@ class TransformWidget : public QWidget {
     Q_OBJECT
 
 public:
-    TransformWidget(QWidget* parent = nullptr);
+    TransformWidget(std::shared_ptr<Transform> transform, QWidget* parent = nullptr);
     ~TransformWidget();
     void setTransform(std::shared_ptr<Transform> transform);
     void clearTransform();
@@ -38,8 +38,11 @@ private slots:
     void onScaleChanged();
 
 private:
+    bool mIsUpdating;
+
     std::weak_ptr<Transform> mTransform;
-	SectionWidget* mSection;
+	
+    SectionWidget* mSection;
 
     QDoubleSpinBox* mPosX;
     QDoubleSpinBox* mPosY;
@@ -52,6 +55,7 @@ private:
     QDoubleSpinBox* mScaleX;
     QDoubleSpinBox* mScaleY;
     QDoubleSpinBox* mScaleZ;
+
 };
 
 #endif // TRANSFORMWIDGET_H

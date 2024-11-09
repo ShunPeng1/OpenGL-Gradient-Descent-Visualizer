@@ -2,7 +2,7 @@
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include <cmath>
 
-TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform() {
+TransformWidget::TransformWidget(std::shared_ptr<Transform> transform, QWidget* parent) : QWidget(parent), mTransform() {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
 
     SectionWidget* section = new SectionWidget("Transform", 0, this);
@@ -33,7 +33,30 @@ TransformWidget::TransformWidget(QWidget* parent) : QWidget(parent), mTransform(
     mainLayout->addLayout(scaleLayout);
 
     section->setContentLayout(*mainLayout);
+    
+	// Set the transform
+    mTransform = transform;
+    if (auto t = mTransform.lock()) {
+        QVector3D position = t->getWorldPosition();
+        QQuaternion rotation = t->getWorldRotation();
+        QVector3D scale = t->getWorldScale();
 
+        mPosX->setValue(position.x());
+        mPosY->setValue(position.y());
+        mPosZ->setValue(position.z());
+
+        QVector3D euler = rotation.toEulerAngles();
+        mRotX->setValue(euler.x());
+        mRotY->setValue(euler.y());
+        mRotZ->setValue(euler.z());
+
+        mScaleX->setValue(scale.x());
+        mScaleY->setValue(scale.y());
+        mScaleZ->setValue(scale.z());
+    }
+
+
+	// Connect signals
     connect(mPosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
     connect(mPosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
     connect(mPosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onPositionChanged);
@@ -53,8 +76,9 @@ TransformWidget::~TransformWidget()
 }
 
 void TransformWidget::setTransform(std::shared_ptr<Transform> transform) {
-    mTransform = transform;
-    if (auto t = mTransform.lock()) {
+	mTransform = transform;
+	mIsUpdating = true;
+	if (auto t = mTransform.lock()) {
 		QVector3D position = t->getWorldPosition();
 		QQuaternion rotation = t->getWorldRotation();
 		QVector3D scale = t->getWorldScale();
@@ -72,7 +96,7 @@ void TransformWidget::setTransform(std::shared_ptr<Transform> transform) {
 		mScaleY->setValue(scale.y());
 		mScaleZ->setValue(scale.z());
 	}
-
+	mIsUpdating = false;
 }
 
 void TransformWidget::clearTransform()
@@ -106,6 +130,9 @@ QVector3D TransformWidget::getScale() const {
 }
 
 void TransformWidget::onPositionChanged() {
+	if (mIsUpdating) {
+		return;
+	}
     if (auto transform = mTransform.lock()) {
         transform->setWorldPosition(getPosition());
     }
@@ -113,6 +140,9 @@ void TransformWidget::onPositionChanged() {
 }
 
 void TransformWidget::onRotationChanged() {
+    if (mIsUpdating) {
+        return;
+    }
 	if (auto transform = mTransform.lock()) {
 		transform->setWorldRotation(getRotation());
 	}
@@ -120,6 +150,9 @@ void TransformWidget::onRotationChanged() {
 }
 
 void TransformWidget::onScaleChanged() {
+    if (mIsUpdating) {
+        return;
+    }
 	if (auto transform = mTransform.lock()) {
 		transform->setWorldScale(getScale());
 	}

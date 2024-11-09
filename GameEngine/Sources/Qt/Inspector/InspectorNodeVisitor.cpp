@@ -4,6 +4,7 @@
 #include "Engine/Nodes/MeshRenderer.h"
 #include "Engine/Scenes/Node.h"
 
+#include "Qt/Inspector/NodeWidgets/NodeWidget.h"
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 
 #include "QVBoxLayout"
@@ -36,17 +37,15 @@ void* InspectorNodeVisitor::visit(INodeVisitable* node) {
 }
 
 void* InspectorNodeVisitor::visitNode(Node* node) {
-    QLabel* label = new QLabel("Node: " + node->getName());
-    mStackItems.append(label);
+    NodeWidget* nodeWidget = new NodeWidget(node);
+    mStackItems.append(nodeWidget);
     return nullptr;
 }
 
 void* InspectorNodeVisitor::visitContainer(Container* node) {
     
-    // Create and add the TransformWidget
     std::shared_ptr<Transform> transform = node->transform;
-    TransformWidget* transformWidget = new TransformWidget();
-    transformWidget->setTransform(transform);
+    TransformWidget* transformWidget = new TransformWidget(transform);
 
     mStackItems.append(transformWidget);
 
