@@ -24,7 +24,6 @@ void Camera::init()
 void Camera::start(IScene* scene)
 {
 
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Camera::update(float deltaTime)
@@ -35,7 +34,9 @@ void Camera::update(float deltaTime)
 void Camera::render(ShaderProgram& shaderProgram)
 {
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDepthFunc(GL_LESS);
 
 	QMatrix4x4 view = getViewMatrix();
 

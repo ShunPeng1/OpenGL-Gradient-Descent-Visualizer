@@ -6,6 +6,8 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTimer>
+#include <QOpenGLDebugMessage>
+
 
 #include <Engine/Interfaces/IScene.h>
 
@@ -24,6 +26,9 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
+
+private slots:
+    void handleLoggedMessage(const QOpenGLDebugMessage& debugMessage);
 
 private:
     float deltaTime;

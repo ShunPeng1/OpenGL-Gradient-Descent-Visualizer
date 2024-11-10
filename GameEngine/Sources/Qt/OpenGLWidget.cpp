@@ -10,7 +10,6 @@
 #include <QVector3D>
 
 
-
 OpenGLWidget::OpenGLWidget(IScene* scene, QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunctions() {
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
@@ -23,6 +22,8 @@ OpenGLWidget::OpenGLWidget(IScene* scene, QWidget* parent) : QOpenGLWidget(paren
 	mCurrentScene = scene;
 
     elapsedTimer = new QElapsedTimer();
+
+    
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -39,17 +40,33 @@ void OpenGLWidget::initializeGL() {
 
     elapsedTimer->start();
 
+    // Initialize QOpenGLDebugLogger
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+    if (context->hasExtension(QByteArrayLiteral("GL_KHR_debug"))) {
+        QOpenGLDebugLogger* logger = new QOpenGLDebugLogger(this);
+        if (logger->initialize()) {
+            connect(logger, &QOpenGLDebugLogger::messageLogged, this, &OpenGLWidget::handleLoggedMessage);
+            logger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
+        }
+        else {
+            qDebug() << "Failed to initialize QOpenGLDebugLogger";
+        }
+    }
+    else {
+        qDebug() << "GL_KHR_debug extension not available";
+    }
 }
 
 void OpenGLWidget::resizeGL(int w, int h) {
     if (h == 0) h = 1;
 
-    // Update the projection matrix
-    glViewport(0, 0, w, h);
-
     mInputPublisher->resizeGLEvent(w, h);
 	mCurrentScene->getInputPublisher()->resizeGLEvent(w, h);
 
+}
+
+void OpenGLWidget::handleLoggedMessage(const QOpenGLDebugMessage& debugMessage) {
+    qDebug() << "OpenGL Debug Message:" << debugMessage;
 }
 
 void OpenGLWidget::paintGL() {
@@ -57,12 +74,22 @@ void OpenGLWidget::paintGL() {
     deltaTime = (currentFrame - lastFrame) / 1000.0f; // Convert milliseconds to seconds
     lastFrame = currentFrame;
 
+
     mCurrentScene->start();
 
     mInputPublisher->update(deltaTime);
 	mCurrentScene->getInputPublisher()->update(deltaTime);
 	mCurrentScene->update(deltaTime);
 	mCurrentScene->render();
+
+    // Check for OpenGL errors
+    GLenum error = GL_NO_ERROR;
+    do {
+        error = glGetError();
+        if (error != GL_NO_ERROR) {
+            qDebug() << "OpenGL Error:" << error;
+        }
+    } while (error != GL_NO_ERROR);
 }
 
 void OpenGLWidget::keyPressEvent(QKeyEvent* event) {
