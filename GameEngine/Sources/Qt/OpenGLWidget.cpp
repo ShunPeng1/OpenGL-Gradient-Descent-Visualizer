@@ -34,10 +34,8 @@ void OpenGLWidget::initializeGL() {
 
     initializeOpenGLFunctions();
     mInputPublisher->clear();
-    mCurrentScene->clear();
 
 	mCurrentScene->init();
-    mCurrentScene->create();
 
     elapsedTimer->start();
 

@@ -125,6 +125,7 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Engine\Scenes\SceneManager.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\Camera.cpp" />

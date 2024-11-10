@@ -3,36 +3,52 @@
 
 #include "TestGame/Scenes/TestScene.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), mPlayingScene(new Scene()), mEditingScene(nullptr) {
-
-    mEditingScene = new TestScene();
-    mEditingScene->load();
-
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+    createScenes();
     createControlButtons();
     createDockWidgets();
 
 }
 
 MainWindow::~MainWindow() {
-    delete mPlayingScene;
-    if (mEditingScene) {
-        delete mEditingScene;
-    }
+
 }
 
+void MainWindow::createScenes() {
+    mSceneManager = new SceneManager();
+
+    IScene *firstScene = new TestScene();
+    
+	mSceneManager->addScene(firstScene);
+	mSceneManager->changeToScene(firstScene);
+
+    QOpenGLContext* context = QOpenGLContext::currentContext();
+    QOpenGLContext * global = QOpenGLContext::globalShareContext();
+
+}
 
 void MainWindow::createDockWidgets() {
+	IScene* currentScene = mSceneManager->getCurrentScene();
+
     // Create the hierarchy dock widget
     mHierarchyWidget = new HierarchyWidget(this);
-    mHierarchyWidget->populateHierarchyView(mEditingScene);
+    mHierarchyWidget->populateHierarchyView(currentScene);
     mHierarchyWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
 
 
     // Create the camera view dock widget
     mCameraViewDock = new QDockWidget(tr("Camera View"), this);
-    OpenGLWidget* openGLWidget = new OpenGLWidget(mEditingScene, this); // Create an instance of OpenGLWidget
+    OpenGLWidget* openGLWidget = new OpenGLWidget(currentScene, this); // Create an instance of OpenGLWidget
     mCameraViewDock->setWidget(openGLWidget);
     mCameraViewDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+
+    // Create the second camera view dock widget
+    mCameraViewDock2 = new QDockWidget(tr("Camera View 2"), this);
+    OpenGLWidget* openGLWidget2 = new OpenGLWidget(currentScene, this); // Create another instance of OpenGLWidget with a new scene
+    mCameraViewDock2->setWidget(openGLWidget2);
+    mCameraViewDock2->setAllowedAreas(Qt::AllDockWidgetAreas);
+	addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock2);
+
 
     // Create the inspector dock widget
     mInspectorDock = new QDockWidget(tr("Inspector"), this);
@@ -45,7 +61,7 @@ void MainWindow::createDockWidgets() {
     addDockWidget(Qt::RightDockWidgetArea, mHierarchyWidget);
     addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
 
-	//  
+	// Enable dock nesting
     setDockNestingEnabled(true);
 
 
@@ -73,18 +89,9 @@ void MainWindow::createControlButtons() {
 }
 
 void MainWindow::onPlayButtonClicked() {
-    if (!mEditingScene) {
-        mEditingScene = mPlayingScene->clone(); // Duplicate the current scene
-    }
-    // Start the game logic
+	// TODO: Play the game logic
 }
 
 void MainWindow::onPauseButtonClicked() {
-    if (mEditingScene) {
-        delete mPlayingScene;
-        mPlayingScene = mEditingScene->clone(); // Restore the backup scene
-        delete mEditingScene;
-        mEditingScene = nullptr;
-    }
-    // Pause the game logic
+    // TODO: Pause the game logic
 }

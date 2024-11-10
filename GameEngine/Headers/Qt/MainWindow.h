@@ -6,6 +6,7 @@
 #include "Qt/Inspector/InspectorWidget.h"
 #include "Qt/OpenGLWidget.h"
 
+#include "Engine/Scenes/SceneManager.h"
 #include "Engine/Interfaces/IScene.h"
 
 #include <QMainWindow>
@@ -35,15 +36,16 @@ private slots:
     void onPauseButtonClicked();
 
 private:
+	void createScenes();
     void createDockWidgets();
     void createControlButtons();
 
 private:
     QDockWidget* mCameraViewDock;
+	QDockWidget* mCameraViewDock2;
     QDockWidget* mInspectorDock;
 
-    IScene* mPlayingScene;
-    IScene* mEditingScene;
+    SceneManager* mSceneManager;
 
     HierarchyWidget* mHierarchyWidget;
     InspectorWidget* mInspectorWidget;
