@@ -37,22 +37,12 @@ void Scene::init()
 
 void Scene::create()
 {
-	// Bind attribute locations before linking
-	mDefaultShader->bindAttributeLocation("position", 0);
-	mDefaultShader->bindAttributeLocation("normal", 1);
-	mDefaultShader->bindAttributeLocation("texCoord", 2);
-	mDefaultShader->bindAttributeLocation("color", 3);
-
-	mDefaultShader->start();
-	mDefaultShader->bind();
-	mDefaultShader->setUniformValue("mUseTexture", false);
-	mDefaultShader->setUniformValue("mUseColor", true);
-	mDefaultShader->release();
 
 }
 
 void Scene::start()
 {
+	mDefaultShader->start();
 
 	for (auto& mesh : mMeshes)
 	{
