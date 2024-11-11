@@ -157,6 +157,7 @@
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\NodeWidget.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\CameraWidget.h" />
     <ClInclude Include="Headers\Qt\Layouts\VectorFieldLayout.h" />
+    <QtMoc Include="Headers\Qt\Scenes\SceneWidget.h" />
     <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />
     <None Include="Resources\Shaders\default.frag" />
     <None Include="Resources\Shaders\default.vert" />
@@ -176,7 +177,7 @@
     <ClInclude Include="Headers\Engine\Renders\VAO.h" />
     <ClInclude Include="Headers\Engine\Renders\VBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Vertex.h" />
-    <QtMoc Include="Headers\Qt\OpenGLWidget.h" />
+    <QtMoc Include="Headers\Qt\Scenes\OpenGLWidget.h" />
     <ClInclude Include="Headers\Engine\Scenes\Node.h" />
     <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\TransformWidget.cpp" />
     <ClCompile Include="Sources\Qt\Layouts\VectorFieldLayout.cpp" />
     <ClCompile Include="Sources\Qt\MainWindow.cpp" />
+    <ClCompile Include="Sources\Qt\Scenes\SceneWidget.cpp" />
     <ClCompile Include="Sources\Qt\Widgets\SectionWidget.cpp" />
     <ClCompile Include="Sources\TestGame\Controllers\FPSCameraController.cpp" />
     <ClInclude Include="Headers\stdafx.h" />
@@ -198,7 +200,7 @@
     <ClCompile Include="Sources\Engine\Renders\ShaderProgram.cpp" />
     <ClCompile Include="Sources\Engine\Renders\VAO.cpp" />
     <ClCompile Include="Sources\Engine\Renders\VBO.cpp" />
-    <ClCompile Include="Sources\Qt\OpenGLWidget.cpp" />
+    <ClCompile Include="Sources\Qt\Scenes\OpenGLWidget.cpp" />
     <ClCompile Include="Sources\TestGame\Scenes\TestScene.cpp" />
     <ClCompile Include="Sources\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>

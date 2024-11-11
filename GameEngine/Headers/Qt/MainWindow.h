@@ -4,7 +4,7 @@
 
 #include "Qt/Hierarchy/HierarchyWidget.h"
 #include "Qt/Inspector/InspectorWidget.h"
-#include "Qt/OpenGLWidget.h"
+#include "Qt/Scenes/SceneWidget.h"
 
 #include "Engine/Scenes/SceneManager.h"
 #include "Engine/Interfaces/IScene.h"
@@ -41,12 +41,14 @@ private:
     void createControlButtons();
 
 private:
-    QDockWidget* mCameraViewDock;
-	QDockWidget* mCameraViewDock2;
-    QDockWidget* mInspectorDock;
 
     SceneManager* mSceneManager;
 
+    SceneWidget* mSceneWidget;
+    SceneWidget* mSceneWidget2;
+
+
     HierarchyWidget* mHierarchyWidget;
+    QDockWidget* mInspectorDock;
     InspectorWidget* mInspectorWidget;
 };

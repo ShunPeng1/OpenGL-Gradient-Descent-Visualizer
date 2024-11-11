@@ -41,7 +41,7 @@
     <ClCompile Include="Sources\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Qt\OpenGLWidget.cpp">
+    <ClCompile Include="Sources\Qt\Scenes\OpenGLWidget.cpp">
       <Filter>Source Files\Qt</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp">
@@ -126,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Engine\Scenes\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Scenes\SceneWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -234,7 +237,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Headers\Qt\OpenGLWidget.h">
+    <QtMoc Include="Headers\Qt\Scenes\OpenGLWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\MainWindow.h">
@@ -259,6 +262,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\CameraWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Scenes\SceneWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

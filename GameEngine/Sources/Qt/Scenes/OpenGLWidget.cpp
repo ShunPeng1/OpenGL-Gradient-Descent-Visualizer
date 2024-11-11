@@ -1,4 +1,4 @@
-#include "Qt/OpenGLWidget.h"
+#include "Qt/Scenes/OpenGLWidget.h"
 #include <QTimer>
 #include <QApplication>
 #include <QOpenGLFunctions>

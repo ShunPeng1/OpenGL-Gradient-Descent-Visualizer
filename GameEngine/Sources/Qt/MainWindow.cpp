@@ -37,17 +37,13 @@ void MainWindow::createDockWidgets() {
 
 
     // Create the camera view dock widget
-    mCameraViewDock = new QDockWidget(tr("Camera View"), this);
-    OpenGLWidget* openGLWidget = new OpenGLWidget(currentScene, this); // Create an instance of OpenGLWidget
-    mCameraViewDock->setWidget(openGLWidget);
-    mCameraViewDock->setAllowedAreas(Qt::AllDockWidgetAreas);
+    mSceneWidget = new SceneWidget(tr("Camera View"), mSceneManager, this);
+    mSceneWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Create the second camera view dock widget
-    mCameraViewDock2 = new QDockWidget(tr("Camera View 2"), this);
-    OpenGLWidget* openGLWidget2 = new OpenGLWidget(currentScene, this); // Create another instance of OpenGLWidget with a new scene
-    mCameraViewDock2->setWidget(openGLWidget2);
-    mCameraViewDock2->setAllowedAreas(Qt::AllDockWidgetAreas);
-	addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock2);
+	mSceneWidget2 = new SceneWidget(tr("Camera View 2"), mSceneManager, this);
+	mSceneWidget2->setAllowedAreas(Qt::AllDockWidgetAreas);
+	addDockWidget(Qt::LeftDockWidgetArea, mSceneWidget2);
 
 
     // Create the inspector dock widget
@@ -57,7 +53,7 @@ void MainWindow::createDockWidgets() {
     mInspectorDock->setAllowedAreas(Qt::AllDockWidgetAreas);
 
     // Add dock widgets to the main window
-    addDockWidget(Qt::LeftDockWidgetArea, mCameraViewDock);
+    addDockWidget(Qt::LeftDockWidgetArea, mSceneWidget);
     addDockWidget(Qt::RightDockWidgetArea, mHierarchyWidget);
     addDockWidget(Qt::RightDockWidgetArea, mInspectorDock);
 

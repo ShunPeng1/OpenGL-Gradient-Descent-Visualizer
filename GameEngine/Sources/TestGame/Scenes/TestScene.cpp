@@ -13,6 +13,10 @@ void TestScene::load()
 	Camera* camera = new Camera();
 	addNode(camera);
 
+
+	Camera* camera2 = new Camera();
+	addNode(camera2);
+
 	mCameraController = new FPSCameraController(camera);
 	inputPublisher->subscribe(mCameraController);
 
