@@ -33,6 +33,11 @@ void Scene::init()
 	{
 		node->init();
 	}
+
+	for (auto& camera : mCameras)
+	{
+		camera->init();
+	}
 }
 
 void Scene::create()
@@ -53,6 +58,11 @@ void Scene::start()
 	{
 		node->tryStart(this);
 	}
+
+	for (auto& camera : mCameras)
+	{
+		camera->tryStart(this);
+	}
 }
 
 void Scene::update(float deltaTime)
@@ -61,16 +71,24 @@ void Scene::update(float deltaTime)
 	{
 		node->tryUpdate(deltaTime);
 	}
+
+	for (auto& camera : mCameras)
+	{
+		camera->tryUpdate(deltaTime);
+	}
 }
 
 void Scene::render()
 {
 	mDefaultShader->bind();
 
+	mMainCamera->tryRender(*mDefaultShader); // Only render the main camera
+
 	for (auto& node : mChildrenNodes)
 	{
 		node->tryRender(*mDefaultShader);
 	}
+
 	mDefaultShader->release();
 }
 
@@ -84,6 +102,11 @@ void Scene::clear()
 	for (auto& node : mChildrenNodes)
 	{
 		node->clear();
+	}
+
+	for (auto& camera : mCameras)
+	{
+		camera->clear();
 	}
 
 	mDefaultShader->clear();
@@ -168,17 +191,41 @@ void Scene::removeMesh(std::shared_ptr<Mesh> mesh)
 
 void Scene::addNode(Node* node)
 {
-	mChildrenNodes.push_back(std::unique_ptr<Node>(node));
+	Camera* camera = dynamic_cast<Camera*>(node);
+	if (camera != nullptr) {
+		if (mMainCamera == nullptr) {
+			mMainCamera = camera;
+		}
+		mCameras.push_back(camera);
+	}
+	else {
+		mChildrenNodes.push_back(std::unique_ptr<Node>(node));
+	}
+
 }
 
 void Scene::removeNode(Node* node)
 {
-	auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
-		[node](const std::unique_ptr<Node>& ptr) {
-			return ptr.get() == node;
-		});
-	if (it != mChildrenNodes.end()) {
-		mChildrenNodes.erase(it, mChildrenNodes.end());
+	Camera* camera = dynamic_cast<Camera*>(node);
+
+	if (camera != nullptr) {
+		auto it = std::remove(mCameras.begin(), mCameras.end(), camera);
+		if (it != mCameras.end()) {
+			mCameras.erase(it, mCameras.end());
+		}
+
+		if (mMainCamera == camera) {
+			mMainCamera = mCameras.size() > 0 ? mCameras[0] : nullptr;
+		}
+	}
+	else {
+		auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
+			[node](const std::unique_ptr<Node>& ptr) {
+				return ptr.get() == node;
+			});
+		if (it != mChildrenNodes.end()) {
+			mChildrenNodes.erase(it, mChildrenNodes.end());
+		}
 	}
 }
 
@@ -191,6 +238,16 @@ std::vector<Node*> Scene::getNodes() const
 	}
 
 	return children;
+}
+
+std::vector<Camera*> Scene::getCameras()
+{
+	return mCameras;
+}
+
+void Scene::setMainCamera(Camera* camera)
+{
+	mMainCamera = camera;
 }
 
 void Scene::setInputPublisher(InputPublisher* inputPublisher)

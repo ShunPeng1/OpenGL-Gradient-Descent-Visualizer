@@ -49,6 +49,9 @@ public:
 	void removeNode(Node* node);
 	virtual std::vector<Node*> getNodes() const;
 
+	std::vector<Camera*> getCameras();
+	void setMainCamera(Camera* camera);
+
 	void setInputPublisher(InputPublisher* inputPublisher);
 	InputPublisher* getInputPublisher() const;
 
@@ -59,6 +62,8 @@ protected:
 
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
 	std::vector<std::shared_ptr<Mesh>> mMeshes;
+	std::vector<Camera*> mCameras;
+	Camera* mMainCamera;
 
 	InputPublisher* inputPublisher;
 

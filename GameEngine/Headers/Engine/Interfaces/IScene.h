@@ -36,6 +36,9 @@ public:
     virtual void addNode(Node* node) = 0;
     virtual void removeNode(Node* node) = 0;
     virtual std::vector<Node*> getNodes() const = 0;
+    virtual std::vector<Camera*> getCameras() = 0;
+	virtual void setMainCamera(Camera* camera) = 0;
+
 
 	virtual void setInputPublisher(InputPublisher* inputPublisher) = 0;
     virtual InputPublisher* getInputPublisher() const = 0;
