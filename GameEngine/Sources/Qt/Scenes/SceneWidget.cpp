@@ -2,10 +2,17 @@
 
 SceneWidget::SceneWidget(const QString& title, SceneManager* sceneManager, QWidget* parent)
     : QDockWidget(title, parent), mSceneManager(sceneManager) {
-	QWidget* mainContainer = new QWidget(this);
+    IScene* currentScene = mSceneManager->getCurrentScene();
+    auto cameras = currentScene->getCameras();
+    
+    QWidget* mainContainer = new QWidget(this);
 	QVBoxLayout* mainLayout = new QVBoxLayout(mainContainer);
 	
 	mOpenGLWidget = new OpenGLWidget(mSceneManager->getCurrentScene(), mainContainer);
+	if (cameras.size() > 0) {
+		mOpenGLWidget->setCurrentCamera(cameras[0]);
+	}
+
     QWidget* topContainer = new QWidget(this);
 
 	mainLayout->addWidget(topContainer); 
@@ -17,8 +24,10 @@ SceneWidget::SceneWidget(const QString& title, SceneManager* sceneManager, QWidg
     // Camera dropdown
     mCameraDropdown = new QComboBox(topContainer);
     // Populate with camera options (example)
-    mCameraDropdown->addItem("Camera 1");
-    mCameraDropdown->addItem("Camera 2");
+    for (auto camera : cameras) {
+        mCameraDropdown->addItem(camera->getName());
+    }
+
     connect(mCameraDropdown, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SceneWidget::onCameraChanged);
 
     // Resolution width
@@ -49,8 +58,11 @@ SceneWidget::~SceneWidget()
 }
 
 void SceneWidget::onCameraChanged(int index) {
-    // Handle camera change
-    // Example: mOpenGLWidget->setMainCamera(index);
+	IScene* mCurrentScene = mSceneManager->getCurrentScene();
+    auto cameras = mCurrentScene->getCameras();
+    if (index >= 0 && index < cameras.size()) {
+        mOpenGLWidget->setCurrentCamera(cameras[index]);
+    }
 }
 
 void SceneWidget::onResolutionChanged() {

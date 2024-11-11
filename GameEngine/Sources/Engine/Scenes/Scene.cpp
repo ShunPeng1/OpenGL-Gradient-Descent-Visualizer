@@ -33,11 +33,6 @@ void Scene::init()
 	{
 		node->init();
 	}
-
-	for (auto& camera : mCameras)
-	{
-		camera->init();
-	}
 }
 
 void Scene::create()
@@ -59,10 +54,6 @@ void Scene::start()
 		node->tryStart(this);
 	}
 
-	for (auto& camera : mCameras)
-	{
-		camera->tryStart(this);
-	}
 }
 
 void Scene::update(float deltaTime)
@@ -70,11 +61,6 @@ void Scene::update(float deltaTime)
 	for (auto& node : mChildrenNodes)
 	{
 		node->tryUpdate(deltaTime);
-	}
-
-	for (auto& camera : mCameras)
-	{
-		camera->tryUpdate(deltaTime);
 	}
 }
 
@@ -86,6 +72,11 @@ void Scene::render()
 
 	for (auto& node : mChildrenNodes)
 	{
+		Camera* camera = dynamic_cast<Camera*>(node.get());
+		if (camera != nullptr) { // Skip camera nodes
+			continue;
+		}
+
 		node->tryRender(*mDefaultShader);
 	}
 
@@ -102,11 +93,6 @@ void Scene::clear()
 	for (auto& node : mChildrenNodes)
 	{
 		node->clear();
-	}
-
-	for (auto& camera : mCameras)
-	{
-		camera->clear();
 	}
 
 	mDefaultShader->clear();
@@ -198,9 +184,9 @@ void Scene::addNode(Node* node)
 		}
 		mCameras.push_back(camera);
 	}
-	else {
-		mChildrenNodes.push_back(std::unique_ptr<Node>(node));
-	}
+
+	mChildrenNodes.push_back(std::unique_ptr<Node>(node));
+	
 
 }
 
@@ -218,15 +204,15 @@ void Scene::removeNode(Node* node)
 			mMainCamera = mCameras.size() > 0 ? mCameras[0] : nullptr;
 		}
 	}
-	else {
-		auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
-			[node](const std::unique_ptr<Node>& ptr) {
-				return ptr.get() == node;
-			});
-		if (it != mChildrenNodes.end()) {
-			mChildrenNodes.erase(it, mChildrenNodes.end());
-		}
+
+	auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
+		[node](const std::unique_ptr<Node>& ptr) {
+			return ptr.get() == node;
+		});
+	if (it != mChildrenNodes.end()) {
+		mChildrenNodes.erase(it, mChildrenNodes.end());
 	}
+	
 }
 
 std::vector<Node*> Scene::getNodes() const

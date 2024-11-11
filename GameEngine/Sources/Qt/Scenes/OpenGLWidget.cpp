@@ -31,6 +31,11 @@ OpenGLWidget::~OpenGLWidget()
     delete elapsedTimer;
 }
 
+void OpenGLWidget::setCurrentCamera(Camera* camera)
+{
+	mRenderCamera = camera;
+}
+
 void OpenGLWidget::initializeGL() {
 
     initializeOpenGLFunctions();
@@ -70,6 +75,9 @@ void OpenGLWidget::handleLoggedMessage(const QOpenGLDebugMessage& debugMessage) 
 }
 
 void OpenGLWidget::paintGL() {
+    if (mRenderCamera == nullptr) 
+        return;
+
  	qint64 currentFrame = elapsedTimer->elapsed();
     deltaTime = (currentFrame - lastFrame) / 1000.0f; // Convert milliseconds to seconds
     lastFrame = currentFrame;
@@ -80,6 +88,7 @@ void OpenGLWidget::paintGL() {
     mInputPublisher->update(deltaTime);
 	mCurrentScene->getInputPublisher()->update(deltaTime);
 	mCurrentScene->update(deltaTime);
+    mCurrentScene->setMainCamera(mRenderCamera);
 	mCurrentScene->render();
 
     // Check for OpenGL errors

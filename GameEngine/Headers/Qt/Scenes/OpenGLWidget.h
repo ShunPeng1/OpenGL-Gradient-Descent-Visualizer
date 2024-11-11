@@ -19,6 +19,9 @@ public:
     OpenGLWidget(IScene* scene, QWidget* parent = nullptr);
 	~OpenGLWidget();
 
+public:
+    void setCurrentCamera(Camera* camera);
+
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
@@ -36,6 +39,7 @@ private:
     QElapsedTimer* elapsedTimer;
     
     IScene* mCurrentScene;
+	Camera* mRenderCamera;
 	InputPublisher* mInputPublisher;
 
 };
