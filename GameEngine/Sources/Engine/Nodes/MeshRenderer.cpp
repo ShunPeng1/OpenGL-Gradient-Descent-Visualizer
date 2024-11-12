@@ -6,7 +6,7 @@ MeshRenderer::MeshRenderer() : Container()
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
 
-	setName("Mesh Renderer");
+	setObjectName("Mesh Renderer");
 }
 
 MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID) : Container()
@@ -15,7 +15,7 @@ MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID) : Container()
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
 
-	setName("Mesh Renderer");
+	setObjectName("Mesh Renderer");
 }
 
 void MeshRenderer::init()

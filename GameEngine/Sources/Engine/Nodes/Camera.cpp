@@ -9,7 +9,7 @@ Camera::Camera()
 	mIsOrtho = false;
 	mDirty = true;
 
-	setName("Camera");
+	setObjectName("Camera");
 }
 
 Camera::~Camera() noexcept

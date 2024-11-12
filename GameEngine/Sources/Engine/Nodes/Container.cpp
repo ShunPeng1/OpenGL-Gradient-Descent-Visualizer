@@ -3,7 +3,7 @@
 Container::Container() : Node()
 {
     transform = std::make_shared<Transform>(); // Initialize with make_shared
-    setName("Container");
+    setObjectName("Container");
 }
 
 Container::~Container() noexcept

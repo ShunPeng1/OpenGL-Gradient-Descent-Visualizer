@@ -19,27 +19,35 @@ NodeWidget::NodeWidget(Node* node, QWidget* parent) : QWidget(parent), mNode() {
 
 	section->setContentLayout(*mainLayout);
 
-    mNode = node;
-    if (mNode) {
-        mNameEdit->setText(mNode->getName());
-        mIsAliveCheckBox->setChecked(mNode->getIsAlive());
-    }
+    connect(mNameEdit, &QLineEdit::textEdited, this, &NodeWidget::onObjectNameSet);
+    connect(mIsAliveCheckBox, &QCheckBox::clicked, this, &NodeWidget::onIsAliveSet);
 
-
-    connect(mNameEdit, &QLineEdit::textChanged, this, &NodeWidget::onNameChanged);
-    connect(mIsAliveCheckBox, &QCheckBox::toggled, this, &NodeWidget::onIsAliveChanged);
+	setNode(node);
 }
 
-NodeWidget::~NodeWidget() {}
+NodeWidget::~NodeWidget() 
+{
+    if (mNode) {
+        disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+        disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+    }
+}
 
 void NodeWidget::setNode(Node* node) {
-    mNode = node;
-	mIsUpdating = true;
-    if (node) {
-        mNameEdit->setText(node->getName());
-        mIsAliveCheckBox->setChecked(node->getIsAlive());
+    if (mNode) {
+        disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+        disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
     }
-	mIsUpdating = false;
+
+    mNode = node;
+    if (node) {
+        mNameEdit->setText(node->objectName());
+        mIsAliveCheckBox->setChecked(node->getIsAlive());
+
+        connect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+        connect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+
+    }
 }
 
 void NodeWidget::clearNode() {
@@ -57,9 +65,15 @@ bool NodeWidget::getIsAlive() const {
 }
 
 void NodeWidget::onIsAliveChanged(bool isAlive) {
-	if (mIsUpdating) {
-		return;
-	}
+    mIsAliveCheckBox->setChecked(isAlive);
+}
+
+void NodeWidget::onObjectNameChanged(const QString& name) {
+    mNameEdit->setText(name);
+}
+
+void NodeWidget::onIsAliveSet(bool isAlive)
+{
     if (mNode) {
         if (isAlive) {
             mNode->revive();
@@ -70,11 +84,9 @@ void NodeWidget::onIsAliveChanged(bool isAlive) {
     }
 }
 
-void NodeWidget::onNameChanged(const QString& name) {
-    if (mIsUpdating) {
-        return;
-    }
+void NodeWidget::onObjectNameSet(const QString& name)
+{
     if (mNode) {
-        mNode->setName(name);
+        mNode->setObjectName(name);
     }
 }

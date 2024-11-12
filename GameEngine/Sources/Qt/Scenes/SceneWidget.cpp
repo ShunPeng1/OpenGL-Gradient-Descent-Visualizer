@@ -25,7 +25,7 @@ SceneWidget::SceneWidget(const QString& title, SceneManager* sceneManager, QWidg
     mCameraDropdown = new QComboBox(topContainer);
     // Populate with camera options (example)
     for (auto camera : cameras) {
-        mCameraDropdown->addItem(camera->getName());
+        mCameraDropdown->addItem(camera->objectName());
     }
 
     connect(mCameraDropdown, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SceneWidget::onCameraChanged);

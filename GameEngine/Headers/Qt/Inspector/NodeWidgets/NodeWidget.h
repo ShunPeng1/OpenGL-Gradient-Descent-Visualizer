@@ -28,12 +28,13 @@ public:
 
 private slots:
     void onIsAliveChanged(bool isAlive);
-    void onNameChanged(const QString& name);
+    void onObjectNameChanged(const QString& name);
+
+	void onIsAliveSet(bool isAlive);
+	void onObjectNameSet(const QString& name);
 
 
 private:
-    bool mIsUpdating;
-
     Node* mNode;
 
     SectionWidget* mSection;

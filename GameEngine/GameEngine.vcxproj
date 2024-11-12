@@ -178,7 +178,7 @@
     <ClInclude Include="Headers\Engine\Renders\VBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Vertex.h" />
     <QtMoc Include="Headers\Qt\Scenes\OpenGLWidget.h" />
-    <ClInclude Include="Headers\Engine\Scenes\Node.h" />
+    <QtMoc Include="Headers\Engine\Scenes\Node.h" />
     <ClInclude Include="Headers\Engine\Scenes\Scene.h" />
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h" />
     <ClCompile Include="Sources\Qt\Inputs\InputPublisher.cpp" />

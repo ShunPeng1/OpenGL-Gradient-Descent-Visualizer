@@ -10,9 +10,12 @@
 
 #include <vector>
 #include <memory>
+#include <QObject>
 
-class Node : public ISerializable, public INodeVisitable
+class Node : public QObject, public ISerializable, public INodeVisitable
 {
+    Q_OBJECT
+
 public:
     Node();
     virtual ~Node();
@@ -28,9 +31,6 @@ public:
     bool getIsAlive() const;
 
 public:
-    void setName(const QString& name);
-    QString getName() const;
-
     void setScene(IScene* scene);
     IScene* getScene() const;
 
@@ -40,11 +40,14 @@ public:
     int getChildCount() const;
     Node* getChild(int index) const;
 	std::vector<Node*> getChildren() const;
-
+    
 public: // Interfaces
     virtual void write(QJsonObject& json) const;
     virtual void read(const QJsonObject& json);
     virtual void* accept(INodeVisitor* visitor);
+
+signals:
+    void isAliveChanged(bool isAlive);
 
 protected:
     virtual void start(IScene* scene);
@@ -58,7 +61,6 @@ protected:
     bool mIsAlive;
     bool mIsStarted;
     IScene* mScenePtr;
-    QString mName;
 
     Node* mParent;
     std::vector<std::unique_ptr<Node>> mChildren;

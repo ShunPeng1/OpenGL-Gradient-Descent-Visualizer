@@ -7,6 +7,6 @@ Node* HierarchyItem::getNode() {
 void HierarchyItem::setNode(Node* val) {
 	mNode = val;
 
-	setText(0, mNode->getName());
+	setText(0, mNode->objectName());
 
 }

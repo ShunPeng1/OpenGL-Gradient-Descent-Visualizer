@@ -12,12 +12,12 @@ void TestScene::load()
 
 	Camera* camera = new Camera();
 	addNode(camera);
-	camera->setName("Camera 1");
+	camera->setObjectName("Camera 1");
 
 
 	Camera* camera2 = new Camera();
 	addNode(camera2);
-	camera2->setName("Camera 2");
+	camera2->setObjectName("Camera 2");
 	camera2->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 10.0f));
 
 	mCameraController = new FPSCameraController(camera);
