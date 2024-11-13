@@ -38,7 +38,7 @@ void TestScene::load()
 
 	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
 	ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	QString expression = "Math.sin(x) * Math.sin(y)";
+	QString expression = "Math.sin($x) * Math.sin($y)";
 	Mesh* plane = tempLoader.loadPlane(expression, xRange, yRange);
 
 

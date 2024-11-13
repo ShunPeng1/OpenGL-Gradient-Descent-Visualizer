@@ -747,7 +747,7 @@ void getHeatMapColor(float value, float* red, float* green, float* blue)
 
 }
 
-Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yRange)
+Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -770,8 +770,10 @@ Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yR
         "    for (var j = 0; j <= " + QString::number(yStep) + "; j++) {"
         "        var x = " + QString::number(xRange.from) + " + i * " + QString::number(xRange.step) + ";"
         "        var y = " + QString::number(yRange.from) + " + j * " + QString::number(yRange.step) + ";"
-        "        var z = " + expression + ";"
-        "        results[i][j] = [x, y, z];"
+        "        var z = " + expression.replace("$x","x").replace("$y", "y") + ";"
+        "        var zX = " + expression.replace("$x", "(x + 0.000001)").replace("$y", "y") + ";"
+        "        var zY = " + expression.replace("$x", "x").replace("$y", "(y + 0.000001)") + ";"
+        "        results[i][j] = [x, y, z, zX, zY];"
         "    }"
         "}"
         "results;";
@@ -781,7 +783,7 @@ Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yR
         return nullptr;
     }
 
-    std::vector <std::vector<std::vector<float>>> results(xStep + 1, std::vector<std::vector<float>>(yStep + 1, std::vector<float>(3, 0.0f)));
+    std::vector <std::vector<std::vector<float>>> results(xStep + 1, std::vector<std::vector<float>>(yStep + 1, std::vector<float>(5, 0.0f)));
 
     int i = 0, j = 0;
     QJSValueIterator it(jsResults);
@@ -795,6 +797,8 @@ Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yR
             float x = point.property(0).toNumber();
             float y = point.property(1).toNumber();
             float z = point.property(2).toNumber();
+			float zX = point.property(3).toNumber();
+			float zY = point.property(4).toNumber();
 
             if (i == xStep + 1) // Skip the last row because it is nan
             {
@@ -802,9 +806,12 @@ Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yR
                 j++;
                 continue;
             }
+
             results[i][j][0] = x;
             results[i][j][1] = y;
             results[i][j][2] = z;
+            results[i][j][3] = zX;
+            results[i][j][4] = zY;
 
             if (z < minZ) minZ = z;
             if (z > maxZ) maxZ = z;
@@ -818,15 +825,22 @@ Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yR
 			float x = results[i][j][0];
 			float y = results[i][j][1];
 			float z = results[i][j][2];
+			float zX = results[i][j][3];
+			float zY = results[i][j][4];
 
             positions.push_back(QVector3D(x, y, z));
             texcoords.push_back(QVector2D(x, y));
 
             float r, g, b;
             float normalizedZ = (z - minZ) / (maxZ - minZ);
-            getHeatMapColor(normalizedZ, &r, &g, &b);
 
-            normals.push_back(QVector3D(0, 0, 0));
+            QVector3D normal = QVector3D::crossProduct(
+                QVector3D(1.0f, 0.0f, zX - z),
+                QVector3D(0.0f, 1.0f, zY - z)
+            );
+            normals.push_back(normal.normalized());
+
+            getHeatMapColor(normalizedZ, &r, &g, &b);
             normalColors.push_back(QVector4D(r, g, b, 1.0f));
 		}
 	}

@@ -29,7 +29,7 @@ public:
 	Mesh* loadIcosphere(int subdivision);
 	Mesh* loadCubeSphere(int sector);
 	Mesh* loadCone(int sector);
-	Mesh* loadPlane(const QString& expression, Range& xRange, Range& yRange);
+	Mesh* loadPlane(QString& expression, Range& xRange, Range& yRange);
 
 
 	class Builder {
