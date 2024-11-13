@@ -1,19 +1,14 @@
 
 #include "Engine/Nodes/MeshRenderer.h"
 
-MeshRenderer::MeshRenderer() : Container()
+
+MeshRenderer::MeshRenderer(Mesh* mesh, bool isInstance)
 {
+	mMesh = mesh;
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
 
-	setObjectName("Mesh Renderer");
-}
-
-MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> meshID) : Container()
-{
-	mMesh = meshID;
-	mPolygonMode = PolygonMode::FILL;
-	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
+	mIsInstanced = isInstance;
 
 	setObjectName("Mesh Renderer");
 }
@@ -25,14 +20,22 @@ void MeshRenderer::init()
 
 MeshRenderer::~MeshRenderer() noexcept
 {
+	if (mMesh != nullptr)
+	{
+		if (!mIsInstanced) {
+			delete mMesh;
+		}
+		mMesh = nullptr;
+	}
 }
 
-void MeshRenderer::setMesh(std::shared_ptr<Mesh> mesh)
+void MeshRenderer::setMesh(Mesh* mesh, bool isInstance)
 {
 	mMesh = mesh;
+	mIsInstanced = isInstance;
 }
 
-std::shared_ptr<Mesh> MeshRenderer::getMesh() const
+Mesh* MeshRenderer::getMesh() const
 {
 	return mMesh;
 }
@@ -43,8 +46,14 @@ void MeshRenderer::setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBuf
 	mDrawBufferMode = drawBufferMode;
 }
 
+PolygonMode MeshRenderer::getPolygonMode() const
+{
+	return mPolygonMode;
+}
+
 void MeshRenderer::start(IScene* scene)
 {
+
 }
 
 void MeshRenderer::update(float deltaTime)

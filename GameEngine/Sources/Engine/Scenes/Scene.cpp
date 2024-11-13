@@ -3,7 +3,7 @@
 
 Scene::Scene()
 {
-	mMeshes = std::vector<std::shared_ptr<Mesh>>();
+	mMeshes = std::vector<Mesh*>();
 	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
 }
 
@@ -135,7 +135,7 @@ void Scene::read(const QJsonObject& json) {
 	QJsonArray meshesArray = json[SERIALIZE_SCENE_MESHES].toArray();
 	for (int i = 0; i < meshesArray.size(); ++i) {
 		QJsonObject meshObject = meshesArray[i].toObject();
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		Mesh* mesh = new Mesh();
 		// Assuming Mesh class has a read method
 		mesh->read(meshObject);
 		addMesh(mesh);
@@ -164,15 +164,24 @@ void Scene::setName(const QString& name)
 	mName = name;
 }
 
-int Scene::addMesh(std::shared_ptr<Mesh> mesh)
+int Scene::addMesh(Mesh* mesh)
 {
 	mMeshes.push_back(mesh);
 	return static_cast<int>(mMeshes.size()) - 1;
 }
 
-void Scene::removeMesh(std::shared_ptr<Mesh> mesh)
+void Scene::removeMesh(Mesh* mesh)
 {
 	mMeshes.erase(std::remove(mMeshes.begin(), mMeshes.end(), mesh), mMeshes.end());
+}
+
+Mesh* Scene::getMesh(int index) const
+{
+	if (index < 0 || index >= mMeshes.size()) {
+		return nullptr;
+	}
+
+	return mMeshes[index];
 }
 
 void Scene::addNode(Node* node)
@@ -244,9 +253,4 @@ void Scene::setInputPublisher(InputPublisher* inputPublisher)
 InputPublisher* Scene::getInputPublisher() const
 {
 	return this->inputPublisher;
-}
-
-std::shared_ptr<Mesh> Scene::getMesh(int index) const
-{
-	return mMeshes[index];
 }

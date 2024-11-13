@@ -1,9 +1,12 @@
 #ifndef RESOURCE_PATH_H
 #define RESOURCE_PATH_H
 
-const QString DEFAULT_MODEL_PATH = "Resources/Models/Default/";
-const QString DEFAULT_TEXTURE_PATH = "Resources/Textures/Default/";
-const QString DEFAULT_SHADER_PATH = "Resources/Shaders/Default/";
+
+const QString SEPARATOR = "/";
+
+const QString DEFAULT_MODEL_PATH = "Models" + SEPARATOR +"Default" + SEPARATOR;
+const QString DEFAULT_TEXTURE_PATH = "Textures" + SEPARATOR + "Default" + SEPARATOR;
+const QString DEFAULT_SHADER_PATH = "Shaders" + SEPARATOR + "Default" + SEPARATOR;
 
 // Model paths
 const QString MODEL_CUBE = DEFAULT_MODEL_PATH + "cube";
@@ -15,7 +18,6 @@ const QString MODEL_QUAD = DEFAULT_MODEL_PATH + "quad";
 const QString MODEL_TRIANGLE = DEFAULT_MODEL_PATH + "triangle";
 const QString MODEL_CIRCLE = DEFAULT_MODEL_PATH + "circle";
 const QString MODEL_PLANE = DEFAULT_MODEL_PATH + "plane";
-
 
 
 #endif // RESOURCE_PATH_H

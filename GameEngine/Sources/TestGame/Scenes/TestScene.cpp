@@ -26,21 +26,21 @@ void TestScene::load()
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
-	std::shared_ptr<Mesh> teapot = std::shared_ptr<Mesh>(tempLoader.loadObjFile(":/Resources/Models/teapot.obj"));
-	std::shared_ptr<Mesh> triangle = std::shared_ptr<Mesh>(tempLoader.loadTriangle());
-	std::shared_ptr<Mesh> quad = std::shared_ptr<Mesh>(tempLoader.loadQuad());
-	std::shared_ptr<Mesh> circle = std::shared_ptr<Mesh>(tempLoader.loadCircle(36));
-	std::shared_ptr<Mesh> cube = std::shared_ptr<Mesh>(tempLoader.loadCube());
-	std::shared_ptr<Mesh> sphere = std::shared_ptr<Mesh>(tempLoader.loadSphere(40, 40));
-	std::shared_ptr<Mesh> icosphere = std::shared_ptr<Mesh>(tempLoader.loadIcosphere(5));
-	std::shared_ptr<Mesh> cylinder = std::shared_ptr<Mesh>(tempLoader.loadCylinder(36));
-	std::shared_ptr<Mesh> cone = std::shared_ptr<Mesh>(tempLoader.loadCone(36));
+	Mesh* teapot = tempLoader.loadObjFile(":/Resources/Models/teapot.obj");
+	Mesh* triangle = tempLoader.loadTriangle();
+	Mesh* quad = tempLoader.loadQuad();
+	Mesh* circle = tempLoader.loadCircle(36);
+	Mesh* cube = tempLoader.loadCube();
+	Mesh* sphere = tempLoader.loadSphere(40, 40);
+	Mesh* icosphere = tempLoader.loadIcosphere(5);
+	Mesh* cylinder = tempLoader.loadCylinder(36);
+	Mesh* cone = tempLoader.loadCone(36);
 
 	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
 	ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	std::shared_ptr<Mesh> plane = std::shared_ptr<Mesh>(tempLoader.loadPlane([](float x, float y) -> float {
+	Mesh* plane = tempLoader.loadPlane([](float x, float y) -> float {
 		return std::sin(x) * std::sin(y);
-		}, xRange, yRange));
+		}, xRange, yRange);
 
 
 	addMesh(teapot);
@@ -55,16 +55,16 @@ void TestScene::load()
 	addMesh(plane);
 
 
-	MeshRenderer* teapotNode = new MeshRenderer(teapot);
-	MeshRenderer* triangleNode = new MeshRenderer(triangle);
-	MeshRenderer* quadNode = new MeshRenderer(quad);
-	MeshRenderer* circleNode = new MeshRenderer(circle);
-	MeshRenderer* cubeNode = new MeshRenderer(cube);
-	MeshRenderer* sphereNode = new MeshRenderer(sphere);
-	MeshRenderer* icosphereNode = new MeshRenderer(icosphere);
-	MeshRenderer* cylinderNode = new MeshRenderer(cylinder);
-	MeshRenderer* coneNode = new MeshRenderer(cone);
-	MeshRenderer* planeNode = new MeshRenderer(plane);
+	MeshRenderer* teapotNode = new MeshRenderer(teapot, true);
+	MeshRenderer* triangleNode = new MeshRenderer(triangle, true);
+	MeshRenderer* quadNode = new MeshRenderer(quad, true);
+	MeshRenderer* circleNode = new MeshRenderer(circle, true);
+	MeshRenderer* cubeNode = new MeshRenderer(cube, true);
+	MeshRenderer* sphereNode = new MeshRenderer(sphere, true);
+	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, true);
+	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
+	MeshRenderer* coneNode = new MeshRenderer(cone, true);
+	MeshRenderer* planeNode = new MeshRenderer(plane, true);
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
@@ -76,6 +76,18 @@ void TestScene::load()
 	cylinderNode->transform->setLocalPosition(QVector3D(13.0f, 0.0f, 0.0f));
 	coneNode->transform->setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
 	planeNode->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
+
+	teapotNode->setObjectName("Teapot");
+	triangleNode->setObjectName("Triangle");
+	quadNode->setObjectName("Quad");
+	circleNode->setObjectName("Circle");
+	cubeNode->setObjectName("Cube");
+	sphereNode->setObjectName("Sphere");
+	icosphereNode->setObjectName("Icosphere");
+	cylinderNode->setObjectName("Cylinder");
+	coneNode->setObjectName("Cone");
+	planeNode->setObjectName("Plane");
+
 
 	addNode(teapotNode);
 	addNode(triangleNode);

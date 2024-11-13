@@ -10,16 +10,19 @@
 
 class MeshRenderer : public Container, public QOpenGLExtraFunctions
 {
+	Q_OBJECT
 public:
-	MeshRenderer();
-	MeshRenderer(std::shared_ptr<Mesh> meshID);
+
+	MeshRenderer(Mesh* mesh, bool isInstance = false);
 
 	virtual void init() override;
 	virtual ~MeshRenderer() noexcept;
 
-	void setMesh(std::shared_ptr<Mesh> meshID);
-	std::shared_ptr<Mesh> getMesh() const;
+	void setMesh(Mesh* mesh, bool isInstance);
+	Mesh* getMesh() const;
+
 	void setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBufferMode = DrawBufferMode::FRONT_AND_BACK);
+	PolygonMode getPolygonMode() const;
 
 	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
@@ -31,7 +34,10 @@ public: // Interfaces
 	virtual void* accept(INodeVisitor* visitor) override;
 
 protected:
-	std::shared_ptr<Mesh> mMesh;
+	bool mIsInstanced;
+	
+	Mesh* mMesh;
+
 	PolygonMode mPolygonMode;
 	DrawBufferMode mDrawBufferMode;
 };

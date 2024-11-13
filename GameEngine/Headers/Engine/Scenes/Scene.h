@@ -41,9 +41,9 @@ public:
 	QString getName() const;
 	void setName(const QString& name);
 
-	int addMesh(std::shared_ptr<Mesh> mesh);
-	void removeMesh(std::shared_ptr<Mesh> mesh);
-	std::shared_ptr<Mesh> getMesh(int index) const;
+	int addMesh(Mesh* mesh) override;
+	void removeMesh(Mesh* mesh) override;
+	Mesh* getMesh(int index) const;
 
 	void addNode(Node* node);
 	void removeNode(Node* node);
@@ -61,7 +61,7 @@ protected:
 	std::shared_ptr<ShaderProgram> mDefaultShader;
 
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
-	std::vector<std::shared_ptr<Mesh>> mMeshes;
+	std::vector<Mesh*> mMeshes;
 	std::vector<Camera*> mCameras;
 	Camera* mMainCamera;
 

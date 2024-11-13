@@ -160,9 +160,6 @@
     <ClInclude Include="Headers\Engine\Scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -220,6 +217,9 @@
     <ClInclude Include="Headers\Qt\Interfaces\INodeWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Engine\Enums\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />
@@ -271,6 +271,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Engine\Nodes\Camera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\MeshRenderer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

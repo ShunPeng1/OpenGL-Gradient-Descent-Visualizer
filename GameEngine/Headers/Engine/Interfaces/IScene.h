@@ -29,9 +29,9 @@ public:
     virtual QString getName() const = 0;
     virtual void setName(const QString& name) = 0;
 
-    virtual int addMesh(std::shared_ptr<Mesh> mesh) = 0;
-    virtual void removeMesh(std::shared_ptr<Mesh> mesh) = 0;
-    virtual std::shared_ptr<Mesh> getMesh(int index) const = 0;
+    virtual int addMesh(Mesh* mesh) = 0;
+    virtual void removeMesh(Mesh* mesh) = 0;
+    virtual Mesh* getMesh(int index) const = 0;
 
     virtual void addNode(Node* node) = 0;
     virtual void removeNode(Node* node) = 0;

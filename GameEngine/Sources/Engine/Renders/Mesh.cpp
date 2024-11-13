@@ -57,6 +57,22 @@ void Mesh::setupMesh() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void Mesh::updateMesh(QString newPath, const std::vector<Vertex>& newVertices, const std::vector<unsigned int>& newIndices)
+{
+    if (mIsStarted) {
+        glDeleteBuffers(1, &mVBO);
+        glDeleteBuffers(1, &mEBO);
+    }
+
+    // Update vertices and indices
+	path = newPath;
+    vertices = newVertices;
+    indices = newIndices;
+
+    // Re-setup the mesh
+    setupMesh();
+}
+
 void Mesh::write(QJsonObject& json) const {
     json[SERIALIZE_MESH_PATH] = path;
 

@@ -324,6 +324,7 @@ Mesh* ModelLoader::loadCircle(int sector)
 		indices.push_back(i);
 
 	}
+	QString path = MODEL_CIRCLE + SEPARATOR + QString::number(sector);
 	return new Mesh(MODEL_CIRCLE, vertices, indices, {}, GL_TRIANGLE_FAN);
 }
 
@@ -421,8 +422,8 @@ Mesh* ModelLoader::loadCylinder(int sector)
 	indices.push_back(0);
 	indices.push_back(1);
 	
-
-    return new Mesh(MODEL_CYLINDER, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_CYLINDER + SEPARATOR + QString::number(sector);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh* ModelLoader::loadSphere(int sector, int stack)
@@ -506,8 +507,8 @@ Mesh* ModelLoader::loadSphere(int sector, int stack)
 
 	}
 
-
-    return new Mesh(MODEL_SPHERE, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_SPHERE + SEPARATOR + QString::number(sector) + SEPARATOR + QString::number(stack);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<QVector3D>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
@@ -631,15 +632,14 @@ Mesh* ModelLoader::loadIcosphere(int subdivision)
         vertices.push_back(vertex);
     }
 
-	return new Mesh(MODEL_ICOSPHERE, vertices, indices, {}, GL_TRIANGLES);
+	QString path = MODEL_ICOSPHERE + SEPARATOR + QString::number(subdivision);
+	return new Mesh(path, vertices, indices, {}, GL_TRIANGLES);
 
 }
 
 Mesh* ModelLoader::loadCubeSphere(int subdivision)
 {
     
-
-
 
     return new Mesh("", {}, {}, {});
 }
@@ -716,8 +716,8 @@ Mesh* ModelLoader::loadCone(int sector)
 	indices.push_back(topCenterIndex);
 
 
-
-    return new Mesh(MODEL_CONE, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_CONE + SEPARATOR + QString::number(sector);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 void getHeatMapColor(float value, float* red, float* green, float* blue)

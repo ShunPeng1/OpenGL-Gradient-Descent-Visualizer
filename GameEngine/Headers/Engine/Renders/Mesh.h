@@ -31,6 +31,7 @@ public:
 
     virtual void draw(ShaderProgram& shader);
 
+    void updateMesh(QString newPath, const std::vector<Vertex>& newVertices, const std::vector<unsigned int>& newIndices);
 
 protected:
 	virtual void start();
@@ -41,6 +42,7 @@ protected:
     GLenum mDrawMode; // Member variable to store the drawing mode
 
     void setupMesh();
+
 };
 
 #endif // MESH_H
