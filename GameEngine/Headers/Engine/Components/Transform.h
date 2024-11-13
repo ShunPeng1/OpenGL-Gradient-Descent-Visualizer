@@ -8,8 +8,13 @@
 #include <vector>
 #include <memory> 
 
-class Transform
+#include "Engine/Interfaces/IComponent.h"
+#include <QObject>
+
+class Transform : public QObject, public IComponent
 {
+	Q_OBJECT
+
 public:
 	Transform();
 	virtual ~Transform();
@@ -43,6 +48,16 @@ public:
 
 	QMatrix4x4 getWorldMatrix();
 	QMatrix4x4 getLocalMatrix();
+
+
+signals:
+	void positionChanged(QVector3D);
+
+signals:
+	void rotationChanged(QQuaternion);
+
+signals:
+	void scaleChanged(QVector3D);
 
 private:
 

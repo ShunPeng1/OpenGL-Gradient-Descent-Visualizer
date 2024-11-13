@@ -27,41 +27,25 @@ NodeWidget::NodeWidget(Node* node, QWidget* parent) : QWidget(parent), mNode() {
 
 NodeWidget::~NodeWidget() 
 {
-    if (mNode) {
-        disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
-        disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
-    }
+    disconnectSignals();
 }
 
 void NodeWidget::setNode(Node* node) {
-    if (mNode) {
-        disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
-        disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
-    }
 
+    disconnectSignals();
+    
     mNode = node;
-    if (node) {
-        mNameEdit->setText(node->objectName());
-        mIsAliveCheckBox->setChecked(node->getIsAlive());
 
-        connect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
-        connect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
-
-    }
+    updateUI();
+	connectSignals();
 }
 
 void NodeWidget::clearNode() {
+    disconnectSignals();
+
 	mNode = nullptr;
-    mNameEdit->clear();
-    mIsAliveCheckBox->setChecked(false);
-}
 
-QString NodeWidget::getName() const {
-    return mNameEdit->text();
-}
-
-bool NodeWidget::getIsAlive() const {
-    return mIsAliveCheckBox->isChecked();
+	updateUI();
 }
 
 void NodeWidget::onIsAliveChanged(bool isAlive) {
@@ -89,4 +73,35 @@ void NodeWidget::onObjectNameSet(const QString& name)
     if (mNode) {
         mNode->setObjectName(name);
     }
+}
+
+void NodeWidget::updateUI()
+{
+	if (mNode) {
+		mNameEdit->setText(mNode->objectName());
+		mIsAliveCheckBox->setChecked(mNode->getIsAlive());
+	}
+    else {
+		mNameEdit->clear();
+		mIsAliveCheckBox->setChecked(false);
+    }
+}
+
+void NodeWidget::connectSignals()
+{
+	if (!mNode) {
+		return;
+	}
+    connect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+    connect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+}
+
+void NodeWidget::disconnectSignals()
+{
+	if (!mNode) {
+		return;
+	}
+
+	disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+	disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
 }

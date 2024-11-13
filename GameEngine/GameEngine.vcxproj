@@ -134,6 +134,7 @@
     <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
     <ClInclude Include="Headers\Engine\Constants\ResourcePath.h" />
     <ClInclude Include="Headers\Engine\Constants\SerializePath.h" />
+    <ClInclude Include="Headers\Engine\Interfaces\IComponent.h" />
     <ClInclude Include="Headers\Engine\Interfaces\INodeVisitable.h" />
     <ClInclude Include="Headers\Engine\Interfaces\IScene.h" />
     <ClInclude Include="Headers\Engine\Interfaces\ISerializable.h" />
@@ -166,7 +167,7 @@
     <ClInclude Include="Headers\Engine\Engine.h" />
     <ClInclude Include="Headers\Engine\Nodes\Camera.h" />
     <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h" />
-    <ClInclude Include="Headers\Engine\Components\Transform.h" />
+    <QtMoc Include="Headers\Engine\Components\Transform.h" />
     <ClInclude Include="Headers\Engine\Nodes\Container.h" />
     <ClInclude Include="Headers\Engine\Components\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />

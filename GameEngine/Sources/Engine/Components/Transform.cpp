@@ -30,18 +30,21 @@ void Transform::scale(const QVector3D& scale)
 void Transform::setWorldPosition(const QVector3D& position)
 {
 	mWorldPosition = position;
+	emit positionChanged(position);
 	updateChildrenWorldMatrix();
 }
 
 void Transform::setWorldRotation(const QQuaternion& rotation)
 {
 	mWorldRotation = rotation;
+	emit rotationChanged(rotation);
 	updateChildrenWorldMatrix();
 }
 
 void Transform::setWorldScale(const QVector3D& scale)
 {
 	mWorldScale = scale;
+	emit scaleChanged(scale);
 	updateChildrenWorldMatrix();
 }
 
@@ -73,6 +76,7 @@ void Transform::setLocalPosition(const QVector3D& position)
     {
         mWorldPosition = position;
     }
+	emit positionChanged(mWorldPosition);
 	updateChildrenWorldMatrix();
 }
 
@@ -90,6 +94,7 @@ void Transform::setLocalRotation(const QQuaternion& rotation)
    {  
        mWorldRotation = rotation;  
    }  
+   emit rotationChanged(mWorldRotation);
    updateChildrenWorldMatrix();  
 }
 
@@ -107,6 +112,7 @@ void Transform::setLocalScale(const QVector3D& scale)
 	{
 		mWorldScale = scale;
 	}
+	emit scaleChanged(mWorldScale);
 	updateChildrenWorldMatrix();
 }
 

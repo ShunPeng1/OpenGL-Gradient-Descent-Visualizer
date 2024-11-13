@@ -22,10 +22,6 @@ public:
     void setNode(Node* node);
     void clearNode();
 
-	QString getName() const;
-	bool getIsAlive() const;
-
-
 private slots:
     void onIsAliveChanged(bool isAlive);
     void onObjectNameChanged(const QString& name);
@@ -33,6 +29,10 @@ private slots:
 	void onIsAliveSet(bool isAlive);
 	void onObjectNameSet(const QString& name);
 
+private:
+    void updateUI();
+    void connectSignals();
+    void disconnectSignals();
 
 private:
     Node* mNode;
