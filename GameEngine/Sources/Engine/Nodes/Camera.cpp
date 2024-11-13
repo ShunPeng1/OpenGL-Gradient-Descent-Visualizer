@@ -54,42 +54,49 @@ void Camera::setFov(float fov)
 {
 	mFov = fov;
 	mDirty = true;
+	emit fovChanged(fov);
 }
 
 void Camera::setNear(float near)
 {
 	mNear = near;
 	mDirty = true;
+	emit nearChanged(near);
 }
 
 void Camera::setFar(float far)
 {
 	mFar = far;
 	mDirty = true;
+	emit farChanged(far);
 }
 
 void Camera::setAspectRatio(float width, float height)
 {
 	mAspectRatio = width / height;
 	mDirty = true;
+	emit aspectRatioChanged(mAspectRatio);
 }
 
 void Camera::setAspectRatio(float aspectRatio)
 {
 	mAspectRatio = aspectRatio;
 	mDirty = true;
+	emit aspectRatioChanged(aspectRatio);
 }
 
 void Camera::setIsOrtho(bool isOrtho)
 {
 	mIsOrtho = isOrtho;
 	mDirty = true;
+	emit isOrthoChanged(isOrtho);
 }
 
 void Camera::setWidth(float width)
 {
 	mWidth = width;
 	mDirty = true;
+	emit widthChanged(width);
 }
 
 float Camera::getFov() const

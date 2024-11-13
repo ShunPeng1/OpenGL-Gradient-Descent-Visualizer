@@ -5,6 +5,8 @@
 
 class Camera : public Container, public QOpenGLExtraFunctions
 {
+	Q_OBJECT
+
 public:
 	Camera();
 	virtual ~Camera() noexcept;
@@ -33,6 +35,19 @@ public: // Interfaces
 	virtual void write(QJsonObject& json) const override;
 	virtual void read(const QJsonObject& json) override;
 	virtual void* accept(INodeVisitor* visitor) override;
+
+signals:
+	void fovChanged(float);
+signals:
+	void nearChanged(float);
+signals:
+	void farChanged(float);
+signals:
+	void aspectRatioChanged(float);
+signals:
+	void isOrthoChanged(bool);
+signals:
+	void widthChanged(float);
 
 protected: 
 	virtual void start(IScene* scene) override;

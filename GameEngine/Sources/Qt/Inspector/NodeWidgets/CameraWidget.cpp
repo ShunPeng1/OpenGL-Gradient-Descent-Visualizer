@@ -1,13 +1,12 @@
 #include "Qt/Inspector/NodeWidgets/CameraWidget.h"
+CameraWidget::CameraWidget(Camera* camera, QWidget* parent)
+    : INodeWidget<Camera>(parent){
 
-CameraWidget::CameraWidget(Camera* camera, QWidget* parent) : QWidget(parent), mCamera(camera) {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
+    mSection = new SectionWidget("Camera", 0, this);
+    widgetLayout->addWidget(mSection);
 
-    SectionWidget* section = new SectionWidget("Camera", 0, this);
-    mSection = section;
-    widgetLayout->addWidget(section);
-
-    QVBoxLayout* mainLayout = new QVBoxLayout(section);
+    QVBoxLayout* mainLayout = new QVBoxLayout(mSection);
 
     // FOV
     QHBoxLayout* fovLayout = new QHBoxLayout();
@@ -67,134 +66,150 @@ CameraWidget::CameraWidget(Camera* camera, QWidget* parent) : QWidget(parent), m
     widthLayout->addWidget(mWidth);
     mainLayout->addLayout(widthLayout);
 
-    section->setContentLayout(*mainLayout);
+    mSection->setContentLayout(*mainLayout);
 
-    // Set the camera
-    mCamera = camera;
-    if (mCamera) {
-        mFov->setValue(mCamera->getFov());
-        mNear->setValue(mCamera->getNear());
-        mFar->setValue(mCamera->getFar());
-        mAspectRatio->setValue(mCamera->getAspectRatio());
-        mIsOrtho->setChecked(mCamera->getIsOrtho());
-        mWidth->setValue(mCamera->getWidth());
-    }
+	// Connect signals
+    connect(mFov, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onFovSet);
+    connect(mNear, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onNearSet);
+    connect(mFar, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onFarSet);
+    connect(mAspectRatio, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onAspectRatioSet);
+    connect(mIsOrtho, &QCheckBox::toggled, this, &CameraWidget::onIsOrthoSet);
+    connect(mWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onWidthSet);
 
-    // Connect signals
-    connect(mFov, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onFovChanged);
-    connect(mNear, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onNearChanged);
-    connect(mFar, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onFarChanged);
-    connect(mAspectRatio, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onAspectRatioChanged);
-    connect(mIsOrtho, &QCheckBox::toggled, this, &CameraWidget::onIsOrthoChanged);
-    connect(mWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onWidthChanged);
+    setNode(camera);
 }
 
-CameraWidget::~CameraWidget() {}
-
-void CameraWidget::setCamera(Camera* camera) {
-    mCamera = camera;
-    mIsUpdating = true;
-    if (mCamera) {
-        mFov->setValue(mCamera->getFov());
-        mNear->setValue(mCamera->getNear());
-        mFar->setValue(mCamera->getFar());
-        mAspectRatio->setValue(mCamera->getAspectRatio());
-        mIsOrtho->setChecked(mCamera->getIsOrtho());
-        mWidth->setValue(mCamera->getWidth());
-    }
-    mIsUpdating = false;
+CameraWidget::~CameraWidget() {
+    clearNode();
 }
 
-void CameraWidget::clearCamera() {
-	mCamera = nullptr;
-    mFov->setValue(45.0);
-    mNear->setValue(0.1);
-    mFar->setValue(1000.0);
-    mAspectRatio->setValue(1.0);
-    mIsOrtho->setChecked(false);
-    mWidth->setValue(1.0);
+void CameraWidget::setNode(Camera* camera) {
+    disconnectSignals();
+    mNode = camera;
+    updateUI();
+    connectSignals();
 }
 
-float CameraWidget::getFov() const {
-    return mFov->value();
+void CameraWidget::clearNode() {
+    disconnectSignals();
+    mNode = nullptr;
 }
 
-float CameraWidget::getNear() const {
-    return mNear->value();
+void CameraWidget::onFovChanged(float value) {
+    mFov->setValue(value);
 }
 
-float CameraWidget::getFar() const {
-    return mFar->value();
+void CameraWidget::onNearChanged(float value) {
+	mNear->setValue(value);
 }
 
-float CameraWidget::getAspectRatio() const {
-    return mAspectRatio->value();
+void CameraWidget::onFarChanged(float value) {
+	mFar->setValue(value);
 }
 
-bool CameraWidget::getIsOrtho() const {
-    return mIsOrtho->isChecked();
+void CameraWidget::onAspectRatioChanged(float value) {
+	mAspectRatio->setValue(value);
 }
 
-float CameraWidget::getWidth() const {
-    return mWidth->value();
+void CameraWidget::onIsOrthoChanged(bool checked) {
+	mIsOrtho->setChecked(checked);
 }
 
-void CameraWidget::onFovChanged() {
-    if (mIsUpdating) {
-        return;
-    }
-    if (mCamera) {
-        mCamera->setFov(getFov());
-    }
-    emit cameraChanged();
+void CameraWidget::onWidthChanged(float value) {
+	mWidth->setValue(value);
 }
 
-void CameraWidget::onNearChanged() {
-    if (mIsUpdating) {
-        return;
-    }
-    if (mCamera) {
-        mCamera->setNear(getNear());
-    }
-    emit cameraChanged();
+void CameraWidget::onFovSet(double value)
+{
+	if (mNode) {
+		mNode->setFov(value);
+	}
 }
 
-void CameraWidget::onFarChanged() {
-    if (mIsUpdating) {
-        return;
-    }
-    if (mCamera) {
-        mCamera->setFar(getFar());
-    }
-    emit cameraChanged();
+void CameraWidget::onNearSet(double value)
+{
+	if (mNode) {
+		mNode->setNear(value);
+	}
 }
 
-void CameraWidget::onAspectRatioChanged() {
-    if (mIsUpdating) {
-        return;
-    }
-    if (mCamera) {
-        mCamera->setAspectRatio(getAspectRatio());
-    }
-    emit cameraChanged();
+void CameraWidget::onFarSet(double value)
+{
+	if (mNode) {
+		mNode->setFar(value);
+	}
 }
 
-void CameraWidget::onIsOrthoChanged() {
-    if (mIsUpdating) {
-        return;
+void CameraWidget::onAspectRatioSet(double value)
+{
+    if (mNode) {
+		mNode->setAspectRatio(value);
     }
-    if (mCamera) {
-        mCamera->setIsOrtho(getIsOrtho());
-    }
-    emit cameraChanged();
 }
 
-void CameraWidget::onWidthChanged() {
-    if (mIsUpdating) {
-        return;
+void CameraWidget::onIsOrthoSet(bool value)
+{
+	if (mNode) {
+		mNode->setIsOrtho(value);
+	}
+}
+
+void CameraWidget::onWidthSet(double value)
+{
+    if (mNode) {
+		mNode->setWidth(value);
     }
-    if (mCamera) {
-        mCamera->setWidth(getWidth());
+}
+
+void CameraWidget::updateUI() {
+    blockSignals(true);
+    if (mNode) {
+        mFov->setValue(mNode->getFov());
+        mNear->setValue(mNode->getNear());
+        mFar->setValue(mNode->getFar());
+        mAspectRatio->setValue(mNode->getAspectRatio());
+        mIsOrtho->setChecked(mNode->getIsOrtho());
+        mWidth->setValue(mNode->getWidth());
     }
-    emit cameraChanged();
+    else {
+        mFov->setValue(60.0);
+        mNear->setValue(0.1);
+        mFar->setValue(1000.0);
+        mAspectRatio->setValue(1.78);
+        mIsOrtho->setChecked(false);
+        mWidth->setValue(1.0);
+    }
+    blockSignals(false);
+}
+
+void CameraWidget::connectSignals() {
+    if (!mNode) return;
+
+	connect(mNode, &Camera::fovChanged, this, &CameraWidget::onFovChanged);
+	connect(mNode, &Camera::nearChanged, this, &CameraWidget::onNearChanged);
+	connect(mNode, &Camera::farChanged, this, &CameraWidget::onFarChanged);
+	connect(mNode, &Camera::aspectRatioChanged, this, &CameraWidget::onAspectRatioChanged);
+	connect(mNode, &Camera::isOrthoChanged, this, &CameraWidget::onIsOrthoChanged);
+	connect(mNode, &Camera::widthChanged, this, &CameraWidget::onWidthChanged);
+}
+
+void CameraWidget::disconnectSignals() {
+    if (!mNode) return;
+
+	disconnect(mNode, &Camera::fovChanged, this, &CameraWidget::onFovChanged);
+	disconnect(mNode, &Camera::nearChanged, this, &CameraWidget::onNearChanged);
+	disconnect(mNode, &Camera::farChanged, this, &CameraWidget::onFarChanged);
+	disconnect(mNode, &Camera::aspectRatioChanged, this, &CameraWidget::onAspectRatioChanged);
+	disconnect(mNode, &Camera::isOrthoChanged, this, &CameraWidget::onIsOrthoChanged);
+	disconnect(mNode, &Camera::widthChanged, this, &CameraWidget::onWidthChanged);
+}
+
+void CameraWidget::blockSignals(bool value)
+{
+	mFov->blockSignals(value);
+	mNear->blockSignals(value);
+	mFar->blockSignals(value);
+	mAspectRatio->blockSignals(value);
+	mIsOrtho->blockSignals(value);
+	mWidth->blockSignals(value);
 }

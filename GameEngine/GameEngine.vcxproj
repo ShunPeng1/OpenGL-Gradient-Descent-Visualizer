@@ -166,10 +166,10 @@
     <QtRcc Include="qml.qrc" />
     <None Include="main.qml" />
     <ClInclude Include="Headers\Engine\Engine.h" />
-    <ClInclude Include="Headers\Engine\Nodes\Camera.h" />
+    <QtMoc Include="Headers\Engine\Nodes\Camera.h" />
     <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h" />
     <QtMoc Include="Headers\Engine\Components\Transform.h" />
-    <ClInclude Include="Headers\Engine\Nodes\Container.h" />
+    <QtMoc Include="Headers\Engine\Nodes\Container.h" />
     <ClInclude Include="Headers\Engine\Components\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />

@@ -7,6 +7,8 @@
 
 class Container : public Node  
 {  
+	Q_OBJECT
+
 public:  
 	Container();  
 	virtual ~Container() noexcept;

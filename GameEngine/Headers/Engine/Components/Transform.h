@@ -52,11 +52,7 @@ public:
 
 signals:
 	void positionChanged(QVector3D);
-
-signals:
 	void rotationChanged(QQuaternion);
-
-signals:
 	void scaleChanged(QVector3D);
 
 private:

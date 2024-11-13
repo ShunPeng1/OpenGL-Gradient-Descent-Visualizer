@@ -160,16 +160,10 @@
     <ClInclude Include="Headers\Engine\Scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\Container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Engine\Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h">
@@ -271,6 +265,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Engine\Components\Transform.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\Container.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\Camera.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
