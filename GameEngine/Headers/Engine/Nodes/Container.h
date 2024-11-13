@@ -19,7 +19,7 @@ public: // Interfaces
 	virtual void* accept(INodeVisitor* visitor) override;
 
 public:  
-	std::shared_ptr<Transform> transform; // Use shared_ptr
+	Transform* transform;
 };
 
 

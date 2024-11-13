@@ -45,7 +45,7 @@ void* InspectorNodeVisitor::visitNode(Node* node) {
 
 void* InspectorNodeVisitor::visitContainer(Container* node) {
     
-    std::shared_ptr<Transform> transform = node->transform;
+    Transform * transform = node->transform;
     TransformWidget* transformWidget = new TransformWidget(transform);
 
     mStackItems.append(transformWidget);

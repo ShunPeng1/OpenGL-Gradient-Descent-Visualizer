@@ -2,7 +2,7 @@
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include <cmath>
 
-TransformWidget::TransformWidget(std::shared_ptr<Transform> transform, QWidget* parent) : QWidget(parent), mTransform() {
+TransformWidget::TransformWidget(Transform* transform, QWidget* parent) : QWidget(parent), mTransform() {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
 
     SectionWidget* section = new SectionWidget("Transform", 0, this);
@@ -36,10 +36,10 @@ TransformWidget::TransformWidget(std::shared_ptr<Transform> transform, QWidget* 
     
 	// Set the transform
     mTransform = transform;
-    if (auto t = mTransform.lock()) {
-        QVector3D position = t->getWorldPosition();
-        QQuaternion rotation = t->getWorldRotation();
-        QVector3D scale = t->getWorldScale();
+    if (mTransform) {
+        QVector3D position = mTransform->getWorldPosition();
+        QQuaternion rotation = mTransform->getWorldRotation();
+        QVector3D scale = mTransform->getWorldScale();
 
         mPosX->setValue(position.x());
         mPosY->setValue(position.y());
@@ -75,13 +75,13 @@ TransformWidget::~TransformWidget()
 
 }
 
-void TransformWidget::setTransform(std::shared_ptr<Transform> transform) {
+void TransformWidget::setTransform(Transform* transform) {
 	mTransform = transform;
 	mIsUpdating = true;
-	if (auto t = mTransform.lock()) {
-		QVector3D position = t->getWorldPosition();
-		QQuaternion rotation = t->getWorldRotation();
-		QVector3D scale = t->getWorldScale();
+	if (mTransform) {
+		QVector3D position = mTransform->getWorldPosition();
+		QQuaternion rotation = mTransform->getWorldRotation();
+		QVector3D scale = mTransform->getWorldScale();
 
 		mPosX->setValue(position.x());
 		mPosY->setValue(position.y());
@@ -101,7 +101,7 @@ void TransformWidget::setTransform(std::shared_ptr<Transform> transform) {
 
 void TransformWidget::clearTransform()
 {
-    mTransform.reset();
+	mTransform = nullptr;
 	mPosX->setValue(0.0);
 	mPosY->setValue(0.0);
 	mPosZ->setValue(0.0);
@@ -133,8 +133,8 @@ void TransformWidget::onPositionChanged() {
 	if (mIsUpdating) {
 		return;
 	}
-    if (auto transform = mTransform.lock()) {
-        transform->setWorldPosition(getPosition());
+    if (mTransform) {
+        mTransform->setWorldPosition(getPosition());
     }
     emit transformChanged();
 }
@@ -143,8 +143,8 @@ void TransformWidget::onRotationChanged() {
     if (mIsUpdating) {
         return;
     }
-	if (auto transform = mTransform.lock()) {
-		transform->setWorldRotation(getRotation());
+	if (mTransform) {
+        mTransform->setWorldRotation(getRotation());
 	}
     emit transformChanged();
 }
@@ -153,8 +153,8 @@ void TransformWidget::onScaleChanged() {
     if (mIsUpdating) {
         return;
     }
-	if (auto transform = mTransform.lock()) {
-		transform->setWorldScale(getScale());
+	if (mTransform) {
+        mTransform->setWorldScale(getScale());
 	}
     emit transformChanged();
 }

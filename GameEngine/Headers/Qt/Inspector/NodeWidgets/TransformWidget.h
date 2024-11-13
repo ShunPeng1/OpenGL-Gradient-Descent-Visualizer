@@ -20,9 +20,9 @@ class TransformWidget : public QWidget {
     Q_OBJECT
 
 public:
-    TransformWidget(std::shared_ptr<Transform> transform, QWidget* parent = nullptr);
+    TransformWidget(Transform* transform, QWidget* parent = nullptr);
     ~TransformWidget();
-    void setTransform(std::shared_ptr<Transform> transform);
+    void setTransform(Transform* transform);
     void clearTransform();
 
     QVector3D getPosition() const;
@@ -40,7 +40,7 @@ private slots:
 private:
     bool mIsUpdating;
 
-    std::weak_ptr<Transform> mTransform;
+    Transform* mTransform;
 	
     SectionWidget* mSection;
 
