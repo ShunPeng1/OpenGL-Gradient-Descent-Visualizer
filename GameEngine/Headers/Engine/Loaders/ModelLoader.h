@@ -4,7 +4,8 @@
 
 #include "Engine/Renders/Mesh.h"
 #include "Engine/Constants/ResourcePath.h"
-#include <functional>
+#include <QJSEngine>
+#include <QJSValueIterator>
 
 class ModelLoader {
 public:
@@ -28,7 +29,7 @@ public:
 	Mesh* loadIcosphere(int subdivision);
 	Mesh* loadCubeSphere(int sector);
 	Mesh* loadCone(int sector);
-	Mesh* loadPlane(float (*func)(float, float), Range& xRange, Range& yRange);
+	Mesh* loadPlane(const QString& expression, Range& xRange, Range& yRange);
 
 
 	class Builder {

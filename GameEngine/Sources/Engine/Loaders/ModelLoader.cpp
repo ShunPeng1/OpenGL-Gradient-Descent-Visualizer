@@ -747,7 +747,7 @@ void getHeatMapColor(float value, float* red, float* green, float* blue)
 
 }
 
-Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& yRange)
+Mesh* ModelLoader::loadPlane(const QString& expression, Range& xRange, Range& yRange)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -755,44 +755,81 @@ Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& 
     std::vector<QVector4D> normalColors;
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+    
+    QJSEngine engine;
 
-    float xStep = (xRange.to - xRange.from) / xRange.step;
-    float yStep = (yRange.to - yRange.from) / yRange.step;
+    int xStep = (int) ((xRange.to - xRange.from) / xRange.step);
+    int yStep = (int) ((yRange.to - yRange.from) / yRange.step);
     float minZ = std::numeric_limits<float>::max();
     float maxZ = std::numeric_limits<float>::lowest();
 
-    for (int i = 0; i <= xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            float x = xRange.from + i * xRange.step;
-            float y = yRange.from + j * yRange.step;
-            float z = func(x, y);
+    // Precompute the results in JavaScript
+    QString jsCode = "var results = [];"
+        "for (var i = 0; i <= " + QString::number(xStep) + "; i++) {"
+        "    results[i] = [];"
+        "    for (var j = 0; j <= " + QString::number(yStep) + "; j++) {"
+        "        var x = " + QString::number(xRange.from) + " + i * " + QString::number(xRange.step) + ";"
+        "        var y = " + QString::number(yRange.from) + " + j * " + QString::number(yRange.step) + ";"
+        "        var z = " + expression + ";"
+        "        results[i][j] = [x, y, z];"
+        "    }"
+        "}"
+        "results;";
+    QJSValue jsResults = engine.evaluate(jsCode);
+    if (jsResults.isError()) {
+        std::cerr << "JavaScript error: " << jsResults.toString().toStdString() << std::endl;
+        return nullptr;
+    }
+
+    std::vector <std::vector<std::vector<float>>> results(xStep + 1, std::vector<std::vector<float>>(yStep + 1, std::vector<float>(3, 0.0f)));
+
+    int i = 0, j = 0;
+    QJSValueIterator it(jsResults);
+    while (it.hasNext()) {
+        it.next();
+        QJSValue row = it.value();
+        QJSValueIterator rowIt(row);
+        while (rowIt.hasNext()) {
+            rowIt.next();
+            QJSValue point = rowIt.value();
+            float x = point.property(0).toNumber();
+            float y = point.property(1).toNumber();
+            float z = point.property(2).toNumber();
+
+            if (i == xStep + 1) // Skip the last row because it is nan
+            {
+                i = 0;
+                j++;
+                continue;
+            }
+            results[i][j][0] = x;
+            results[i][j][1] = y;
+            results[i][j][2] = z;
+
             if (z < minZ) minZ = z;
             if (z > maxZ) maxZ = z;
 
+            i = (i + 1) % (xStep + 2);
         }
     }
 
-    for (int i = 0; i <= xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            float x = xRange.from + i * xRange.step;
-            float y = yRange.from + j * yRange.step;
-            float z = func(x, y);
+	for (int i = 0; i <= xStep; i++) {
+		for (int j = 0; j <= yStep; j++) {
+			float x = results[i][j][0];
+			float y = results[i][j][1];
+			float z = results[i][j][2];
 
             positions.push_back(QVector3D(x, y, z));
-            QVector3D normal = QVector3D::crossProduct(
-                QVector3D(1.0f, 0.0f, func(x + 0.01f, y) - z),
-                QVector3D(0.0f, 1.0f, func(x, y + 0.01f) - z)
-            );
-            normals.push_back(normal.normalized());
-
             texcoords.push_back(QVector2D(x, y));
 
             float r, g, b;
             float normalizedZ = (z - minZ) / (maxZ - minZ);
             getHeatMapColor(normalizedZ, &r, &g, &b);
+
+            normals.push_back(QVector3D(0, 0, 0));
             normalColors.push_back(QVector4D(r, g, b, 1.0f));
-        }
-    }
+		}
+	}
 
     for (int i = 0; i <= xStep; i++) {
         for (int j = 0; j <= yStep; j++) {

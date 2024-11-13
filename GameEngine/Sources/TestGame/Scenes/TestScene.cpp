@@ -38,9 +38,8 @@ void TestScene::load()
 
 	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
 	ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	Mesh* plane = tempLoader.loadPlane([](float x, float y) -> float {
-		return std::sin(x) * std::sin(y);
-		}, xRange, yRange);
+	QString expression = "Math.sin(x) * Math.sin(y)";
+	Mesh* plane = tempLoader.loadPlane(expression, xRange, yRange);
 
 
 	addMesh(teapot);
