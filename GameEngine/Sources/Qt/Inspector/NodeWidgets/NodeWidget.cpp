@@ -1,6 +1,6 @@
 #include "Qt/Inspector/NodeWidgets/NodeWidget.h"
 
-NodeWidget::NodeWidget(Node* node, QWidget* parent) : QWidget(parent), mNode() {
+NodeWidget::NodeWidget(Node* node, QWidget* parent) : INodeWidget(parent), mNode() {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
 
     SectionWidget* section = new SectionWidget("Node", 0, this);
@@ -104,4 +104,10 @@ void NodeWidget::disconnectSignals()
 
 	disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
 	disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+}
+
+void NodeWidget::blockSignals(bool)
+{
+	mNameEdit->blockSignals(true);
+	mIsAliveCheckBox->blockSignals(true);
 }

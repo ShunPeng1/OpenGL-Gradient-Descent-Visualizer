@@ -9,18 +9,18 @@
 #include <QLabel>
 
 #include "Engine/Scenes/Node.h"
+#include "Qt/Interfaces/INodeWidget.h"
 #include "Qt/Widgets/SectionWidget.h"
 #include "Qt/Layouts/VectorFieldLayout.h"
 
-
-class NodeWidget : public QWidget {
+class NodeWidget : public INodeWidget<Node> {
     Q_OBJECT
 
 public:
     NodeWidget(Node* node, QWidget* parent = nullptr);
     ~NodeWidget();
-    void setNode(Node* node);
-    void clearNode();
+    void setNode(Node* node) override;
+    void clearNode() override;
 
 private slots:
     void onIsAliveChanged(bool isAlive);
@@ -30,9 +30,10 @@ private slots:
 	void onObjectNameSet(const QString& name);
 
 private:
-    void updateUI();
-    void connectSignals();
-    void disconnectSignals();
+    void updateUI() override;
+    void connectSignals() override;
+    void disconnectSignals() override;
+    void blockSignals(bool) override;
 
 private:
     Node* mNode;

@@ -8,19 +8,22 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <memory>
+
 #include "Engine/Components/Transform.h"
+#include "Qt/Interfaces/INodeWidget.h"
+
 #include "Qt/Widgets/SectionWidget.h"
 #include "Qt/Layouts/VectorFieldLayout.h"
 
-class TransformWidget : public QWidget {
+class TransformWidget : public INodeWidget<Transform> {
     Q_OBJECT
 
 public:
     TransformWidget(Transform* transform, QWidget* parent = nullptr);
     ~TransformWidget();
-    void setTransform(Transform* transform);
-    void clearTransform();
+
+	void setNode(Transform* transform) override;
+	void clearNode() override;
 
 private slots:
     void onPositionChanged(QVector3D);
@@ -31,13 +34,12 @@ private slots:
     void onScaleSet(double);
 
 private:
-    void updateUI();
-    void connectSignals();
-    void disconnectSignals();
+    void updateUI() override;
+    void connectSignals() override;
+    void disconnectSignals() override;
+    void blockSignals(bool) override;
 
 private:
-    bool mIsUpdating;
-    Transform* mTransform;
 
     SectionWidget* mSection;
 

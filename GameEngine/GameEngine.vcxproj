@@ -157,6 +157,7 @@
     <QtMoc Include="Headers\Qt\Widgets\SectionWidget.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\NodeWidget.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\CameraWidget.h" />
+    <ClInclude Include="Headers\Qt\Interfaces\INodeWidget.h" />
     <ClInclude Include="Headers\Qt\Layouts\VectorFieldLayout.h" />
     <QtMoc Include="Headers\Qt\Scenes\SceneWidget.h" />
     <ClInclude Include="Headers\TestGame\Scenes\TestScene.h" />

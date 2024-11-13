@@ -223,6 +223,9 @@
     <ClInclude Include="Headers\Engine\Interfaces\IComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Qt\Interfaces\INodeWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\default.frag" />

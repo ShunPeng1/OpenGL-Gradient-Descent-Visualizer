@@ -1,7 +1,7 @@
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include <cmath>
 
-TransformWidget::TransformWidget(Transform* transform, QWidget* parent) : QWidget(parent), mTransform(nullptr), mIsUpdating(false) {
+TransformWidget::TransformWidget(Transform* transform, QWidget* parent) : INodeWidget<Transform>(parent) {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
 
     SectionWidget* section = new SectionWidget("Transform", 0, this);
@@ -46,90 +46,79 @@ TransformWidget::TransformWidget(Transform* transform, QWidget* parent) : QWidge
     connect(mScaleY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onScaleSet);
     connect(mScaleZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &TransformWidget::onScaleSet);
 
-    setTransform(transform);
+    setNode(transform);
 }
 
-TransformWidget::~TransformWidget() {
-    clearTransform();
+TransformWidget::~TransformWidget()
+{
+    clearNode();
 }
 
-void TransformWidget::setTransform(Transform* transform) {
+void TransformWidget::setNode(Transform* transform) {
     disconnectSignals();
     
-    mTransform = transform;
+    mNode = transform;
 
     updateUI();
     connectSignals();
 }
 
-void TransformWidget::clearTransform() {
+void TransformWidget::clearNode() {
     disconnectSignals();
     
-    mTransform = nullptr;
+    mNode = nullptr;
 }
 
 void TransformWidget::onPositionChanged(QVector3D position)
 {
-    mIsUpdating = true;
+    blockSignals(true);
 	mPosX->setValue(position.x());
 	mPosY->setValue(position.y());
 	mPosZ->setValue(position.z());
-    mIsUpdating = false;
+    blockSignals(false);
 }
 
 void TransformWidget::onRotationChanged(QQuaternion rotation)
 {
-    mIsUpdating = true;
+    blockSignals(true);
 	QVector3D euler = rotation.toEulerAngles();
 	mRotX->setValue(euler.x());
 	mRotY->setValue(euler.y());
 	mRotZ->setValue(euler.z());
-    mIsUpdating = false;
+    blockSignals(false);
 }
 
 void TransformWidget::onScaleChanged(QVector3D scale)
 {
-    mIsUpdating = true;
+    blockSignals(true);
 	mScaleX->setValue(scale.x());
 	mScaleY->setValue(scale.y());
 	mScaleZ->setValue(scale.z());
-    mIsUpdating = false;
+    blockSignals(false);
 }
 
 
 void TransformWidget::onPositionSet(double value) {
-    if (mIsUpdating) {
-        return;
-    }
-
 	QVector3D position(mPosX->value(), mPosY->value(), mPosZ->value());
-	mTransform->setWorldPosition(position);
+    mNode->setWorldPosition(position);
 }
 
 void TransformWidget::onRotationSet(double value) {
-    if (mIsUpdating) {
-        return;
-    }
-
     QQuaternion rotation = QQuaternion::fromEulerAngles(mRotX->value(), mRotY->value(), mRotZ->value());
-	mTransform->setWorldRotation(rotation);
+    mNode->setWorldRotation(rotation);
 }
 
 void TransformWidget::onScaleSet(double value) {
-    if (mIsUpdating) {
-        return;
-    }
-
 	QVector3D scale(mScaleX->value(), mScaleY->value(), mScaleZ->value());
-	mTransform->setWorldScale(scale);
+    mNode->setWorldScale(scale);
 }
 
 void TransformWidget::updateUI() {
-	mIsUpdating = true;
-    if (mTransform) {
-        QVector3D position = mTransform->getWorldPosition();
-        QQuaternion rotation = mTransform->getWorldRotation();
-        QVector3D scale = mTransform->getWorldScale();
+	blockSignals(true);
+    if (mNode) {
+        QVector3D position = mNode->getWorldPosition();
+        QQuaternion rotation = mNode->getWorldRotation();
+        QVector3D scale = mNode->getWorldScale();
 
         mPosX->setValue(position.x());
         mPosY->setValue(position.y());
@@ -155,25 +144,37 @@ void TransformWidget::updateUI() {
         mScaleY->setValue(1.0);
         mScaleZ->setValue(1.0);
     }
-	mIsUpdating = false;
+	blockSignals(false);
 }
 
 void TransformWidget::connectSignals() {
-    if (!mTransform){
+    if (!mNode){
         return;
     }
 
-	connect(mTransform, &Transform::positionChanged, this, &TransformWidget::onPositionChanged);
-	connect(mTransform, &Transform::rotationChanged, this, &TransformWidget::onRotationChanged);
-	connect(mTransform, &Transform::scaleChanged, this, &TransformWidget::onScaleChanged);
+	connect(mNode, &Transform::positionChanged, this, &TransformWidget::onPositionChanged);
+	connect(mNode, &Transform::rotationChanged, this, &TransformWidget::onRotationChanged);
+	connect(mNode, &Transform::scaleChanged, this, &TransformWidget::onScaleChanged);
 }
 
 void TransformWidget::disconnectSignals() {
-    if (!mTransform) {
+    if (!mNode) {
         return;
     }
 
-	disconnect(mTransform, &Transform::positionChanged, this, &TransformWidget::onPositionChanged);
-	disconnect(mTransform, &Transform::rotationChanged, this, &TransformWidget::onRotationChanged);
-	disconnect(mTransform, &Transform::scaleChanged, this, &TransformWidget::onScaleChanged);
+	disconnect(mNode, &Transform::positionChanged, this, &TransformWidget::onPositionChanged);
+	disconnect(mNode, &Transform::rotationChanged, this, &TransformWidget::onRotationChanged);
+	disconnect(mNode, &Transform::scaleChanged, this, &TransformWidget::onScaleChanged);
+}
+
+void TransformWidget::blockSignals(bool block) {
+    mPosX->blockSignals(block);
+    mPosY->blockSignals(block);
+    mPosZ->blockSignals(block);
+    mRotX->blockSignals(block);
+    mRotY->blockSignals(block);
+    mRotZ->blockSignals(block);
+    mScaleX->blockSignals(block);
+    mScaleY->blockSignals(block);
+    mScaleZ->blockSignals(block);
 }
