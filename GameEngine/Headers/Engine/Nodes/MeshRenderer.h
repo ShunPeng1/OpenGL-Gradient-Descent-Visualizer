@@ -12,7 +12,7 @@ class MeshRenderer : public Container, public QOpenGLExtraFunctions
 {
 	Q_OBJECT
 public:
-
+	MeshRenderer();
 	MeshRenderer(Mesh* mesh, bool isInstance = false);
 
 	virtual void init() override;

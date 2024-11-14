@@ -39,7 +39,6 @@ void Mesh::tryStart()
 
 void Mesh::start()
 {
-
     setupMesh();
 }
 

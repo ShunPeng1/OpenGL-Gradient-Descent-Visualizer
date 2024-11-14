@@ -747,7 +747,7 @@ void getHeatMapColor(float value, float* red, float* green, float* blue)
 
 }
 
-Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange)
+Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange, std::vector <std::vector<std::vector<float>>> &outResults)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -873,6 +873,7 @@ Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange)
         }
     }
 
+    outResults = results;
     return new Mesh(MODEL_PLANE, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 

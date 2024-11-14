@@ -1,6 +1,16 @@
 
 #include "Engine/Nodes/MeshRenderer.h"
 
+MeshRenderer::MeshRenderer()
+{
+	mMesh = nullptr;
+	mPolygonMode = PolygonMode::FILL;
+	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
+
+	mIsInstanced = false;
+
+	setObjectName("Mesh Renderer");
+}
 
 MeshRenderer::MeshRenderer(Mesh* mesh, bool isInstance)
 {
@@ -33,6 +43,8 @@ void MeshRenderer::setMesh(Mesh* mesh, bool isInstance)
 {
 	mMesh = mesh;
 	mIsInstanced = isInstance;
+
+	emit meshChanged(mesh, isInstance);
 }
 
 Mesh* MeshRenderer::getMesh() const
@@ -43,11 +55,13 @@ Mesh* MeshRenderer::getMesh() const
 void MeshRenderer::setPolygonMode(PolygonMode polygonMode)
 {
 	mPolygonMode = polygonMode;
+	emit polygonModeChanged(polygonMode);
 }
 
 void MeshRenderer::setDrawBufferMode(DrawBufferMode drawBufferMode)
 {
 	mDrawBufferMode = drawBufferMode;
+	emit drawBufferModeChanged(drawBufferMode);
 }
 
 PolygonMode MeshRenderer::getPolygonMode() const

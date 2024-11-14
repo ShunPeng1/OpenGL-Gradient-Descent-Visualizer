@@ -1,5 +1,7 @@
 #include "TestGame/Scenes/TestScene.h"
 
+#include "Engine/Nodes/GradientDescent.h"
+
 TestScene::TestScene() : Scene()
 {
 	setName("TestScene");
@@ -36,12 +38,6 @@ void TestScene::load()
 	Mesh* cylinder = tempLoader.loadCylinder(36);
 	Mesh* cone = tempLoader.loadCone(36);
 
-	ModelLoader::Range xRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	ModelLoader::Range yRange = ModelLoader::Range(-10.0f, 10.0f, 0.1f);
-	QString expression = "Math.sin($x) * Math.sin($y)";
-	Mesh* plane = tempLoader.loadPlane(expression, xRange, yRange);
-
-
 	addMesh(teapot);
 	addMesh(triangle);
 	addMesh(quad);
@@ -51,7 +47,6 @@ void TestScene::load()
 	addMesh(icosphere);
 	addMesh(cylinder);
 	addMesh(cone);
-	addMesh(plane);
 
 
 	MeshRenderer* teapotNode = new MeshRenderer(teapot, true);
@@ -63,7 +58,7 @@ void TestScene::load()
 	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, true);
 	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
-	MeshRenderer* planeNode = new MeshRenderer(plane, true);
+	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 0);
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
