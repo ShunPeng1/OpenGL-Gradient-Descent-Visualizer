@@ -75,9 +75,9 @@ void MeshRenderer::render(ShaderProgram& shaderProgram)
 	QMatrix4x4 world = transform->getWorldMatrix();
 	shaderProgram.setUniformValue("mWorld", world);
 
+	glPolygonMode(static_cast<GLenum>(mDrawBufferMode), static_cast<GLenum>(mPolygonMode));
 	mMesh->draw(shaderProgram);
 
-	glPolygonMode(static_cast<GLenum>(mDrawBufferMode), static_cast<GLenum>(mPolygonMode));
 }
 
 void MeshRenderer::write(QJsonObject& json) const
