@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include <QPushButton>
 #include "Engine/Nodes/GradientDescent.h"
 #include "Qt/Interfaces/INodeWidget.h"
 #include "Qt/Widgets/SectionWidget.h"
@@ -47,6 +48,9 @@ private slots:
 	void onPointCountSet(int pointCount);
 	void onSimulationFrequencySet(int simulationFrequency);
 
+    void onReloadMeshClicked(); 
+
+
 private:
     void updateUI() override;
     void connectSignals() override;
@@ -67,6 +71,7 @@ private:
 	QSpinBox* mPointCountSpin;
 	QSpinBox* mSimulationFrequencySpin;
 
+    QPushButton* mReloadMeshButton;
 };
 
 #endif // GRADIENT_DESCENT_WIDGET_H

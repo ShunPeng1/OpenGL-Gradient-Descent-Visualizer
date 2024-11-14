@@ -108,6 +108,12 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
 	simulationFrequencyLayout->addWidget(mSimulationFrequencySpin);
 	mainLayout->addLayout(simulationFrequencyLayout);
 
+	// Reload Mesh
+    QVBoxLayout* buttonLayout = new QVBoxLayout(this);
+    mReloadMeshButton = new QPushButton("Reload Mesh", this);
+    buttonLayout->addWidget(mReloadMeshButton);
+	mainLayout->addLayout(buttonLayout);
+
 
     mSection->setContentLayout(*mainLayout);
 
@@ -123,6 +129,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     connect(mLearningRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onLearningRateSet);
 	connect(mPointCountSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onPointCountSet);
 	connect(mSimulationFrequencySpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
+	connect(mReloadMeshButton, &QPushButton::clicked, this, &GradientDescentWidget::onReloadMeshClicked);
 
     setNode(gradientDescent);
 }
@@ -272,6 +279,13 @@ void GradientDescentWidget::onPointCountSet(int pointCount) {
 void GradientDescentWidget::onSimulationFrequencySet(int simulationFrequency) {
     if (mNode) {
         mNode->setSimulationFrequency(static_cast<float>(simulationFrequency));
+    }
+}
+
+void GradientDescentWidget::onReloadMeshClicked()
+{
+    if (mNode) {
+        mNode->ReloadMesh();
     }
 }
 

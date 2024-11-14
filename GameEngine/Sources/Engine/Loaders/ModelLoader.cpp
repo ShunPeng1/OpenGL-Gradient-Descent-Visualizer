@@ -775,8 +775,8 @@ Mesh* ModelLoader::loadPlane(QString expression, Range& xRange, Range& yRange, s
         "        var x = " + QString::number(xRange.from) + " + i * " + QString::number(xRange.step) + ";"
         "        var y = " + QString::number(yRange.from) + " + j * " + QString::number(yRange.step) + ";"
         "        var z = " + expression1.replace("$x","x").replace("$y", "y") + ";"
-        "        var zX = " + expression2.replace("$x", "(x + 0.000001)").replace("$y", "y") + ";"
-        "        var zY = " + expression3.replace("$x", "x").replace("$y", "(y + 0.000001)") + ";"
+        "        var zX = " + expression2.replace("$x", "(x + 0.00001)").replace("$y", "y") + ";"
+        "        var zY = " + expression3.replace("$x", "x").replace("$y", "(y + 0.00001)") + ";"
         "        results[i][j] = [x, y, z, zX, zY];"
         "    }"
         "}"
@@ -804,12 +804,11 @@ Mesh* ModelLoader::loadPlane(QString expression, Range& xRange, Range& yRange, s
 			float zX = point.property(3).toNumber();
 			float zY = point.property(4).toNumber();
 
-            if (i == xStep + 1) // Skip the last row because it is nan
-            {
-                i = 0;
-                j++;
+
+			if (std::isnan(x) || std::isnan(y) || std::isnan(z) || std::isnan(zX) || std::isnan(zY)) {
                 continue;
             }
+
 
             results[i][j][0] = x;
             results[i][j][1] = y;
@@ -820,7 +819,12 @@ Mesh* ModelLoader::loadPlane(QString expression, Range& xRange, Range& yRange, s
             if (z < minZ) minZ = z;
             if (z > maxZ) maxZ = z;
 
-            i = (i + 1) % (xStep + 2);
+            i = (i + 1) % (xStep + 1);
+
+            if (i == 0)
+            {
+                j++;
+            }
         }
     }
 
