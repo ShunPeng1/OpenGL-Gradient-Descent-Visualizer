@@ -99,6 +99,16 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
 	pointCountLayout->addWidget(mPointCountSpin);
 	mainLayout->addLayout(pointCountLayout);
 
+	// Simulation Frequency
+	QHBoxLayout* simulationFrequencyLayout = new QHBoxLayout();
+	QLabel* simulationFrequencyLabel = new QLabel("Simulation Frequency:");
+	mSimulationFrequencySpin = new QSpinBox();
+	mSimulationFrequencySpin->setRange(1, 1e6);
+	simulationFrequencyLayout->addWidget(simulationFrequencyLabel);
+	simulationFrequencyLayout->addWidget(mSimulationFrequencySpin);
+	mainLayout->addLayout(simulationFrequencyLayout);
+
+
     mSection->setContentLayout(*mainLayout);
 
     // Connect signals
@@ -112,6 +122,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     connect(mMaxIterationSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onMaxIterationSet);
     connect(mLearningRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onLearningRateSet);
 	connect(mPointCountSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onPointCountSet);
+	connect(mSimulationFrequencySpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
 
     setNode(gradientDescent);
 }
@@ -192,6 +203,12 @@ void GradientDescentWidget::onPointCountChanged(int pointCount) {
 	mPointCountSpin->blockSignals(false);
 }
 
+void GradientDescentWidget::onSimulationFrequencyChanged(int simulationFrequency) {
+	mSimulationFrequencySpin->blockSignals(true);
+	mSimulationFrequencySpin->setValue(simulationFrequency);
+	mSimulationFrequencySpin->blockSignals(false);
+}
+
 void GradientDescentWidget::onExpressionSet(const QString& expression) {
     if (mNode) {
         mNode->setExpression(expression);
@@ -252,6 +269,11 @@ void GradientDescentWidget::onPointCountSet(int pointCount) {
     }
 }
 
+void GradientDescentWidget::onSimulationFrequencySet(int simulationFrequency) {
+    if (mNode) {
+        mNode->setSimulationFrequency(static_cast<float>(simulationFrequency));
+    }
+}
 
 void GradientDescentWidget::updateUI() {
     blockSignals(true);

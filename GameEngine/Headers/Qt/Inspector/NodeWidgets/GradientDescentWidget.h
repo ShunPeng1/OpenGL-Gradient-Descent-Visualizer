@@ -33,6 +33,7 @@ private slots:
     void onMaxIterationChanged(int maxIteration);
     void onLearningRateChanged(double learningRate);
 	void onPointCountChanged(int pointCount);
+	void onSimulationFrequencyChanged(int simulationFrequency);
 
     void onExpressionSet(const QString& expression);
 	void onXFromSet(double xFrom);
@@ -44,6 +45,7 @@ private slots:
 	void onMaxIterationSet(int maxIteration);
 	void onLearningRateSet(double learningRate);
 	void onPointCountSet(int pointCount);
+	void onSimulationFrequencySet(int simulationFrequency);
 
 private:
     void updateUI() override;
@@ -63,6 +65,8 @@ private:
     QSpinBox* mMaxIterationSpin;
     QDoubleSpinBox* mLearningRateSpin;
 	QSpinBox* mPointCountSpin;
+	QSpinBox* mSimulationFrequencySpin;
+
 };
 
 #endif // GRADIENT_DESCENT_WIDGET_H

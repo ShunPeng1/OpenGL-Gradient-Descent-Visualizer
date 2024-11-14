@@ -53,26 +53,21 @@ public:
 	void setPointCount(int pointCount);
 	int getPointCount() const;
 
+	void setSimulationFrequency(float simulationFrequency);
+	float getSimulationFrequency() const;
+
 signals:
 	void expressionChanged(QString expression);
-signals:
 	void xFromChanged(float xFrom);
-signals:
 	void xToChanged(float xTo);
-signals:
 	void xStepChanged(float xStep);
-signals:
 	void yFromChanged(float yFrom);
-signals:
 	void yToChanged(float yTo);
-signals:
 	void yStepChanged(float yStep);
-signals:
 	void maxIterationChanged(int maxIteration);
-signals:
 	void learningRateChanged(float learningRate);
-signals:
 	void pointCountChanged(int pointCount);
+	void simulationFrequencyChanged(float simulationFrequency);
 
 protected:
 	QString mExpression;
@@ -87,6 +82,7 @@ protected:
 
 	int mMaxIteration;
 	float mLearningRate;
+	float mSimulationFrequency;
 
 	int mPointCount;
 	std::vector <std::vector<std::vector<float>>> mResults;

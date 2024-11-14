@@ -54,17 +54,24 @@ void* GradientDescent::accept(INodeVisitor* visitor)
 
 void GradientDescent::ReloadMesh()
 {
-    ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
+    try {
+        ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
-    ModelLoader::Range xRange(mXFrom, mXTo, mXStep);
-    ModelLoader::Range yRange(mYFrom, mYTo, mYStep);
+        ModelLoader::Range xRange(mXFrom, mXTo, mXStep);
+        ModelLoader::Range yRange(mYFrom, mYTo, mYStep);
 
-    Mesh* mesh = loader.loadPlane(mExpression, xRange, yRange, mResults);
+        Mesh* mesh = loader.loadPlane(mExpression, xRange, yRange, mResults);
 
-    mesh->init();
-    mesh->tryStart();
+        mesh->init();
+        mesh->tryStart();
+
+
+        setMesh(mesh, false);
+	}
+	catch (const std::exception& e) {
+		qDebug() << e.what();
+	}
     
-	setMesh(mesh, false);
 
 
 }
@@ -190,11 +197,24 @@ void GradientDescent::setPointCount(int pointCount)
 {
     if (mPointCount != pointCount) {
         mPointCount = pointCount;
-        // No signal for pointCount as it is not defined in the header
+		emit pointCountChanged(mPointCount);
     }
 }
 
 int GradientDescent::getPointCount() const
 {
     return mPointCount;
+}
+
+void GradientDescent::setSimulationFrequency(float simulationFrequency)
+{
+	if (mSimulationFrequency != simulationFrequency) {
+		mSimulationFrequency = simulationFrequency;
+		emit simulationFrequencyChanged(mSimulationFrequency);
+	}
+}
+
+float GradientDescent::getSimulationFrequency() const
+{
+    return mSimulationFrequency;
 }
