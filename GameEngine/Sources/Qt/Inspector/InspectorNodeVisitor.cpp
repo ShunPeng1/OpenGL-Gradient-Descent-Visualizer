@@ -7,6 +7,7 @@
 #include "Qt/Inspector/NodeWidgets/NodeWidget.h"
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include "Qt/Inspector/NodeWidgets/CameraWidget.h"
+#include "Qt/Inspector/NodeWidgets/MeshRendererWidget.h"
 
 #include "QVBoxLayout"
 
@@ -56,6 +57,9 @@ void* InspectorNodeVisitor::visitContainer(Container* node) {
 
 void* InspectorNodeVisitor::visitMeshRenderer(MeshRenderer* node) {
     
+	MeshRendererWidget* transformWidget = new MeshRendererWidget(node);
+	mStackItems.append(transformWidget);
+
     visitContainer(node);
 
     return nullptr;

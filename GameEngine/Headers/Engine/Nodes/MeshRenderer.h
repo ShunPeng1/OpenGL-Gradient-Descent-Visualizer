@@ -21,8 +21,10 @@ public:
 	void setMesh(Mesh* mesh, bool isInstance);
 	Mesh* getMesh() const;
 
-	void setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBufferMode = DrawBufferMode::FRONT_AND_BACK);
+	void setPolygonMode(PolygonMode polygonMode);
+	void setDrawBufferMode(DrawBufferMode drawBufferMode);
 	PolygonMode getPolygonMode() const;
+	DrawBufferMode getDrawBufferMode() const;
 
 	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
@@ -32,6 +34,12 @@ public: // Interfaces
 	virtual void write(QJsonObject& json) const override;
 	virtual void read(const QJsonObject& json) override;
 	virtual void* accept(INodeVisitor* visitor) override;
+
+signals:
+	void meshChanged(Mesh* mesh, bool isInstance);
+	void polygonModeChanged(PolygonMode polygonMode);
+	void drawBufferModeChanged(DrawBufferMode drawBufferMode);
+
 
 protected:
 	bool mIsInstanced;

@@ -40,15 +40,24 @@ Mesh* MeshRenderer::getMesh() const
 	return mMesh;
 }
 
-void MeshRenderer::setRenderMode(PolygonMode polygonMode, DrawBufferMode drawBufferMode)
+void MeshRenderer::setPolygonMode(PolygonMode polygonMode)
 {
 	mPolygonMode = polygonMode;
+}
+
+void MeshRenderer::setDrawBufferMode(DrawBufferMode drawBufferMode)
+{
 	mDrawBufferMode = drawBufferMode;
 }
 
 PolygonMode MeshRenderer::getPolygonMode() const
 {
 	return mPolygonMode;
+}
+
+DrawBufferMode MeshRenderer::getDrawBufferMode() const
+{
+	return mDrawBufferMode;
 }
 
 void MeshRenderer::start(IScene* scene)

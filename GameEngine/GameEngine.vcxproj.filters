@@ -131,6 +131,9 @@
     <ClCompile Include="Sources\Qt\Scenes\SceneWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\MeshRendererWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -274,6 +277,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Engine\Nodes\MeshRenderer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\MeshRendererWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
