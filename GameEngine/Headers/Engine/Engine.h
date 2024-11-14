@@ -12,12 +12,13 @@ class ISerializable;
 class Node;
 class Transform;
 class Renderer;
+class Mesh;
 
 // Nodes
 class Camera;
 class Container;
 class MeshRenderer;
-class Mesh;
+class GradientDescent;
 
 
 #endif // ENGINE_H

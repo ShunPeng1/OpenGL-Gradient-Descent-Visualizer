@@ -747,7 +747,7 @@ void getHeatMapColor(float value, float* red, float* green, float* blue)
 
 }
 
-Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange, std::vector <std::vector<std::vector<float>>> &outResults)
+Mesh* ModelLoader::loadPlane(QString expression, Range& xRange, Range& yRange, std::vector <std::vector<std::vector<float>>> &outResults)
 {
     std::vector<QVector3D> positions;
     std::vector<QVector3D> normals;
@@ -763,6 +763,10 @@ Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange, 
     float minZ = std::numeric_limits<float>::max();
     float maxZ = std::numeric_limits<float>::lowest();
 
+	QString expression1 = expression;
+	QString expression2 = expression;
+	QString expression3 = expression;
+
     // Precompute the results in JavaScript
     QString jsCode = "var results = [];"
         "for (var i = 0; i <= " + QString::number(xStep) + "; i++) {"
@@ -770,9 +774,9 @@ Mesh* ModelLoader::loadPlane(QString& expression, Range& xRange, Range& yRange, 
         "    for (var j = 0; j <= " + QString::number(yStep) + "; j++) {"
         "        var x = " + QString::number(xRange.from) + " + i * " + QString::number(xRange.step) + ";"
         "        var y = " + QString::number(yRange.from) + " + j * " + QString::number(yRange.step) + ";"
-        "        var z = " + expression.replace("$x","x").replace("$y", "y") + ";"
-        "        var zX = " + expression.replace("$x", "(x + 0.000001)").replace("$y", "y") + ";"
-        "        var zY = " + expression.replace("$x", "x").replace("$y", "(y + 0.000001)") + ";"
+        "        var z = " + expression1.replace("$x","x").replace("$y", "y") + ";"
+        "        var zX = " + expression2.replace("$x", "(x + 0.000001)").replace("$y", "y") + ";"
+        "        var zY = " + expression3.replace("$x", "x").replace("$y", "(y + 0.000001)") + ";"
         "        results[i][j] = [x, y, z, zX, zY];"
         "    }"
         "}"

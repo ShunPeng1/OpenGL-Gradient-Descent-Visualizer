@@ -137,6 +137,9 @@
     <ClCompile Include="Sources\Engine\Nodes\GradientDescent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\GradientDescentWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -286,6 +289,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Engine\Nodes\GradientDescent.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\GradientDescentWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

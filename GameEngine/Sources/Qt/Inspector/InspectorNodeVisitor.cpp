@@ -8,6 +8,7 @@
 #include "Qt/Inspector/NodeWidgets/TransformWidget.h"
 #include "Qt/Inspector/NodeWidgets/CameraWidget.h"
 #include "Qt/Inspector/NodeWidgets/MeshRendererWidget.h"
+#include "Qt/Inspector/NodeWidgets/GradientDescentWidget.h"
 
 #include "QVBoxLayout"
 
@@ -72,5 +73,14 @@ void* InspectorNodeVisitor::visitCamera(Camera* node) {
 
 	visitContainer(node);
 
+    return nullptr;
+}
+
+void* InspectorNodeVisitor::visitGradientDescent(GradientDescent* node)
+{
+	GradientDescentWidget* transformWidget = new GradientDescentWidget(node);
+	mStackItems.append(transformWidget);
+
+	visitMeshRenderer(node);
     return nullptr;
 }

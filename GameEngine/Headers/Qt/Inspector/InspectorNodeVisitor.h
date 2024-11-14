@@ -17,6 +17,7 @@ public:
 	virtual void* visitContainer(Container* node) override;
 	virtual void* visitMeshRenderer(MeshRenderer* node) override;
 	virtual void* visitCamera(Camera* node) override;
+	virtual void* visitGradientDescent(GradientDescent* node) override;
 
 private:
 	QList<QWidget*> mStackItems;

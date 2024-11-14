@@ -47,6 +47,11 @@ void GradientDescent::render(ShaderProgram& shaderProgram)
     MeshRenderer::render(shaderProgram);
 }
 
+void* GradientDescent::accept(INodeVisitor* visitor)
+{
+	return visitor->visitGradientDescent(this);
+}
+
 void GradientDescent::ReloadMesh()
 {
     ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();

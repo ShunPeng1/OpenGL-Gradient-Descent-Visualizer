@@ -10,6 +10,7 @@ public:
 	virtual void* visitContainer(Container* node) = 0;
 	virtual void* visitMeshRenderer(MeshRenderer* node) = 0;
 	virtual void* visitCamera(Camera* node) = 0;
+	virtual void* visitGradientDescent(GradientDescent* node) = 0;
 
 	virtual ~INodeVisitor() = default;
 };

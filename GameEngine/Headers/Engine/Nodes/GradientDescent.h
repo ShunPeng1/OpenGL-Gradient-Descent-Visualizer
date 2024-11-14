@@ -18,6 +18,9 @@ public:
 	virtual void render(ShaderProgram& shaderProgram) override;
 
 public:
+	void* accept(INodeVisitor* visitor) override;
+
+public:
 	void ReloadMesh();
 
 	void setExpression(QString expression);
@@ -68,6 +71,8 @@ signals:
 	void maxIterationChanged(int maxIteration);
 signals:
 	void learningRateChanged(float learningRate);
+signals:
+	void pointCountChanged(int pointCount);
 
 protected:
 	QString mExpression;

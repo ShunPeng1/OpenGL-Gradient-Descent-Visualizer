@@ -161,6 +161,7 @@
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\NodeWidget.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\CameraWidget.h" />
     <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\MeshRendererWidget.h" />
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\GradientDescentWidget.h" />
     <ClInclude Include="Headers\Qt\Interfaces\INodeWidget.h" />
     <ClInclude Include="Headers\Qt\Layouts\VectorFieldLayout.h" />
     <QtMoc Include="Headers\Qt\Scenes\SceneWidget.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Sources\Qt\Inspector\InspectorNodeVisitor.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\InspectorWidget.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\CameraWidget.cpp" />
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\GradientDescentWidget.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\MeshRendererWidget.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\NodeWidget.cpp" />
     <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\TransformWidget.cpp" />
