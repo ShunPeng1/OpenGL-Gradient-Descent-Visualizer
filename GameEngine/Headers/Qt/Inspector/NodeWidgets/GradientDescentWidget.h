@@ -46,7 +46,7 @@ private slots:
 	void onMaxIterationSet(int maxIteration);
 	void onLearningRateSet(double learningRate);
 	void onPointCountSet(int pointCount);
-	void onSimulationFrequencySet(int simulationFrequency);
+	void onSimulationFrequencySet(double simulationFrequency);
 
     void onReloadMeshClicked(); 
 
@@ -69,7 +69,7 @@ private:
     QSpinBox* mMaxIterationSpin;
     QDoubleSpinBox* mLearningRateSpin;
 	QSpinBox* mPointCountSpin;
-	QSpinBox* mSimulationFrequencySpin;
+    QDoubleSpinBox* mSimulationFrequencySpin;
 
     QPushButton* mReloadMeshButton;
 };

@@ -77,9 +77,9 @@ void TestScene::load()
 	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, true);
 	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
-	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1);
-	MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x**2 - $y**2) / 5 + ($x**2 + $y**2) / 50 - 0.1 * Math.cos(2 * Math.PI * $x) * Math.sin(2 * Math.PI * $y) + 0.5 * Math.exp(-(($x - 2)**2 + ($y - 2)**2))", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1);
-	planeNode2->kill();
+	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1000);
+	MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -3.0f, 3.0f, 0.01f, -3.0f, 3.0f, 0.01f, 1000, 0.01f, 10, 1000);
+	planeNode->kill();
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
@@ -93,7 +93,7 @@ void TestScene::load()
 
 	planeNode->transform->setLocalPosition(QVector3D(0.0f, -3.0f, 0.0f));
 	planeNode->transform->setLocalRotation(QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f));
-	planeNode2->transform->setLocalPosition(QVector3D(0.0f, -8.0f, 0.0f));
+	planeNode2->transform->setLocalPosition(QVector3D(0.0f, -1.0f, 0.0f));
 	planeNode2->transform->setLocalRotation(QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f));
 
 	teapotNode->setObjectName("Teapot");

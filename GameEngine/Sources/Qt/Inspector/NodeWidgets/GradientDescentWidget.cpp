@@ -40,7 +40,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     QHBoxLayout* xStepLayout = new QHBoxLayout();
     QLabel* xStepLabel = new QLabel("X Step:");
     mXStepSpin = new QDoubleSpinBox();
-    mXStepSpin->setRange(0.0001, 1e3);
+    mXStepSpin->setRange(-1e6, 1e6);
     xStepLayout->addWidget(xStepLabel);
     xStepLayout->addWidget(mXStepSpin);
     mainLayout->addLayout(xStepLayout);
@@ -85,7 +85,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     QHBoxLayout* learningRateLayout = new QHBoxLayout();
     QLabel* learningRateLabel = new QLabel("Learning Rate:");
     mLearningRateSpin = new QDoubleSpinBox();
-    mLearningRateSpin->setRange(0.0001, 1.0);
+    mLearningRateSpin->setRange(-1e6, 1e6);
     learningRateLayout->addWidget(learningRateLabel);
     learningRateLayout->addWidget(mLearningRateSpin);
     mainLayout->addLayout(learningRateLayout);
@@ -102,7 +102,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
 	// Simulation Frequency
 	QHBoxLayout* simulationFrequencyLayout = new QHBoxLayout();
 	QLabel* simulationFrequencyLabel = new QLabel("Simulation Frequency:");
-	mSimulationFrequencySpin = new QSpinBox();
+	mSimulationFrequencySpin = new QDoubleSpinBox();
 	mSimulationFrequencySpin->setRange(1, 1e6);
 	simulationFrequencyLayout->addWidget(simulationFrequencyLabel);
 	simulationFrequencyLayout->addWidget(mSimulationFrequencySpin);
@@ -128,7 +128,7 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     connect(mMaxIterationSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onMaxIterationSet);
     connect(mLearningRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onLearningRateSet);
 	connect(mPointCountSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onPointCountSet);
-	connect(mSimulationFrequencySpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
+	connect(mSimulationFrequencySpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
 	connect(mReloadMeshButton, &QPushButton::clicked, this, &GradientDescentWidget::onReloadMeshClicked);
 
     setNode(gradientDescent);
@@ -276,7 +276,7 @@ void GradientDescentWidget::onPointCountSet(int pointCount) {
     }
 }
 
-void GradientDescentWidget::onSimulationFrequencySet(int simulationFrequency) {
+void GradientDescentWidget::onSimulationFrequencySet(double simulationFrequency) {
     if (mNode) {
         mNode->setSimulationFrequency(static_cast<float>(simulationFrequency));
     }

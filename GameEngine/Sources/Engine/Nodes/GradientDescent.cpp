@@ -58,6 +58,7 @@ void* GradientDescent::accept(INodeVisitor* visitor)
 void GradientDescent::ReloadMesh()
 {
     try {
+
         ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
         ModelLoader::Range xRange(mXFrom, mXTo, mXStep);
