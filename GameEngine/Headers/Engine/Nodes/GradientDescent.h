@@ -96,6 +96,7 @@ protected:
 	Mesh* mSphereMesh;
 
 	float mTimeAccumulator;
+	int mIteration;
 };
 
 

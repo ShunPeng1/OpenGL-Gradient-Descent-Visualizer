@@ -60,6 +60,7 @@ void TestScene::load()
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
 	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1);
 	MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x**2 - $y**2) / 5 + ($x**2 + $y**2) / 50 - 0.1 * Math.cos(2 * Math.PI * $x) * Math.sin(2 * Math.PI * $y) + 0.5 * Math.exp(-(($x - 2)**2 + ($y - 2)**2))", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1);
+	planeNode2->kill();
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
