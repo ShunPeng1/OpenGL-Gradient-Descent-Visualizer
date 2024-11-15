@@ -231,7 +231,7 @@ void GradientDescent::initializeSpheres()
 {
     for (auto sphere : mSpheres) {
         this->removeChild(sphere);
-        delete sphere;
+        //delete sphere;
     }
     mSpheres.clear();
 
