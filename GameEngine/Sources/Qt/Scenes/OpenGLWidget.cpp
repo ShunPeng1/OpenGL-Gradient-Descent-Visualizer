@@ -9,6 +9,7 @@
 #include <QMatrix4x4>
 #include <QVector3D>
 
+#include "TestGame/Controllers/FPSCameraController.h"
 
 OpenGLWidget::OpenGLWidget(IScene* scene, QWidget* parent) : QOpenGLWidget(parent), QOpenGLFunctions() {
     setFocusPolicy(Qt::StrongFocus);
@@ -34,12 +35,17 @@ OpenGLWidget::~OpenGLWidget()
 void OpenGLWidget::setCurrentCamera(Camera* camera)
 {
 	mRenderCamera = camera;
+
+    // TODO: Make a camera controller
+	mInputPublisher->clear();
+    FPSCameraController * cameraController = new FPSCameraController(camera);
+    mInputPublisher->subscribe(cameraController);
 }
 
 void OpenGLWidget::initializeGL() {
 
     initializeOpenGLFunctions();
-    mInputPublisher->clear();
+    //mInputPublisher->clear(); // TODO: Make a camera controller
 
 	mCurrentScene->init();
 

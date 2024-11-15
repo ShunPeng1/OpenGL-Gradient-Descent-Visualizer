@@ -22,8 +22,27 @@ void TestScene::load()
 	camera2->setObjectName("Camera 2");
 	camera2->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 10.0f));
 
-	mCameraController = new FPSCameraController(camera);
-	inputPublisher->subscribe(mCameraController);
+	const int numCameras = 10; // Number of cameras
+	const float radius = 10.0f; // Radius of the sphere
+	const QVector3D center(0.0f, -6.0f, 0.0f); // Center of the sphere
+
+	for (int i = 0; i < numCameras; ++i)
+	{
+		float theta = M_PI * (i + 1) / (numCameras + 1); // Latitude
+		float phi = 2 * M_PI * i / numCameras; // Longitude
+
+		float x = radius * sin(theta) * cos(phi);
+		float y = radius * cos(theta);
+		float z = radius * sin(theta) * sin(phi);
+
+		Camera* camera = new Camera();
+		addNode(camera);
+		camera->setObjectName("Camera " + std::to_string(i + 3));
+		camera->transform->setLocalPosition(QVector3D(x, y, z));
+
+		// Look at the center
+		camera->transform->setLocalRotation(QQuaternion::rotationTo(camera->transform->getLocalPosition(), center - camera->transform->getLocalPosition()));
+	}
 
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
