@@ -24,15 +24,16 @@ void Scene::init()
 {
 	mDefaultShader->init();
 
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->init();
+		mMeshes[i]->init();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->init();
+		mChildrenNodes[i]->init();
 	}
+
 }
 
 void Scene::create()
@@ -44,23 +45,24 @@ void Scene::start()
 {
 	mDefaultShader->start();
 
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->tryStart();
+		mMeshes[i]->tryStart();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->tryStart(this);
+		mChildrenNodes[i]->tryStart(this);
 	}
 
 }
 
 void Scene::update(float deltaTime)
 {
-	for (auto& node : mChildrenNodes)
+	
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->tryUpdate(deltaTime);
+		mChildrenNodes[i]->tryUpdate(deltaTime);
 	}
 }
 
@@ -70,9 +72,10 @@ void Scene::render()
 
 	mMainCamera->tryRender(*mDefaultShader); // Only render the main camera
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		Camera* camera = dynamic_cast<Camera*>(node.get());
+		Node* node = mChildrenNodes[i].get();
+		Camera* camera = dynamic_cast<Camera*>(node);
 		if (camera != nullptr) { // Skip camera nodes
 			continue;
 		}
@@ -85,13 +88,14 @@ void Scene::render()
 
 void Scene::clear()
 {
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->clear();
+		mMeshes[i]->clear();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
+		Node* node = mChildrenNodes[i].get();
 		node->clear();
 	}
 

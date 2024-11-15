@@ -8,7 +8,7 @@ class GradientDescent : public MeshRenderer
 	Q_OBJECT
 public:
 	GradientDescent();
-	GradientDescent(QString mExpression, float mXFrom, float mXTo, float mXStep, float mYFrom, float mYTo, float mYStep, int mMaxIteration, float mLearningRate, int mPointCount);
+	GradientDescent(QString mExpression, float mXFrom, float mXTo, float mXStep, float mYFrom, float mYTo, float mYStep, int mMaxIteration, float mLearningRate, int mPointCount, float simulationFrequency = 1);
 	virtual ~GradientDescent() noexcept;
 
 	virtual void init() override;
@@ -56,6 +56,11 @@ public:
 	void setSimulationFrequency(float simulationFrequency);
 	float getSimulationFrequency() const;
 
+private:
+	void initializeSpheres();
+	void simulateGradientDescent(float deltaTime);
+
+
 signals:
 	void expressionChanged(QString expression);
 	void xFromChanged(float xFrom);
@@ -87,6 +92,10 @@ protected:
 	int mPointCount;
 	std::vector <std::vector<std::vector<float>>> mResults;
 
+	std::vector<MeshRenderer*> mSpheres;
+	Mesh* mSphereMesh;
+
+	float mTimeAccumulator;
 };
 
 
