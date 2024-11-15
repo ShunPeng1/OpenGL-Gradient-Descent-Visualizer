@@ -177,7 +177,6 @@ void Transform::addChild(Transform* child) {
 		return;
 	}
 
-	child->setParent(this);
 	mChildren.push_back(child);
 }
 

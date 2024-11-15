@@ -246,11 +246,11 @@ void GradientDescent::initializeSpheres()
 
 
         MeshRenderer* sphere = new MeshRenderer();
+        sphere->init();
 		sphere->setMesh(mesh, true);
 
-		mScenePtr->addNode(sphere);
+        sphere->setParent(this);
 
-		sphere->init();
 
 		mSpheres.push_back(sphere);
     }
