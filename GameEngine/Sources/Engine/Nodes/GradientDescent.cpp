@@ -35,7 +35,7 @@ void GradientDescent::start(IScene* scene)
 {
     MeshRenderer::start(scene);
     mScenePtr = scene;
-    ReloadMesh();
+    reloadMesh();
 }
 
 void GradientDescent::update(float deltaTime)
@@ -55,26 +55,17 @@ void* GradientDescent::accept(INodeVisitor* visitor)
 	return visitor->visitGradientDescent(this);
 }
 
-void GradientDescent::ReloadMesh()
+void GradientDescent::reloadMesh()
 {
     try {
-
-        ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
-
-        ModelLoader::Range xRange(mXFrom, mXTo, mXStep);
-        ModelLoader::Range yRange(mYFrom, mYTo, mYStep);
-
-        Mesh* mesh = loader.loadPlane(mExpression, xRange, yRange, mResults);
+        Mesh* mesh = createMesh();
 
         mesh->init();
-
         mesh->tryStart();
-
 
         setMesh(mesh, false);
 
-
-        initializeSpheres();
+        reloadSpheres();
 	}
 	catch (const std::exception& e) {
 		qDebug() << e.what();
@@ -205,7 +196,7 @@ void GradientDescent::setPointCount(int pointCount)
 {
     if (mPointCount != pointCount) {
         mPointCount = pointCount;
-        initializeSpheres();
+        reloadSpheres();
 		emit pointCountChanged(mPointCount);
     }
 }
@@ -228,7 +219,174 @@ float GradientDescent::getSimulationFrequency() const
     return mSimulationFrequency;
 }
 
-void GradientDescent::initializeSpheres()
+
+void GradientDescent::getHeatMapColor(float value, float* red, float* green, float* blue)
+{
+    const int NUM_COLORS = 4;
+    static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,0}, {1,1,0}, {1,0,0} };
+
+    int idx1, idx2;
+    float fractBetween = 0;
+
+    if (value <= 0) {
+        idx1 = idx2 = 0;
+    }
+    else if (value >= 1) {
+        idx1 = idx2 = NUM_COLORS - 1;
+    }
+    else {
+        value = value * (NUM_COLORS - 1);
+        idx1 = floor(value);
+        idx2 = idx1 + 1;
+        fractBetween = value - float(idx1);
+    }
+
+    *red = (color[idx2][0] - color[idx1][0]) * fractBetween + color[idx1][0];
+    *green = (color[idx2][1] - color[idx1][1]) * fractBetween + color[idx1][1];
+    *blue = (color[idx2][2] - color[idx1][2]) * fractBetween + color[idx1][2];
+
+}
+
+Mesh* GradientDescent::createMesh()
+{
+    std::vector<QVector3D> positions;
+    std::vector<QVector3D> normals;
+    std::vector<QVector2D> texcoords;
+    std::vector<QVector4D> normalColors;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+
+    QJSEngine engine;
+
+    int xStep = (int)((mXTo - mXFrom) / mXStep);
+    int yStep = (int)((mYTo - mYFrom) / mYStep);
+    float minZ = std::numeric_limits<float>::max();
+    float maxZ = std::numeric_limits<float>::lowest();
+
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+
+    // Precompute the results in JavaScript
+    QString jsCode = "var results = [];"
+        "for (var i = 0; i <= " + QString::number(xStep) + "; i++) {"
+        "    results[i] = [];"
+        "    for (var j = 0; j <= " + QString::number(yStep) + "; j++) {"
+        "        var x = " + QString::number(mXFrom) + " + i * " + QString::number(mXStep) + ";"
+        "        var y = " + QString::number(mYFrom) + " + j * " + QString::number(mYStep) + ";"
+        "        var z = " + expression1.replace("$x", "x").replace("$y", "y") + ";"
+        "        var zX = " + expression2.replace("$x", "(x + 0.00001)").replace("$y", "y") + ";"
+        "        var zY = " + expression3.replace("$x", "x").replace("$y", "(y + 0.00001)") + ";"
+        "        results[i][j] = [x, y, z, zX, zY];"
+        "    }"
+        "}"
+        "results;";
+    QJSValue jsResults = engine.evaluate(jsCode);
+    if (jsResults.isError()) {
+        std::cerr << "JavaScript error: " << jsResults.toString().toStdString() << std::endl;
+        return nullptr;
+    }
+
+    std::vector <std::vector<std::vector<float>>> results(xStep + 1, std::vector<std::vector<float>>(yStep + 1, std::vector<float>(5, 0.0f)));
+
+    int i = 0, j = 0;
+    QJSValueIterator it(jsResults);
+    while (it.hasNext()) {
+        it.next();
+        QJSValue row = it.value();
+        QJSValueIterator rowIt(row);
+        while (rowIt.hasNext()) {
+            rowIt.next();
+            QJSValue point = rowIt.value();
+            float x = point.property(0).toNumber();
+            float y = point.property(1).toNumber();
+            float z = point.property(2).toNumber();
+            float zX = point.property(3).toNumber();
+            float zY = point.property(4).toNumber();
+
+
+            if (std::isnan(x) || std::isnan(y) || std::isnan(z) || std::isnan(zX) || std::isnan(zY)) {
+                continue;
+            }
+
+
+            results[i][j][0] = x;
+            results[i][j][1] = y;
+            results[i][j][2] = z;
+            results[i][j][3] = zX;
+            results[i][j][4] = zY;
+
+            if (z < minZ) minZ = z;
+            if (z > maxZ) maxZ = z;
+
+            i = (i + 1) % (xStep + 1);
+
+            if (i == 0)
+            {
+                j++;
+            }
+        }
+    }
+
+    for (int i = 0; i <= xStep; i++) {
+        for (int j = 0; j <= yStep; j++) {
+            float x = results[i][j][0];
+            float y = results[i][j][1];
+            float z = results[i][j][2];
+            float zX = results[i][j][3];
+            float zY = results[i][j][4];
+
+            positions.push_back(QVector3D(x, y, z));
+            texcoords.push_back(QVector2D(x, y));
+
+            float r, g, b;
+            float normalizedZ = (z - minZ) / (maxZ - minZ);
+
+            QVector3D normal = QVector3D::crossProduct(
+                QVector3D(1.0f, 0.0f, zX - z),
+                QVector3D(0.0f, 1.0f, zY - z)
+            );
+            normals.push_back(normal.normalized());
+
+            getHeatMapColor(normalizedZ, &r, &g, &b);
+            normalColors.push_back(QVector4D(r, g, b, 1.0f));
+        }
+    }
+
+    for (int i = 0; i <= xStep; i++) {
+        for (int j = 0; j <= yStep; j++) {
+            int index = j + i * (yStep + 1);
+
+            Vertex vertex = {};
+            vertex.position = positions[index];
+            vertex.normal = normals[index];
+            vertex.texCoord = texcoords[index];
+            vertex.color = normalColors[index];
+            vertices.push_back(vertex);
+        }
+    }
+
+    for (int i = 0; i < xStep; i++) {
+        for (int j = 0; j <= yStep; j++) {
+            int index1 = j + i * (yStep + 1);
+            int index2 = j + (i + 1) * (yStep + 1);
+
+            indices.push_back(index1);
+            indices.push_back(index2);
+        }
+
+        if (i < xStep - 1) {
+            indices.push_back(indices[indices.size() - 1]);
+            indices.push_back((i + 1) * (yStep + 1));
+        }
+    }
+
+	mMeshResults = results;
+    return new Mesh(MODEL_PLANE, vertices, indices, {}, GL_TRIANGLE_STRIP);
+}
+
+
+void GradientDescent::reloadSpheres()
 {
     for (auto sphere : mSpheres) {
         this->removeChild(sphere);
@@ -325,7 +483,7 @@ void GradientDescent::initializeSpheres()
         return;
     }
 
-    mResults.clear();
+    mGradientDescentResults.clear();
 
     QJSValueIterator it(jsResults);
     while (it.hasNext()) {
@@ -360,7 +518,7 @@ void GradientDescent::initializeSpheres()
         
             pointResults.push_back(pointData);
         }
-        mResults.push_back(pointResults);
+        mGradientDescentResults.push_back(pointResults);
     }
     
 
@@ -369,7 +527,7 @@ void GradientDescent::initializeSpheres()
 
 void GradientDescent::simulateGradientDescent(float deltaTime)
 {
-	if (mResults.empty() || mSpheres.size() == 0) {
+	if (mGradientDescentResults.empty() || mSpheres.size() == 0) {
 		return;
 	}
 
@@ -383,9 +541,9 @@ void GradientDescent::simulateGradientDescent(float deltaTime)
     
         for (size_t i = 0; i < mSpheres.size(); ++i) {
             // Randomly choose a starting point if needed
-            float x = mResults[i][0][mIteration];
-			float y = mResults[i][1][mIteration];
-			float z = mResults[i][4][mIteration];
+            float x = mGradientDescentResults[i][0][mIteration];
+			float y = mGradientDescentResults[i][1][mIteration];
+			float z = mGradientDescentResults[i][4][mIteration];
 
             // Update sphere position (using setTransform or appropriate method)
             QVector3D newPosition(x,y,z);

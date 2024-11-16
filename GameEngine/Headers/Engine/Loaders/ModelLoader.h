@@ -10,14 +10,6 @@
 class ModelLoader {
 public:
 
-	class Range {
-	public:
-		float from;
-		float to;
-		float step;
-
-		Range(float from, float to, float step) : from(from), to(to), step(step) {}
-	};
 
 	Mesh* loadObjFile(const char* path);	
 	Mesh* loadTriangle();
@@ -29,8 +21,6 @@ public:
 	Mesh* loadIcosphere(int subdivision);
 	Mesh* loadCubeSphere(int sector);
 	Mesh* loadCone(int sector);
-	Mesh* loadPlane(QString expression, Range& xRange, Range& yRange, std::vector <std::vector<std::vector<float>>> &outResults);
-
 
 	class Builder {
 	public:

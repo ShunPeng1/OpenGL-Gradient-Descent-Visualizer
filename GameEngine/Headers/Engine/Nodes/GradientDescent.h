@@ -21,7 +21,9 @@ public:
 	void* accept(INodeVisitor* visitor) override;
 
 public:
-	void ReloadMesh();
+	void reloadMesh();
+	void reloadSpheres();
+
 
 	void setExpression(QString expression);
 	QString getExpression() const;
@@ -56,8 +58,11 @@ public:
 	void setSimulationFrequency(float simulationFrequency);
 	float getSimulationFrequency() const;
 
+
 private:
-	void initializeSpheres();
+
+	void getHeatMapColor(float value, float* red, float* green, float* blue);
+	Mesh* createMesh();
 	void simulateGradientDescent(float deltaTime);
 
 
@@ -90,7 +95,8 @@ protected:
 	float mSimulationFrequency;
 
 	int mPointCount;
-	std::vector <std::vector<std::vector<float>>> mResults;
+	std::vector <std::vector<std::vector<float>>> mGradientDescentResults;
+	std::vector <std::vector<std::vector<float>>> mMeshResults;
 
 	std::vector<MeshRenderer*> mSpheres;
 	Mesh* mSphereMesh;

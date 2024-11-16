@@ -285,7 +285,7 @@ void GradientDescentWidget::onSimulationFrequencySet(double simulationFrequency)
 void GradientDescentWidget::onReloadMeshClicked()
 {
     if (mNode) {
-        mNode->ReloadMesh();
+        mNode->reloadMesh();
     }
 }
 
