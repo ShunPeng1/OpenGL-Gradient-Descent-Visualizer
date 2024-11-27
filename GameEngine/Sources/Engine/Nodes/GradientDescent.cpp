@@ -430,9 +430,10 @@ void GradientDescent::reloadSpheres()
     QString expression2 = mExpression;
     QString expression3 = mExpression;
 
+	QString delta = "0.0001";
 	expression1 = expression1.replace("$x", "x").replace("$y", "y");
-	expression2 = expression2.replace("$x", "(x + 0.0001)").replace("$y", "y");
-	expression3 = expression3.replace("$x", "x").replace("$y", "(y + 0.0001)");
+	expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+	expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
 
 
     QString jsCode = "function gradientDescent(x0, y0, learningRate, iterations) {"
@@ -442,11 +443,11 @@ void GradientDescent::reloadSpheres()
         "    var y_history = [y0];"
         "    var dx_history = [0];"
         "    var dy_history = [0];"
-        "	 var z_history = [" + expression1 + "]; "
+        "	 var z_history = [(" + expression1 + ")]; "
         "    for (var i = 0; i < iterations; i++) {"
-		"		 var z = " + expression1 + ";"
-        "        var df_dx = (" + expression1 + " - " + expression2 + ") / 0.0001;"
-        "        var df_dy = (" + expression1 + " - " + expression3 + ") / 0.0001;"
+		"		 var z = (" + expression1 + ");"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
         "        x_history.push(x);"
         "        y_history.push(y);"
         "        dx_history.push(df_dx);"
@@ -555,7 +556,7 @@ void GradientDescent::simulateGradientDescent(float deltaTime)
 
             // Update sphere position (using setTransform or appropriate method)
             QVector3D newPosition(x,y,z);
-            mSpheres[i]->transform->setLocalPosition(newPosition + transform->getLocalPosition());
+            mSpheres[i]->transform->setLocalPosition(newPosition);
         }
     }
 
