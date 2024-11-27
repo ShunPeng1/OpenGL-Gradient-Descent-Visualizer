@@ -99,11 +99,21 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
 	pointCountLayout->addWidget(mPointCountSpin);
 	mainLayout->addLayout(pointCountLayout);
 
+	// Point Size
+	QHBoxLayout* pointSizeLayout = new QHBoxLayout();
+	QLabel* pointSizeLabel = new QLabel("Point Size:");
+	mPointSizeSpin = new QDoubleSpinBox();
+	mPointSizeSpin->setRange(0.01, 1e6);
+	pointSizeLayout->addWidget(pointSizeLabel);
+	pointSizeLayout->addWidget(mPointSizeSpin);
+	mainLayout->addLayout(pointSizeLayout);
+
+
 	// Simulation Frequency
 	QHBoxLayout* simulationFrequencyLayout = new QHBoxLayout();
 	QLabel* simulationFrequencyLabel = new QLabel("Simulation Frequency:");
 	mSimulationFrequencySpin = new QDoubleSpinBox();
-	mSimulationFrequencySpin->setRange(1, 1e6);
+	mSimulationFrequencySpin->setRange(0.01, 1e6);
 	simulationFrequencyLayout->addWidget(simulationFrequencyLabel);
 	simulationFrequencyLayout->addWidget(mSimulationFrequencySpin);
 	mainLayout->addLayout(simulationFrequencyLayout);
@@ -113,6 +123,12 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     mReloadMeshButton = new QPushButton("Reload Mesh", this);
     buttonLayout->addWidget(mReloadMeshButton);
 	mainLayout->addLayout(buttonLayout);
+
+	// Randomize Simulation
+	QVBoxLayout* randomizeSimulationLayout = new QVBoxLayout(this);
+	mRandomizeSimulationButton = new QPushButton("Randomize Simulation", this);
+	randomizeSimulationLayout->addWidget(mRandomizeSimulationButton);
+	mainLayout->addLayout(randomizeSimulationLayout);
 
 
     mSection->setContentLayout(*mainLayout);
@@ -128,8 +144,11 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     connect(mMaxIterationSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onMaxIterationSet);
     connect(mLearningRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onLearningRateSet);
 	connect(mPointCountSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onPointCountSet);
+	connect(mPointSizeSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onPointSizeSet);
 	connect(mSimulationFrequencySpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
-	connect(mReloadMeshButton, &QPushButton::clicked, this, &GradientDescentWidget::onReloadMeshClicked);
+	
+    connect(mReloadMeshButton, &QPushButton::clicked, this, &GradientDescentWidget::onReloadMeshClicked);
+	connect(mRandomizeSimulationButton, &QPushButton::clicked, this, &GradientDescentWidget::onRandomizeSimulationClicked);
 
     setNode(gradientDescent);
 }
@@ -210,6 +229,13 @@ void GradientDescentWidget::onPointCountChanged(int pointCount) {
 	mPointCountSpin->blockSignals(false);
 }
 
+void GradientDescentWidget::onPointSizeChanged(float pointSize)
+{
+	mPointSizeSpin->blockSignals(true);
+	mPointSizeSpin->setValue(pointSize);
+	mPointSizeSpin->blockSignals(false);
+}
+
 void GradientDescentWidget::onSimulationFrequencyChanged(int simulationFrequency) {
 	mSimulationFrequencySpin->blockSignals(true);
 	mSimulationFrequencySpin->setValue(simulationFrequency);
@@ -276,6 +302,13 @@ void GradientDescentWidget::onPointCountSet(int pointCount) {
     }
 }
 
+void GradientDescentWidget::onPointSizeSet(double pointSize)
+{
+	if (mNode) {
+		mNode->setPointSize(static_cast<float>(pointSize));
+	}
+}
+
 void GradientDescentWidget::onSimulationFrequencySet(double simulationFrequency) {
     if (mNode) {
         mNode->setSimulationFrequency(static_cast<float>(simulationFrequency));
@@ -289,6 +322,13 @@ void GradientDescentWidget::onReloadMeshClicked()
     }
 }
 
+void GradientDescentWidget::onRandomizeSimulationClicked()
+{
+	if (mNode) {
+		mNode->randomizeSimulation();
+	}
+}
+
 void GradientDescentWidget::updateUI() {
     blockSignals(true);
     if (mNode) {
@@ -299,6 +339,8 @@ void GradientDescentWidget::updateUI() {
         mYFromSpin->setValue(mNode->getYFrom());
         mYToSpin->setValue(mNode->getYTo());
         mYStepSpin->setValue(mNode->getYStep());
+		mPointCountSpin->setValue(mNode->getPointCount());
+		mPointSizeSpin->setValue(mNode->getPointSize());
         mMaxIterationSpin->setValue(mNode->getMaxIteration());
         mLearningRateSpin->setValue(mNode->getLearningRate());
     }
@@ -310,6 +352,8 @@ void GradientDescentWidget::updateUI() {
         mYFromSpin->setValue(0.0);
         mYToSpin->setValue(0.0);
         mYStepSpin->setValue(0.1);
+		mPointCountSpin->setValue(0);
+		mPointSizeSpin->setValue(0.1);
         mMaxIterationSpin->setValue(100);
         mLearningRateSpin->setValue(0.01);
     }
@@ -329,6 +373,7 @@ void GradientDescentWidget::connectSignals() {
     connect(mNode, &GradientDescent::maxIterationChanged, this, &GradientDescentWidget::onMaxIterationChanged); 
     connect(mNode, &GradientDescent::learningRateChanged, this, &GradientDescentWidget::onLearningRateChanged);
 	connect(mNode, &GradientDescent::pointCountChanged, this, &GradientDescentWidget::onPointCountChanged);
+	connect(mNode, &GradientDescent::pointSizeChanged, this, &GradientDescentWidget::onPointSizeChanged);
 }
 
 void GradientDescentWidget::disconnectSignals() {
@@ -344,6 +389,7 @@ void GradientDescentWidget::disconnectSignals() {
     disconnect(mNode, &GradientDescent::maxIterationChanged, this, &GradientDescentWidget::onMaxIterationChanged);
     disconnect(mNode, &GradientDescent::learningRateChanged, this, &GradientDescentWidget::onLearningRateChanged);
 	disconnect(mNode, &GradientDescent::pointCountChanged, this, &GradientDescentWidget::onPointCountChanged);
+	disconnect(mNode, &GradientDescent::pointSizeChanged, this, &GradientDescentWidget::onPointSizeChanged);
 }
 
 void GradientDescentWidget::blockSignals(bool block) { 
@@ -357,5 +403,6 @@ void GradientDescentWidget::blockSignals(bool block) {
     mMaxIterationSpin->blockSignals(block); 
     mLearningRateSpin->blockSignals(block); 
 	mPointCountSpin->blockSignals(block);
+	mPointSizeSpin->blockSignals(block);
 }
 

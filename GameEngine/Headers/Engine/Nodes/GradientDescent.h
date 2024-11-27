@@ -8,7 +8,7 @@ class GradientDescent : public MeshRenderer
 	Q_OBJECT
 public:
 	GradientDescent();
-	GradientDescent(QString mExpression, float mXFrom, float mXTo, float mXStep, float mYFrom, float mYTo, float mYStep, int mMaxIteration, float mLearningRate, int mPointCount, float simulationFrequency = 1);
+	GradientDescent(QString mExpression, float mXFrom, float mXTo, float mXStep, float mYFrom, float mYTo, float mYStep, int mMaxIteration = 1000, float mLearningRate = 0.01, int mPointCount = 10, float pointSize = 0.1, float simulationFrequency = 1000);
 	virtual ~GradientDescent() noexcept;
 
 	virtual void init() override;
@@ -22,6 +22,7 @@ public:
 
 public:
 	void reloadMesh();
+	void randomizeSimulation();
 	void reloadSpheres();
 
 
@@ -55,6 +56,9 @@ public:
 	void setPointCount(int pointCount);
 	int getPointCount() const;
 
+	void setPointSize(float pointSize);
+	float getPointSize() const;
+
 	void setSimulationFrequency(float simulationFrequency);
 	float getSimulationFrequency() const;
 
@@ -77,6 +81,7 @@ signals:
 	void maxIterationChanged(int maxIteration);
 	void learningRateChanged(float learningRate);
 	void pointCountChanged(int pointCount);
+	void pointSizeChanged(float pointSize);
 	void simulationFrequencyChanged(float simulationFrequency);
 
 protected:
@@ -95,6 +100,8 @@ protected:
 	float mSimulationFrequency;
 
 	int mPointCount;
+	float mPointSize;
+
 	std::vector <std::vector<std::vector<float>>> mGradientDescentResults;
 	std::vector <std::vector<std::vector<float>>> mMeshResults;
 

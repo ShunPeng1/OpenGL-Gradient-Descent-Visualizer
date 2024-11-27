@@ -6,16 +6,16 @@ GradientDescent::GradientDescent()
     : MeshRenderer(), mExpression("0"), mXFrom(0.0f), mXTo(1.0f), mXStep(0.1f),
     mYFrom(0.0f), mYTo(1.0f), mYStep(0.1f),
     mMaxIteration(1000), mLearningRate(0.01f),
-	mPointCount(0), mSimulationFrequency(1), mSpheres(), mSphereMesh(nullptr)
+	mPointCount(0), mPointSize(0.1), mSimulationFrequency(1000), mSpheres(), mSphereMesh(nullptr)
 {
 
 }
 
-GradientDescent::GradientDescent(QString expression, float xFrom, float xTo, float xStep, float yFrom, float yTo, float yStep, int maxIteration, float learningRate, int pointCount, float simulationFrequency)
+GradientDescent::GradientDescent(QString expression, float xFrom, float xTo, float xStep, float yFrom, float yTo, float yStep, int maxIteration, float learningRate, int pointCount, float pointSize, float simulationFrequency)
     : MeshRenderer(), mExpression(expression), mXFrom(xFrom), mXTo(xTo), mXStep(xStep), 
     mYFrom(yFrom), mYTo(yTo), mYStep(yStep), 
     mMaxIteration(maxIteration), mLearningRate(learningRate), 
-    mPointCount(pointCount), mSimulationFrequency(1), mSpheres(), mSphereMesh(nullptr)
+    mPointCount(pointCount), mPointSize(pointSize) , mSimulationFrequency(simulationFrequency), mSpheres(), mSphereMesh(nullptr)
 {
 
 
@@ -206,6 +206,21 @@ int GradientDescent::getPointCount() const
     return mPointCount;
 }
 
+void GradientDescent::setPointSize(float pointSize)
+{
+	if (mPointSize != pointSize) {
+		mPointSize = pointSize;
+		for (auto& sphere : mSpheres) {
+			sphere->transform->setLocalScale(QVector3D(mPointSize, mPointSize, mPointSize));
+		}
+	}
+}
+
+float GradientDescent::getPointSize() const
+{
+    return mPointSize;
+}
+
 void GradientDescent::setSimulationFrequency(float simulationFrequency)
 {
 	if (mSimulationFrequency != simulationFrequency) {
@@ -386,54 +401,21 @@ Mesh* GradientDescent::createMesh()
 }
 
 
-void GradientDescent::reloadSpheres()
+void GradientDescent::randomizeSimulation()
 {
-    for (auto sphere : mSpheres) {
-        this->removeChild(sphere);
-        //delete sphere;
-    }
-    mSpheres.clear();
-
-    if (mSphereMesh != nullptr) {
-        delete mSphereMesh;
-        mSphereMesh = nullptr;
-    }
-
     // Precompute the results in JavaScript
     QJSEngine engine;
     int xStep = static_cast<int>((mXTo - mXFrom) / mXStep);
     int yStep = static_cast<int>((mYTo - mYFrom) / mYStep);
 
-
-    ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
-    Mesh* mesh = loader.loadIcosphere(3);
-    mesh->init();
-    mesh->tryStart();
-
-    for (int i = 0; i < mPointCount; ++i) {
-        MeshRenderer* sphere = new MeshRenderer();
-        sphere->init();
-        sphere->setMesh(mesh, true);
-
-        float size = 0.1f;
-
-        sphere->transform->setLocalScale(QVector3D(size, size, size));
-        sphere->setParent(this);
-        mSpheres.push_back(sphere);
-    }
-
-    mSphereMesh = mesh;
-
-
-
     QString expression1 = mExpression;
     QString expression2 = mExpression;
     QString expression3 = mExpression;
 
-	QString delta = "0.0001";
-	expression1 = expression1.replace("$x", "x").replace("$y", "y");
-	expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
-	expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+    QString delta = "0.0001";
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
 
 
     QString jsCode = "function gradientDescent(x0, y0, learningRate, iterations) {"
@@ -445,14 +427,14 @@ void GradientDescent::reloadSpheres()
         "    var dy_history = [0];"
         "	 var z_history = [(" + expression1 + ")]; "
         "    for (var i = 0; i < iterations; i++) {"
-		"		 var z = (" + expression1 + ");"
+        "		 var z = (" + expression1 + ");"
         "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
         "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
         "        x_history.push(x);"
         "        y_history.push(y);"
         "        dx_history.push(df_dx);"
         "        dy_history.push(df_dy);"
-		"		 z_history.push(z);"
+        "		 z_history.push(z);"
         "        x = x - learningRate * df_dx;"
         "        y = y - learningRate * df_dy;"
         "    }"
@@ -468,14 +450,14 @@ void GradientDescent::reloadSpheres()
         "    return points;"
         "}"
         "var results = [];"
-		"var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
-		"for (var i = 0; i < points.length; i++) {"
-		"    var point = points[i];"
-		"    var x0 = point[0];"
-		"    var y0 = point[1];"
-		"    var result = gradientDescent(x0, y0, " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ");"
-		"    results.push(result);"
-		"}"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    var x0 = point[0];"
+        "    var y0 = point[1];"
+        "    var result = gradientDescent(x0, y0, " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ");"
+        "    results.push(result);"
+        "}"
         "results;";
 
     qDebug() << jsCode;
@@ -498,40 +480,77 @@ void GradientDescent::reloadSpheres()
             resultIt.next();
             QJSValue resultResult = resultIt.value();
 
-			if (resultResult.isError()) {
-				qDebug() << "JavaScript error:" << resultResult.toString();
-				return;
-			}
+            if (resultResult.isError()) {
+                qDebug() << "JavaScript error:" << resultResult.toString();
+                return;
+            }
 
-			if (resultResult.isArray() == false) {
-				continue;
-			}
+            if (resultResult.isArray() == false) {
+                continue;
+            }
 
             QJSValueIterator resultItIt(resultResult);
 
-			std::vector<float> pointData;
-			while (resultItIt.hasNext()) {
-				resultItIt.next();
-				float value = resultItIt.value().toNumber();
+            std::vector<float> pointData;
+            while (resultItIt.hasNext()) {
+                resultItIt.next();
+                float value = resultItIt.value().toNumber();
 
                 if (std::isnan(value))
                     continue;
-				pointData.push_back(value);
-			}
-        
+                pointData.push_back(value);
+            }
+
             pointResults.push_back(pointData);
         }
         mGradientDescentResults.push_back(pointResults);
     }
-    
+
+
     for (int i = 0; i < mGradientDescentResults.size(); i++) {
         for (int j = 0; j < mGradientDescentResults[i].size(); j++) {
             mMaxIteration = std::min(mMaxIteration, static_cast<int>(mGradientDescentResults[i][j].size()));
         }
     }
 
-	setMaxIteration(mMaxIteration);
+    setMaxIteration(mMaxIteration);
+
+
     mIteration = 0;
+}
+
+void GradientDescent::reloadSpheres()
+{
+    for (auto sphere : mSpheres) {
+        this->removeChild(sphere);
+        //delete sphere;
+    }
+    mSpheres.clear();
+
+    if (mSphereMesh != nullptr) {
+        delete mSphereMesh;
+        mSphereMesh = nullptr;
+    }
+
+    ModelLoader loader = ModelLoader::Builder().SetUseNormalColor(true).Build();
+    Mesh* mesh = loader.loadIcosphere(3);
+    mesh->init();
+    mesh->tryStart();
+
+    for (int i = 0; i < mPointCount; ++i) {
+        MeshRenderer* sphere = new MeshRenderer();
+        sphere->init();
+        sphere->setMesh(mesh, true);
+
+        sphere->transform->setLocalScale(QVector3D(mPointSize, mPointSize, mPointSize));
+        sphere->setParent(this);
+        mSpheres.push_back(sphere);
+    }
+
+    mSphereMesh = mesh;
+
+
+	randomizeSimulation();
 }
 
 void GradientDescent::simulateGradientDescent(float deltaTime)
@@ -554,8 +573,18 @@ void GradientDescent::simulateGradientDescent(float deltaTime)
 			float y = mGradientDescentResults[i][1][mIteration];
 			float z = mGradientDescentResults[i][4][mIteration];
 
+			float dx = mGradientDescentResults[i][2][mIteration];
+			float dy = mGradientDescentResults[i][3][mIteration];
+
+			QVector2D gradient(dx, dy);
+
+            QVector3D normal = QVector3D(-dx, -dy, 1);
+			normal.normalize();
+
             // Update sphere position (using setTransform or appropriate method)
-            QVector3D newPosition(x,y,z);
+            QVector3D newPosition(x, y, z);
+            newPosition = newPosition + mPointSize * normal;
+
             mSpheres[i]->transform->setLocalPosition(newPosition);
         }
     }

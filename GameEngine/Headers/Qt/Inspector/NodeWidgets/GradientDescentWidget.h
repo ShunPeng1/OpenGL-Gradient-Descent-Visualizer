@@ -34,6 +34,7 @@ private slots:
     void onMaxIterationChanged(int maxIteration);
     void onLearningRateChanged(double learningRate);
 	void onPointCountChanged(int pointCount);
+	void onPointSizeChanged(float pointSize);
 	void onSimulationFrequencyChanged(int simulationFrequency);
 
     void onExpressionSet(const QString& expression);
@@ -46,9 +47,11 @@ private slots:
 	void onMaxIterationSet(int maxIteration);
 	void onLearningRateSet(double learningRate);
 	void onPointCountSet(int pointCount);
+	void onPointSizeSet(double pointSize);
 	void onSimulationFrequencySet(double simulationFrequency);
 
     void onReloadMeshClicked(); 
+	void onRandomizeSimulationClicked();
 
 
 private:
@@ -69,9 +72,11 @@ private:
     QSpinBox* mMaxIterationSpin;
     QDoubleSpinBox* mLearningRateSpin;
 	QSpinBox* mPointCountSpin;
+    QDoubleSpinBox* mPointSizeSpin;
     QDoubleSpinBox* mSimulationFrequencySpin;
 
     QPushButton* mReloadMeshButton;
+	QPushButton* mRandomizeSimulationButton;
 };
 
 #endif // GRADIENT_DESCENT_WIDGET_H
