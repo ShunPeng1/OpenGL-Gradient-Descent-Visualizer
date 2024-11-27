@@ -78,7 +78,9 @@ void TestScene::load()
 	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
 	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f, 1000, 0.01f, 10, 1000);
-	MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -3.0f, 3.0f, 0.01f, -3.0f, 3.0f, 0.01f, 1000, 0.01f, 10, 1000);
+	//MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -3.0f, 3.0f, 0.01f, -3.0f, 3.0f, 0.01f, 1000, 0.01f, 10, 1000);
+	MeshRenderer* planeNode2 = new GradientDescent("$x + $y", -3.0f, 3.0f, 0.01f, -3.0f, 3.0f, 0.01f, 1000, 0.01f, 10, 1000);
+
 	planeNode->kill();
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
@@ -120,6 +122,24 @@ void TestScene::load()
 	addNode(coneNode);
 	addNode(planeNode);
 	addNode(planeNode2);
+
+
+	// Test 
+
+
+	MeshRenderer* cubeNode1 = new MeshRenderer(cube, true);
+	MeshRenderer* cubeNode2 = new MeshRenderer(cube, true);
+	cubeNode1->setParent(cubeNode);
+	cubeNode2->setParent(cubeNode);
+
+	cubeNode1->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 2.0f));
+	cubeNode2->transform->setLocalPosition(QVector3D(0.0f, 0.0f, -2.0f));
+
+	cubeNode1->setObjectName("Cube 1");
+	cubeNode2->setObjectName("Cube 2");
+
+	addNode(cubeNode1);
+	addNode(cubeNode2);
 
 }
 

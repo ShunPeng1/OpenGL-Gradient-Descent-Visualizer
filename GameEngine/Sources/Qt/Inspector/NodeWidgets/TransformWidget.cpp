@@ -100,25 +100,25 @@ void TransformWidget::onScaleChanged(QVector3D scale)
 
 void TransformWidget::onPositionSet(double value) {
 	QVector3D position(mPosX->value(), mPosY->value(), mPosZ->value());
-    mNode->setWorldPosition(position);
+    mNode->setLocalPosition(position);
 }
 
 void TransformWidget::onRotationSet(double value) {
     QQuaternion rotation = QQuaternion::fromEulerAngles(mRotX->value(), mRotY->value(), mRotZ->value());
-    mNode->setWorldRotation(rotation);
+    mNode->setLocalRotation(rotation);
 }
 
 void TransformWidget::onScaleSet(double value) {
 	QVector3D scale(mScaleX->value(), mScaleY->value(), mScaleZ->value());
-    mNode->setWorldScale(scale);
+    mNode->setLocalScale(scale);
 }
 
 void TransformWidget::updateUI() {
 	blockSignals(true);
     if (mNode) {
-        QVector3D position = mNode->getWorldPosition();
-        QQuaternion rotation = mNode->getWorldRotation();
-        QVector3D scale = mNode->getWorldScale();
+        QVector3D position = mNode->getLocalPosition();
+        QQuaternion rotation = mNode->getLocalRotation();
+        QVector3D scale = mNode->getLocalScale();
 
         mPosX->setValue(position.x());
         mPosY->setValue(position.y());

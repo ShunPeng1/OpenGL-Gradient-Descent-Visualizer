@@ -477,6 +477,8 @@ void GradientDescent::reloadSpheres()
 		"}"
         "results;";
 
+    qDebug() << jsCode;
+
     QJSValue jsResults = engine.evaluate(jsCode);
     if (jsResults.isError()) {
         qDebug() << "JavaScript error:" << jsResults.toString();
@@ -521,7 +523,13 @@ void GradientDescent::reloadSpheres()
         mGradientDescentResults.push_back(pointResults);
     }
     
+    for (int i = 0; i < mGradientDescentResults.size(); i++) {
+        for (int j = 0; j < mGradientDescentResults[i].size(); j++) {
+            mMaxIteration = std::min(mMaxIteration, static_cast<int>(mGradientDescentResults[i][j].size()));
+        }
+    }
 
+	setMaxIteration(mMaxIteration);
     mIteration = 0;
 }
 
