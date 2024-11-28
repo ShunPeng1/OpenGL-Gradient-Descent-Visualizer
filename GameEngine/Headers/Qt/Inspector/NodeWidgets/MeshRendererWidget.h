@@ -23,11 +23,9 @@ public:
     void clearNode() override;
 
 private slots:
-    //void onMeshChanged(Mesh* mesh, bool isInstance);
     void onPolygonModeChanged(PolygonMode polygonMode);
     void onDrawBufferModeChanged(DrawBufferMode drawBufferMode);
 
-	//void onMeshSet(int);
 	void onPolygonModeSet(int polygonMode);
 	void onDrawBufferModeSet(int drawBufferMode);
 

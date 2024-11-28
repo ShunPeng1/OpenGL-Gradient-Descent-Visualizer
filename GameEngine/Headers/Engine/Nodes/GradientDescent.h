@@ -7,6 +7,17 @@ class GradientDescent : public MeshRenderer
 {
 	Q_OBJECT
 public:
+	enum class Method
+	{
+		SGD,
+		Momentum,
+		NesterovMomentum,
+		AdaGrad,
+		RMSProp,
+		Adam
+	};
+
+public:
 	GradientDescent();
 	GradientDescent(QString mExpression, float mXFrom, float mXTo, float mXStep, float mYFrom, float mYTo, float mYStep, int mMaxIteration = 1000, float mLearningRate = 0.01, int mPointCount = 10, float pointSize = 0.1, float simulationFrequency = 1000);
 	virtual ~GradientDescent() noexcept;
@@ -62,13 +73,37 @@ public:
 	void setSimulationFrequency(float simulationFrequency);
 	float getSimulationFrequency() const;
 
+	void setMethod(Method method);
+	Method getMethod() const;
+
+	void setMomentum(float momentum);
+	float getMomentum() const;
+
+	void setDecayRate(float decayRate);
+	float getDecayRate() const;
+
+	void setBeta1(float beta1);  // For Adam optimizer
+	float getBeta1() const;
+
+	void setBeta2(float beta2);  // For Adam optimizer
+	float getBeta2() const;
+
+	void setEpsilon(float epsilon);  // Small value to prevent division by zero
+	float getEpsilon() const;
 
 private:
 
 	void getHeatMapColor(float value, float* red, float* green, float* blue);
 	Mesh* createMesh();
 	void simulateGradientDescent(float deltaTime);
+	QString getMethodString(Method method);
 
+	QString getSGDString();
+	QString getMomentumString();
+	QString getNesterovMomentumString();
+	QString getAdaGradString();
+	QString getRMSPropString();
+	QString getAdamString();
 
 signals:
 	void expressionChanged(QString expression);
@@ -78,11 +113,19 @@ signals:
 	void yFromChanged(float yFrom);
 	void yToChanged(float yTo);
 	void yStepChanged(float yStep);
+
 	void maxIterationChanged(int maxIteration);
 	void learningRateChanged(float learningRate);
 	void pointCountChanged(int pointCount);
 	void pointSizeChanged(float pointSize);
 	void simulationFrequencyChanged(float simulationFrequency);
+	void methodChanged(Method method);
+
+	void momentumChanged(float momentum);
+	void decayRateChanged(float decayRate);
+	void beta1Changed(float beta1);
+	void beta2Changed(float beta2);
+	void epsilonChanged(float epsilon);
 
 protected:
 	QString mExpression;
@@ -101,6 +144,14 @@ protected:
 
 	int mPointCount;
 	float mPointSize;
+
+	Method mMethod = Method::SGD;
+
+	float mMomentum = 0.9f;
+	float mDecayRate = 0.99f;
+	float mBeta1 = 0.9f;
+	float mBeta2 = 0.999f;
+	float mEpsilon = 1e-8f;
 
 	std::vector <std::vector<std::vector<float>>> mGradientDescentResults;
 	std::vector <std::vector<std::vector<float>>> mMeshResults;

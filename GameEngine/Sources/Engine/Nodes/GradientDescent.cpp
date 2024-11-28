@@ -65,7 +65,7 @@ void GradientDescent::reloadMesh()
 
         setMesh(mesh, false);
 
-        reloadSpheres();
+        randomizeSimulation();
 	}
 	catch (const std::exception& e) {
 		qDebug() << e.what();
@@ -196,7 +196,6 @@ void GradientDescent::setPointCount(int pointCount)
 {
     if (mPointCount != pointCount) {
         mPointCount = pointCount;
-        reloadSpheres();
 		emit pointCountChanged(mPointCount);
     }
 }
@@ -232,6 +231,84 @@ void GradientDescent::setSimulationFrequency(float simulationFrequency)
 float GradientDescent::getSimulationFrequency() const
 {
     return mSimulationFrequency;
+}
+
+void GradientDescent::setMethod(Method method)
+{
+	if (mMethod != method) {
+		mMethod = method;
+		emit methodChanged(mMethod);
+	}
+}
+
+GradientDescent::Method GradientDescent::getMethod() const
+{
+	return mMethod;
+}
+
+void GradientDescent::setMomentum(float momentum)
+{
+	if (mMomentum != momentum) {
+		mMomentum = momentum;
+		emit momentumChanged(mMomentum);
+	}
+}
+
+float GradientDescent::getMomentum() const
+{
+	return mMomentum;
+}
+
+void GradientDescent::setDecayRate(float decayRate)
+{
+	if (mDecayRate != decayRate) {
+		mDecayRate = decayRate;
+		emit decayRateChanged(mDecayRate);
+	}
+}
+
+float GradientDescent::getDecayRate() const
+{
+	return mDecayRate;
+}
+
+void GradientDescent::setBeta1(float beta1)
+{
+	if (mBeta1 != beta1) {
+		mBeta1 = beta1;
+		emit beta1Changed(mBeta1);
+	}
+}
+
+float GradientDescent::getBeta1() const
+{
+	return mBeta1;
+}
+
+void GradientDescent::setBeta2(float beta2)
+{
+	if (mBeta2 != beta2) {
+		mBeta2 = beta2;
+		emit beta2Changed(mBeta2);
+	}
+}
+
+float GradientDescent::getBeta2() const
+{
+    return mBeta2;
+}
+
+void GradientDescent::setEpsilon(float epsilon)
+{
+	if (mEpsilon != epsilon) {
+		mEpsilon = epsilon;
+		emit epsilonChanged(mEpsilon);
+	}
+}
+
+float GradientDescent::getEpsilon() const
+{
+	return mEpsilon;
 }
 
 
@@ -403,64 +480,14 @@ Mesh* GradientDescent::createMesh()
 
 void GradientDescent::randomizeSimulation()
 {
+    reloadSpheres();
+
     // Precompute the results in JavaScript
     QJSEngine engine;
     int xStep = static_cast<int>((mXTo - mXFrom) / mXStep);
     int yStep = static_cast<int>((mYTo - mYFrom) / mYStep);
 
-    QString expression1 = mExpression;
-    QString expression2 = mExpression;
-    QString expression3 = mExpression;
-
-    QString delta = "0.0001";
-    expression1 = expression1.replace("$x", "x").replace("$y", "y");
-    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
-    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
-
-
-    QString jsCode = "function gradientDescent(x0, y0, learningRate, iterations) {"
-        "    var x = x0;"
-        "    var y = y0;"
-        "    var x_history = [x0];"
-        "    var y_history = [y0];"
-        "    var dx_history = [0];"
-        "    var dy_history = [0];"
-        "	 var z_history = [(" + expression1 + ")]; "
-        "    for (var i = 0; i < iterations; i++) {"
-        "		 var z = (" + expression1 + ");"
-        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
-        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
-        "        x_history.push(x);"
-        "        y_history.push(y);"
-        "        dx_history.push(df_dx);"
-        "        dy_history.push(df_dy);"
-        "		 z_history.push(z);"
-        "        x = x - learningRate * df_dx;"
-        "        y = y - learningRate * df_dy;"
-        "    }"
-        "    return [x_history, y_history, dx_history, dy_history, z_history];"
-        "}"
-        "function generateRandomPoints(n, xRange, yRange) {"
-        "    var points = [];"
-        "    for (var i = 0; i < n; i++) {"
-        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
-        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
-        "        points.push([x, y]);"
-        "    }"
-        "    return points;"
-        "}"
-        "var results = [];"
-        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
-        "for (var i = 0; i < points.length; i++) {"
-        "    var point = points[i];"
-        "    var x0 = point[0];"
-        "    var y0 = point[1];"
-        "    var result = gradientDescent(x0, y0, " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ");"
-        "    results.push(result);"
-        "}"
-        "results;";
-
-    qDebug() << jsCode;
+    QString jsCode = getMethodString(mMethod);
 
     QJSValue jsResults = engine.evaluate(jsCode);
     if (jsResults.isError()) {
@@ -550,7 +577,6 @@ void GradientDescent::reloadSpheres()
     mSphereMesh = mesh;
 
 
-	randomizeSimulation();
 }
 
 void GradientDescent::simulateGradientDescent(float deltaTime)
@@ -589,4 +615,386 @@ void GradientDescent::simulateGradientDescent(float deltaTime)
         }
     }
 
+}
+
+QString GradientDescent::getMethodString(Method method)
+{
+
+    switch (method)
+    {
+    case Method::SGD:
+        return getSGDString();
+    case Method::Momentum:
+        return getMomentumString();
+    case Method::NesterovMomentum:
+        return getNesterovMomentumString();
+    case Method::AdaGrad:
+        return getAdaGradString();
+    case Method::RMSProp:
+        return getRMSPropString();
+    case Method::Adam:
+        return getAdamString();
+    default:
+        return getSGDString();
+    }
+}
+
+QString GradientDescent::getSGDString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+
+    QString delta = "0.0001";
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+
+    QString jsCode = "function gradientDescent(x0, y0, learningRate, iterations) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "        x = x - learningRate * df_dx;"
+        "        y = y - learningRate * df_dy;"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    var x0 = point[0];"
+        "    var y0 = point[1];"
+        "    var result = gradientDescent(x0, y0, " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ");"
+        "    results.push(result);"
+        "}"
+        "results;";
+
+    qDebug() << jsCode;
+	return jsCode;
+}
+
+QString GradientDescent::getMomentumString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+    QString delta = "0.0001";
+
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+    QString jsCode =
+        "function gradientDescentMomentum(x0, y0, learningRate, iterations, momentum) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var v_x = 0;"
+        "    var v_y = 0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        v_x = momentum * v_x - learningRate * df_dx;"
+        "        v_y = momentum * v_y - learningRate * df_dy;"
+        "        x += v_x;"
+        "        y += v_y;"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    results.push(gradientDescentMomentum(point[0], point[1], " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ", " + QString::number(mMomentum) + "));"
+        "}"
+        "results;";
+
+    return jsCode;
+}
+
+QString GradientDescent::getNesterovMomentumString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+    QString delta = "0.0001";
+
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+    QString jsCode =
+        "function gradientDescentNesterov(x0, y0, learningRate, iterations, momentum) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var v_x = 0;"
+        "    var v_y = 0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        var lookahead_x = x + momentum * v_x;"
+        "        var lookahead_y = y + momentum * v_y;"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        v_x = momentum * v_x - learningRate * df_dx;"
+        "        v_y = momentum * v_y - learningRate * df_dy;"
+        "        x += v_x;"
+        "        y += v_y;"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    results.push(gradientDescentNesterov(point[0], point[1], " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ", " + QString::number(mMomentum) + "));"
+        "}"
+        "results;";
+
+    return jsCode;
+}
+
+
+QString GradientDescent::getAdaGradString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+    QString delta = "0.0001";
+
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+    QString jsCode =
+        "function gradientDescentAdaGrad(x0, y0, learningRate, iterations, epsilon) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var g_x = 0;"
+        "    var g_y = 0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        g_x += df_dx * df_dx;"
+        "        g_y += df_dy * df_dy;"
+        "        x -= (learningRate / Math.sqrt(g_x + epsilon)) * df_dx;"
+        "        y -= (learningRate / Math.sqrt(g_y + epsilon)) * df_dy;"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    results.push(gradientDescentAdaGrad(point[0], point[1], " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ", " + QString::number(mEpsilon) + "));"
+        "}"
+        "results;";
+
+    return jsCode;
+}
+
+
+QString GradientDescent::getRMSPropString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+    QString delta = "0.0001";
+
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+    QString jsCode =
+        "function gradientDescentRMSProp(x0, y0, learningRate, iterations, decayRate, epsilon) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var g_x = 0;"
+        "    var g_y = 0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        g_x = decayRate * g_x + (1 - decayRate) * df_dx * df_dx;"
+        "        g_y = decayRate * g_y + (1 - decayRate) * df_dy * df_dy;"
+        "        x -= (learningRate / Math.sqrt(g_x + epsilon)) * df_dx;"
+        "        y -= (learningRate / Math.sqrt(g_y + epsilon)) * df_dy;"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    results.push(gradientDescentRMSProp(point[0], point[1], " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ", " + QString::number(mDecayRate) + ", " + QString::number(mEpsilon) + "));"
+        "}"
+        "results;";
+
+    return jsCode;
+}
+
+QString GradientDescent::getAdamString()
+{
+    QString expression1 = mExpression;
+    QString expression2 = mExpression;
+    QString expression3 = mExpression;
+    QString delta = "0.0001";
+
+    expression1 = expression1.replace("$x", "x").replace("$y", "y");
+    expression2 = expression2.replace("$x", "(x + " + delta + ")").replace("$y", "y");
+    expression3 = expression3.replace("$x", "x").replace("$y", "(y + " + delta + ")");
+
+    QString jsCode =
+        "function gradientDescentAdam(x0, y0, learningRate, iterations, beta1, beta2, epsilon) {"
+        "    var x = x0;"
+        "    var y = y0;"
+        "    var m_x = 0, v_x = 0;"
+        "    var m_y = 0, v_y = 0;"
+        "    var t = 0;"
+        "    var x_history = [x0];"
+        "    var y_history = [y0];"
+        "    var dx_history = [0];"
+        "    var dy_history = [0];"
+        "	 var z_history = [(" + expression1 + ")]; "
+        "    for (var i = 0; i < iterations; i++) {"
+        "		 var z = (" + expression1 + ");"
+        "        t++;"
+        "        var df_dx = ((" + expression2 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        var df_dy = ((" + expression3 + ") - (" + expression1 + ")) / " + delta + ";"
+        "        m_x = beta1 * m_x + (1 - beta1) * df_dx;"
+        "        m_y = beta1 * m_y + (1 - beta1) * df_dy;"
+        "        v_x = beta2 * v_x + (1 - beta2) * df_dx * df_dx;"
+        "        v_y = beta2 * v_y + (1 - beta2) * df_dy * df_dy;"
+        "        var m_x_hat = m_x / (1 - Math.pow(beta1, t));"
+        "        var m_y_hat = m_y / (1 - Math.pow(beta1, t));"
+        "        var v_x_hat = v_x / (1 - Math.pow(beta2, t));"
+        "        var v_y_hat = v_y / (1 - Math.pow(beta2, t));"
+        "        x -= (learningRate * m_x_hat) / (Math.sqrt(v_x_hat) + epsilon);"
+        "        y -= (learningRate * m_y_hat) / (Math.sqrt(v_y_hat) + epsilon);"
+        "        x_history.push(x);"
+        "        y_history.push(y);"
+        "        dx_history.push(df_dx);"
+        "        dy_history.push(df_dy);"
+        "		 z_history.push(z);"
+        "    }"
+        "    return [x_history, y_history, dx_history, dy_history, z_history];"
+        "}"
+        "function generateRandomPoints(n, xRange, yRange) {"
+        "    var points = [];"
+        "    for (var i = 0; i < n; i++) {"
+        "        var x = Math.random() * (xRange[1] - xRange[0]) + xRange[0];"
+        "        var y = Math.random() * (yRange[1] - yRange[0]) + yRange[0];"
+        "        points.push([x, y]);"
+        "    }"
+        "    return points;"
+        "}"
+        "var results = [];"
+        "var points = generateRandomPoints(" + QString::number(mPointCount) + ", [" + QString::number(mXFrom) + ", " + QString::number(mXTo) + "], [" + QString::number(mYFrom) + ", " + QString::number(mYTo) + "]);"
+        "for (var i = 0; i < points.length; i++) {"
+        "    var point = points[i];"
+        "    results.push(gradientDescentAdam(point[0], point[1], " + QString::number(mLearningRate) + ", " + QString::number(mMaxIteration) + ", " + QString::number(mBeta1) + ", " + QString::number(mBeta2) + ", " + QString::number(mEpsilon) + "));"
+        "}"
+        "results;";
+
+    return jsCode;
 }

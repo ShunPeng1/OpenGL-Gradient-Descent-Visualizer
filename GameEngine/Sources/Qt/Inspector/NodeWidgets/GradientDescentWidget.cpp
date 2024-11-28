@@ -118,6 +118,57 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
 	simulationFrequencyLayout->addWidget(mSimulationFrequencySpin);
 	mainLayout->addLayout(simulationFrequencyLayout);
 
+	// Method
+	QHBoxLayout* methodLayout = new QHBoxLayout();
+	QLabel* methodLabel = new QLabel("Method:");
+	mMethodCombo = new QComboBox();
+	mMethodCombo->addItem("SGD");
+	mMethodCombo->addItem("Momentum");
+	mMethodCombo->addItem("Nesterov Momentum");
+	mMethodCombo->addItem("AdaGrad");
+	mMethodCombo->addItem("RMSProp");
+	mMethodCombo->addItem("Adam");
+	methodLayout->addWidget(methodLabel);
+	methodLayout->addWidget(mMethodCombo);
+	mainLayout->addLayout(methodLayout);
+
+	// Epsilon
+	QHBoxLayout* epsilonLayout = new QHBoxLayout();
+	QLabel* epsilonLabel = new QLabel("Epsilon:");
+	mEpsilonSpin = new QDoubleSpinBox();
+	mEpsilonSpin->setRange(0.00001, 1e6);
+	epsilonLayout->addWidget(epsilonLabel);
+	epsilonLayout->addWidget(mEpsilonSpin);
+	mainLayout->addLayout(epsilonLayout);
+
+	// Decay Rate
+	QHBoxLayout* decayRateLayout = new QHBoxLayout();
+	QLabel* decayRateLabel = new QLabel("Decay Rate:");
+	mDecayRateSpin = new QDoubleSpinBox();
+	mDecayRateSpin->setRange(0.00001, 1e6);
+	decayRateLayout->addWidget(decayRateLabel);
+	decayRateLayout->addWidget(mDecayRateSpin);
+	mainLayout->addLayout(decayRateLayout);
+
+	// Beta 1
+	QHBoxLayout* beta1Layout = new QHBoxLayout();
+	QLabel* beta1Label = new QLabel("Beta 1:");
+	mBeta1Spin = new QDoubleSpinBox();
+	mBeta1Spin->setRange(0.00001, 1e6);
+	beta1Layout->addWidget(beta1Label);
+	beta1Layout->addWidget(mBeta1Spin);
+	mainLayout->addLayout(beta1Layout);
+
+	// Beta 2
+	QHBoxLayout* beta2Layout = new QHBoxLayout();
+	QLabel* beta2Label = new QLabel("Beta 2:");
+	mBeta2Spin = new QDoubleSpinBox();
+	mBeta2Spin->setRange(0.00001, 1e6);
+	beta2Layout->addWidget(beta2Label);
+	beta2Layout->addWidget(mBeta2Spin);
+	mainLayout->addLayout(beta2Layout);
+
+
 	// Reload Mesh
     QVBoxLayout* buttonLayout = new QVBoxLayout(this);
     mReloadMeshButton = new QPushButton("Reload Mesh", this);
@@ -141,12 +192,19 @@ GradientDescentWidget::GradientDescentWidget(GradientDescent* gradientDescent, Q
     connect(mYFromSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onYFromSet);
     connect(mYToSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onYToSet);
     connect(mYStepSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onYStepSet);
+    
     connect(mMaxIterationSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onMaxIterationSet);
     connect(mLearningRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onLearningRateSet);
 	connect(mPointCountSpin, QOverload<int>::of(&QSpinBox::valueChanged), this, &GradientDescentWidget::onPointCountSet);
 	connect(mPointSizeSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onPointSizeSet);
 	connect(mSimulationFrequencySpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onSimulationFrequencySet);
+	connect(mMethodCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GradientDescentWidget::onMethodSet);
 	
+    connect(mEpsilonSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onEpsilonSet);
+	connect(mDecayRateSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onDecayRateSet);
+	connect(mBeta1Spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onBeta1Set);
+	connect(mBeta2Spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &GradientDescentWidget::onBeta2Set);
+
     connect(mReloadMeshButton, &QPushButton::clicked, this, &GradientDescentWidget::onReloadMeshClicked);
 	connect(mRandomizeSimulationButton, &QPushButton::clicked, this, &GradientDescentWidget::onRandomizeSimulationClicked);
 
@@ -242,6 +300,41 @@ void GradientDescentWidget::onSimulationFrequencyChanged(int simulationFrequency
 	mSimulationFrequencySpin->blockSignals(false);
 }
 
+void GradientDescentWidget::onMethodChanged(GradientDescent::Method method)
+{
+	mMethodCombo->blockSignals(true);
+	mMethodCombo->setCurrentIndex(static_cast<int>(method));
+	mMethodCombo->blockSignals(false);
+}
+
+void GradientDescentWidget::onEpsilonChanged(double epsilon)
+{
+	mEpsilonSpin->blockSignals(true);
+	mEpsilonSpin->setValue(epsilon);
+	mEpsilonSpin->blockSignals(false);
+}
+
+void GradientDescentWidget::onDecayRateChanged(double decayRate)
+{
+	mDecayRateSpin->blockSignals(true);
+	mDecayRateSpin->setValue(decayRate);
+	mDecayRateSpin->blockSignals(false);
+}
+
+void GradientDescentWidget::onBeta1Changed(double beta1)
+{
+	mBeta1Spin->blockSignals(true);
+	mBeta1Spin->setValue(beta1);
+	mBeta1Spin->blockSignals(false);
+}
+
+void GradientDescentWidget::onBeta2Changed(double beta2)
+{
+	mBeta2Spin->blockSignals(true);
+	mBeta2Spin->setValue(beta2);
+	mBeta2Spin->blockSignals(false);
+}
+
 void GradientDescentWidget::onExpressionSet(const QString& expression) {
     if (mNode) {
         mNode->setExpression(expression);
@@ -315,6 +408,41 @@ void GradientDescentWidget::onSimulationFrequencySet(double simulationFrequency)
     }
 }
 
+void GradientDescentWidget::onMethodSet(int method)
+{
+	if (mNode) {
+		mNode->setMethod(static_cast<GradientDescent::Method>(method));
+	}
+}
+
+void GradientDescentWidget::onEpsilonSet(double epsilon)
+{
+	if (mNode) {
+		mNode->setEpsilon(static_cast<float>(epsilon));
+	}
+}
+
+void GradientDescentWidget::onDecayRateSet(double decayRate)
+{
+	if (mNode) {
+		mNode->setDecayRate(static_cast<float>(decayRate));
+	}
+}
+
+void GradientDescentWidget::onBeta1Set(double beta1)
+{
+	if (mNode) {
+		mNode->setBeta1(static_cast<float>(beta1));
+	}
+}
+
+void GradientDescentWidget::onBeta2Set(double beta2)
+{
+	if (mNode) {
+		mNode->setBeta2(static_cast<float>(beta2));
+	}
+}
+
 void GradientDescentWidget::onReloadMeshClicked()
 {
     if (mNode) {
@@ -343,6 +471,12 @@ void GradientDescentWidget::updateUI() {
 		mPointSizeSpin->setValue(mNode->getPointSize());
         mMaxIterationSpin->setValue(mNode->getMaxIteration());
         mLearningRateSpin->setValue(mNode->getLearningRate());
+		mMethodCombo->setCurrentIndex(static_cast<int>(mNode->getMethod()));
+		mSimulationFrequencySpin->setValue(mNode->getSimulationFrequency());
+		mEpsilonSpin->setValue(mNode->getEpsilon());
+		mDecayRateSpin->setValue(mNode->getDecayRate());
+		mBeta1Spin->setValue(mNode->getBeta1());
+		mBeta2Spin->setValue(mNode->getBeta2());
     }
     else {
         mExpressionEdit->clear();
@@ -356,6 +490,13 @@ void GradientDescentWidget::updateUI() {
 		mPointSizeSpin->setValue(0.1);
         mMaxIterationSpin->setValue(100);
         mLearningRateSpin->setValue(0.01);
+		mMethodCombo->setCurrentIndex(0);
+		mSimulationFrequencySpin->setValue(0.1);
+		mEpsilonSpin->setValue(1e-8);
+		mDecayRateSpin->setValue(0.9);
+		mBeta1Spin->setValue(0.9);
+		mBeta2Spin->setValue(0.999);
+
     }
     blockSignals(false);
 }
@@ -374,6 +515,12 @@ void GradientDescentWidget::connectSignals() {
     connect(mNode, &GradientDescent::learningRateChanged, this, &GradientDescentWidget::onLearningRateChanged);
 	connect(mNode, &GradientDescent::pointCountChanged, this, &GradientDescentWidget::onPointCountChanged);
 	connect(mNode, &GradientDescent::pointSizeChanged, this, &GradientDescentWidget::onPointSizeChanged);
+	connect(mNode, &GradientDescent::simulationFrequencyChanged, this, &GradientDescentWidget::onSimulationFrequencyChanged);
+	connect(mNode, &GradientDescent::methodChanged, this, &GradientDescentWidget::onMethodChanged);
+	connect(mNode, &GradientDescent::epsilonChanged, this, &GradientDescentWidget::onEpsilonChanged);
+	connect(mNode, &GradientDescent::decayRateChanged, this, &GradientDescentWidget::onDecayRateChanged);
+	connect(mNode, &GradientDescent::beta1Changed, this, &GradientDescentWidget::onBeta1Changed);
+	connect(mNode, &GradientDescent::beta2Changed, this, &GradientDescentWidget::onBeta2Changed);
 }
 
 void GradientDescentWidget::disconnectSignals() {
@@ -390,6 +537,12 @@ void GradientDescentWidget::disconnectSignals() {
     disconnect(mNode, &GradientDescent::learningRateChanged, this, &GradientDescentWidget::onLearningRateChanged);
 	disconnect(mNode, &GradientDescent::pointCountChanged, this, &GradientDescentWidget::onPointCountChanged);
 	disconnect(mNode, &GradientDescent::pointSizeChanged, this, &GradientDescentWidget::onPointSizeChanged);
+	disconnect(mNode, &GradientDescent::simulationFrequencyChanged, this, &GradientDescentWidget::onSimulationFrequencyChanged);
+	disconnect(mNode, &GradientDescent::methodChanged, this, &GradientDescentWidget::onMethodChanged);
+	disconnect(mNode, &GradientDescent::epsilonChanged, this, &GradientDescentWidget::onEpsilonChanged);
+	disconnect(mNode, &GradientDescent::decayRateChanged, this, &GradientDescentWidget::onDecayRateChanged);
+	disconnect(mNode, &GradientDescent::beta1Changed, this, &GradientDescentWidget::onBeta1Changed);
+	disconnect(mNode, &GradientDescent::beta2Changed, this, &GradientDescentWidget::onBeta2Changed);
 }
 
 void GradientDescentWidget::blockSignals(bool block) { 
@@ -404,5 +557,12 @@ void GradientDescentWidget::blockSignals(bool block) {
     mLearningRateSpin->blockSignals(block); 
 	mPointCountSpin->blockSignals(block);
 	mPointSizeSpin->blockSignals(block);
+	mSimulationFrequencySpin->blockSignals(block);
+	mMethodCombo->blockSignals(block);
+	mEpsilonSpin->blockSignals(block);
+	mDecayRateSpin->blockSignals(block);
+	mBeta1Spin->blockSignals(block);
+	mBeta2Spin->blockSignals(block);
+
 }
 
