@@ -2,6 +2,35 @@
 
 #include "Engine/Nodes/GradientDescent.h"
 
+
+static QQuaternion CreateFromAxisAngle(const QVector3D& axis, float angle)
+{
+	float halfAngle = angle * 0.5f;
+	float s = std::sin(halfAngle);
+	return QQuaternion(std::cos(halfAngle), axis.x() * s, axis.y() * s, axis.z() * s);
+}
+
+static QQuaternion LookAt(const QVector3D& sourcePoint, const QVector3D& destPoint)
+{
+	QVector3D forwardVector = (destPoint - sourcePoint).normalized();
+	QVector3D forward(0.0f, 0.0f, -1.0f);
+
+	float dot = QVector3D::dotProduct(forward, forwardVector);
+
+	if (std::abs(dot - (-1.0f)) < 0.000001f)
+	{
+		return QQuaternion(0.0f, 1.0f, 0.0f, 3.1415926535897932f);
+	}
+	if (std::abs(dot - (1.0f)) < 0.000001f)
+	{
+		return QQuaternion();
+	}
+
+	float rotAngle = std::acos(dot);
+	QVector3D rotAxis = QVector3D::crossProduct(forward, forwardVector).normalized();
+	return CreateFromAxisAngle(rotAxis, rotAngle);
+}
+
 TestScene::TestScene() : Scene()
 {
 	setName("TestScene");
@@ -17,33 +46,30 @@ void TestScene::load()
 	camera->setObjectName("Camera 1");
 
 
-	Camera* camera2 = new Camera();
-	addNode(camera2);
-	camera2->setObjectName("Camera 2");
-	camera2->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 10.0f));
-
-	const int numCameras = 10; // Number of cameras
+	const int numCameras = 100; // Number of cameras
 	const float radius = 10.0f; // Radius of the sphere
-	const QVector3D center(0.0f, -6.0f, 0.0f); // Center of the sphere
+	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
 
-	for (int i = 0; i < numCameras; ++i)
-	{
-		float theta = M_PI * (i + 1) / (numCameras + 1); // Latitude
-		float phi = 2 * M_PI * i / numCameras; // Longitude
+
+	for (int i = 0; i < numCameras; ++i) {
+		// Latitude: range from 0 (north pole) to pi/2 (equator)
+		float theta = M_PI_2 * i / (numCameras - 1);  // M_PI_2 is pi/2
+
+		// Longitude: evenly distributed
+		float phi = 2 * M_PI * i / numCameras;
 
 		float x = radius * sin(theta) * cos(phi);
-		float y = radius * cos(theta);
+		float y = radius * cos(theta);  // Moves from pole (1) to equator (0)
 		float z = radius * sin(theta) * sin(phi);
 
 		Camera* camera = new Camera();
 		addNode(camera);
-		camera->setObjectName("Camera " + std::to_string(i + 3));
+		camera->setObjectName(QString("Camera 1").arg(i + 3));  // Qt's QString for formatting
 		camera->transform->setLocalPosition(QVector3D(x, y, z));
 
 		// Look at the center
-		camera->transform->setLocalRotation(QQuaternion::rotationTo(camera->transform->getLocalPosition(), center - camera->transform->getLocalPosition()));
+		camera->transform->setLocalRotation(LookAt(camera->transform->getLocalPosition(), center));
 	}
-
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
@@ -77,10 +103,7 @@ void TestScene::load()
 	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, true);
 	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
-	MeshRenderer* planeNode = new GradientDescent("Math.sin($x) * Math.sin($y)", -10.0f, 10.0f, 0.1f, -10.0f, 10.0f, 0.1f);
-	MeshRenderer* planeNode2 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -5.0f, 5.0f, 0.01f, -5.0f, 5.0f, 0.01f);
-
-	planeNode->kill();
+	
 
 	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
@@ -92,10 +115,6 @@ void TestScene::load()
 	cylinderNode->transform->setLocalPosition(QVector3D(13.0f, 0.0f, 0.0f));
 	coneNode->transform->setLocalPosition(QVector3D(15.0f, 0.0f, 0.0f));
 
-	planeNode->transform->setLocalPosition(QVector3D(0.0f, -3.0f, 0.0f));
-	planeNode->transform->setLocalRotation(QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f));
-	planeNode2->transform->setLocalPosition(QVector3D(0.0f, -1.0f, 0.0f));
-	planeNode2->transform->setLocalRotation(QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f));
 
 	teapotNode->setObjectName("Teapot");
 	triangleNode->setObjectName("Triangle");
@@ -106,9 +125,6 @@ void TestScene::load()
 	icosphereNode->setObjectName("Icosphere");
 	cylinderNode->setObjectName("Cylinder");
 	coneNode->setObjectName("Cone");
-	planeNode->setObjectName("Plane");
-	planeNode2->setObjectName("Plane2");
-
 
 	addNode(teapotNode);
 	addNode(triangleNode);
@@ -118,10 +134,39 @@ void TestScene::load()
 	addNode(sphereNode);
 	addNode(icosphereNode);
 	addNode(cylinderNode);
-	addNode(coneNode);
-	addNode(planeNode);
-	addNode(planeNode2);
+	addNode(coneNode);	
 
+	
+	for (int i = 0; i < 1; i++) {
+
+		GradientDescent* planeNode1 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -5.0f, 5.0f, 0.01f, -5.0f, 5.0f, 0.01f);
+		planeNode1->transform->setLocalPosition(QVector3D(0.0f, -3.0f, 0.0f));
+		planeNode1->transform->setLocalRotation(QQuaternion::fromEulerAngles(-90.0f, 0.0f, 0.0f));
+		planeNode1->setObjectName("Plane " + std::to_string(i));
+		planeNode1->setPointCount(100);
+		// Set the method for the GradientDescent node
+		switch (i) {
+		case 0:
+			planeNode1->setMethod(GradientDescent::Method::SGD);
+			break;
+		case 1:
+			planeNode1->setMethod(GradientDescent::Method::Momentum);
+			break;
+		case 2:
+			planeNode1->setMethod(GradientDescent::Method::NesterovMomentum);
+			break;
+		case 3:
+			planeNode1->setMethod(GradientDescent::Method::AdaGrad);
+			break;
+		case 4:
+			planeNode1->setMethod(GradientDescent::Method::RMSProp);
+			break;
+		case 5:
+			planeNode1->setMethod(GradientDescent::Method::Adam);
+			break;
+		}
+		addNode(planeNode1);
+	}
 }
 
 void TestScene::create()
@@ -134,6 +179,5 @@ TestScene::~TestScene()
 {
 	delete mCameraController;
 }
-
 
 
