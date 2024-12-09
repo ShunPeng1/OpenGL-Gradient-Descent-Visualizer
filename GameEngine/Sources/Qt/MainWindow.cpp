@@ -66,22 +66,7 @@ void MainWindow::createDockWidgets() {
 }
 
 void MainWindow::createControlButtons() {
-    QWidget* controlWidget = new QWidget(this);
-    QHBoxLayout* controlLayout = new QHBoxLayout();
 
-    QPushButton* playButton = new QPushButton("Play", this);
-    QPushButton* pauseButton = new QPushButton("Pause", this);
-
-    controlLayout->addWidget(playButton);
-    controlLayout->addWidget(pauseButton);
-    controlLayout->setAlignment(Qt::AlignCenter);
-
-    controlWidget->setLayout(controlLayout);
-	setMenuWidget(controlWidget);
-
-
-    connect(playButton, &QPushButton::clicked, this, &MainWindow::onPlayButtonClicked);
-    connect(pauseButton, &QPushButton::clicked, this, &MainWindow::onPauseButtonClicked);
 }
 
 void MainWindow::onPlayButtonClicked() {
