@@ -46,29 +46,32 @@ void TestScene::load()
 	camera->setObjectName("Camera 1");
 
 
-	const int numCameras = 100; // Number of cameras
+	const int numLatitude = 10; // Number of latitude divisions
+	const int numLongitude = 10; // Number of longitude divisions
 	const float radius = 10.0f; // Radius of the sphere
 	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
 
+	for (int i = 0; i < numLatitude; ++i) {
+		// Latitude: range from 0 (north pole) to pi (south pole)
+		float theta = M_PI * i / (numLatitude - 1);
 
-	for (int i = 0; i < numCameras; ++i) {
-		// Latitude: range from 0 (north pole) to pi/2 (equator)
-		float theta = M_PI_2 * i / (numCameras - 1);  // M_PI_2 is pi/2
+		for (int j = 0; j < numLongitude; ++j) {
+			// Longitude: range from 0 to 2*pi
+			float phi = 2 * M_PI * j / numLongitude;
 
-		// Longitude: evenly distributed
-		float phi = 2 * M_PI * i / numCameras;
+			float x = radius * sin(theta) * cos(phi);
+			float y = radius * cos(theta);  // Moves from pole (1) to equator (0)
+			float z = radius * sin(theta) * sin(phi);
 
-		float x = radius * sin(theta) * cos(phi);
-		float y = radius * cos(theta);  // Moves from pole (1) to equator (0)
-		float z = radius * sin(theta) * sin(phi);
 
-		Camera* camera = new Camera();
-		addNode(camera);
-		camera->setObjectName(QString("Camera 1").arg(i + 3));  // Qt's QString for formatting
-		camera->transform->setLocalPosition(QVector3D(x, y, z));
+			Camera* camera = new Camera();
+			addNode(camera);
+			camera->setObjectName(QString("Camera 1").arg(i + 3));  // Qt's QString for formatting
+			camera->transform->setLocalPosition(QVector3D(x, y, z));
 
-		// Look at the center
-		camera->transform->setLocalRotation(LookAt(camera->transform->getLocalPosition(), center));
+			// Look at the center
+			camera->transform->setLocalRotation(LookAt(camera->transform->getLocalPosition(), center));
+		}
 	}
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
