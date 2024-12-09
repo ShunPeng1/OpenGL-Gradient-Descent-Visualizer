@@ -51,7 +51,14 @@ void TestScene::load()
 	const float radius = 10.0f; // Radius of the sphere
 	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
 
-	for (int i = 0; i < numLatitude; ++i) {
+	// Create cameras on a sphere
+	Camera* centerCamera = new Camera();
+	addNode(centerCamera);
+	centerCamera->setObjectName("Top Camera");
+	centerCamera->transform->setLocalPosition(QVector3D(0, radius, 0));
+	centerCamera->transform->setLocalRotation(LookAt(centerCamera->transform->getLocalPosition(), center));
+
+	for (int i = 1; i < numLatitude; ++i) {
 		// Latitude: range from 0 (north pole) to pi (south pole)
 		float theta = M_PI * i / (numLatitude - 1);
 
@@ -66,7 +73,8 @@ void TestScene::load()
 
 			Camera* camera = new Camera();
 			addNode(camera);
-			camera->setObjectName(QString("Camera 1").arg(i + 3));  // Qt's QString for formatting
+
+            camera->setObjectName(QString("Camera %1 %2").arg(i).arg(j));
 			camera->transform->setLocalPosition(QVector3D(x, y, z));
 
 			// Look at the center
@@ -140,7 +148,7 @@ void TestScene::load()
 	addNode(coneNode);	
 
 	
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 0; i++) {
 
 		GradientDescent* planeNode1 = new GradientDescent("Math.sin($x) * Math.cos($y) + Math.cos(Math.sqrt($x * $x + $y * $y)) * Math.sin($x * $y)", -5.0f, 5.0f, 0.01f, -5.0f, 5.0f, 0.01f);
 		planeNode1->transform->setLocalPosition(QVector3D(0.0f, -3.0f, 0.0f));
