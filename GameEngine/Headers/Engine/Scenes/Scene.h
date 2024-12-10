@@ -7,8 +7,8 @@
 #include "Engine/Renders/Mesh.h"
 #include "Qt/Inputs/InputPublisher.h"
 
-
 #include "Engine/Scenes/Node.h"
+#include "Engine/Scenes/CameraManager.h"
 #include "Engine/Nodes/Camera.h"
 
 #include <vector>
@@ -49,8 +49,7 @@ public:
 	void removeNode(Node* node);
 	virtual std::vector<Node*> getNodes() const;
 
-	std::vector<Camera*> getCameras();
-	void setMainCamera(Camera* camera);
+	CameraManager* getCameraManager() override;
 
 	void setInputPublisher(InputPublisher* inputPublisher);
 	InputPublisher* getInputPublisher() const;
@@ -62,8 +61,8 @@ protected:
 
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
 	std::vector<Mesh*> mMeshes;
-	std::vector<Camera*> mCameras;
-	Camera* mMainCamera;
+
+	CameraManager* mCameraManager;
 
 	InputPublisher* inputPublisher;
 

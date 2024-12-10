@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Engine\Nodes\GradientDescent.cpp" />
+    <ClCompile Include="Sources\Engine\Scenes\CameraManager.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\SceneManager.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp" />
@@ -143,6 +144,7 @@
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h" />
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyItem.h" />
     <QtMoc Include="Headers\Engine\Nodes\GradientDescent.h" />
+    <ClInclude Include="Headers\Engine\Scenes\CameraManager.h" />
     <ClInclude Include="Headers\Engine\Scenes\SceneManager.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
     <ClInclude Include="Headers\Engine\Enums\RenderMode.h" />

@@ -94,7 +94,7 @@ void OpenGLWidget::paintGL() {
     mInputPublisher->update(deltaTime);
 	mCurrentScene->getInputPublisher()->update(deltaTime);
 	mCurrentScene->update(deltaTime);
-    mCurrentScene->setMainCamera(mRenderCamera);
+    mCurrentScene->getCameraManager()->setMainCamera(mRenderCamera);
 	mCurrentScene->render();
 
     // Check for OpenGL errors

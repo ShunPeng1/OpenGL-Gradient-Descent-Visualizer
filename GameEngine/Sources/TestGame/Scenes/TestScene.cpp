@@ -43,6 +43,7 @@ void TestScene::load()
 
 	Camera* camera = new Camera();
 	addNode(camera);
+	mCameraManager->addCamera(camera);
 	camera->setObjectName("Camera 1");
 
 
@@ -52,11 +53,12 @@ void TestScene::load()
 	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
 
 	// Create cameras on a sphere
-	Camera* centerCamera = new Camera();
-	addNode(centerCamera);
-	centerCamera->setObjectName("Top Camera");
-	centerCamera->transform->setLocalPosition(QVector3D(0, radius, 0));
-	centerCamera->transform->setLocalRotation(LookAt(centerCamera->transform->getLocalPosition(), center));
+	Camera* topCamera = new Camera();
+	addNode(topCamera);
+	mCameraManager->addCamera(topCamera);
+	topCamera->setObjectName("Top Camera");
+	topCamera->transform->setLocalPosition(QVector3D(0, radius, 0));
+	topCamera->transform->setLocalRotation(LookAt(topCamera->transform->getLocalPosition(), center));
 
 	for (int i = 1; i < numLatitude; ++i) {
 		// Latitude: range from 0 (north pole) to pi (south pole)
@@ -73,6 +75,7 @@ void TestScene::load()
 
 			Camera* camera = new Camera();
 			addNode(camera);
+			mCameraManager->addCamera(camera);
 
             camera->setObjectName(QString("Camera %1 %2").arg(i).arg(j));
 			camera->transform->setLocalPosition(QVector3D(x, y, z));

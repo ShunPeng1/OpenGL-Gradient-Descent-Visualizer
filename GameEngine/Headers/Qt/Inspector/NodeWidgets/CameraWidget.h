@@ -28,6 +28,7 @@ private slots:
     void onAspectRatioChanged(float);
     void onIsOrthoChanged(bool);
     void onWidthChanged(float);
+	void onDrawFrustumChanged(bool);
 
 	void onFovSet(double);
 	void onNearSet(double);
@@ -35,6 +36,7 @@ private slots:
 	void onAspectRatioSet(double);
 	void onIsOrthoSet(bool);
 	void onWidthSet(double);
+	void onDrawFrustumSet(bool);
 
 
 private:
@@ -51,6 +53,7 @@ private:
     QDoubleSpinBox* mFar;
     QDoubleSpinBox* mAspectRatio;
     QCheckBox* mIsOrtho;
+	QCheckBox* mDrawFrustum;
     QDoubleSpinBox* mWidth;
 };
 

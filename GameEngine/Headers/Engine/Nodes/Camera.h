@@ -2,6 +2,7 @@
 
 #include "Engine/Nodes/Container.h"
 #include <QOpenGLExtraFunctions>
+#include "Engine/Renders/Vertex.h"
 
 class Camera : public Container, public QOpenGLExtraFunctions
 {
@@ -13,6 +14,10 @@ public:
 
 	virtual void init() override;
 
+	void drawFrustum(ShaderProgram& shaderProgram);
+
+	QVector<QVector3D> calculateFrustumCorners();
+
 	void setFov(float fov);
 	void setNear(float near);
 	void setFar(float far);
@@ -20,6 +25,7 @@ public:
 	void setAspectRatio(float aspectRatio);
 	void setIsOrtho(bool isOrtho);
 	void setWidth(float width);
+	void setDrawFrustum(bool drawFrustum);
 
 	float getFov() const;
 	float getNear() const;
@@ -27,6 +33,7 @@ public:
 	float getAspectRatio() const;
 	bool getIsOrtho() const;
 	float getWidth() const;
+	bool getDrawFrustum() const;
 
 	QMatrix4x4 getViewMatrix();
 	QMatrix4x4 getProjectionMatrix();
@@ -38,16 +45,12 @@ public: // Interfaces
 
 signals:
 	void fovChanged(float);
-signals:
 	void nearChanged(float);
-signals:
 	void farChanged(float);
-signals:
 	void aspectRatioChanged(float);
-signals:
 	void isOrthoChanged(bool);
-signals:
 	void widthChanged(float);
+	void drawFrustumChanged(bool);
 
 protected: 
 	virtual void start(IScene* scene) override;
@@ -62,4 +65,11 @@ protected:
 	float mWidth;
 	float mIsOrtho;
 	bool mDirty;
+	bool mDrawFrustum;
+
+	QMatrix4x4 mProjection;
+
+
+	unsigned int mVAO;
+	unsigned int mVBO;
 };

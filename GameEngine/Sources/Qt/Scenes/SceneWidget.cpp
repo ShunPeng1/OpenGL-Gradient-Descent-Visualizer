@@ -3,7 +3,7 @@
 SceneWidget::SceneWidget(const QString& title, SceneManager* sceneManager, QWidget* parent)
     : QDockWidget(title, parent), mSceneManager(sceneManager) {
     IScene* currentScene = mSceneManager->getCurrentScene();
-    auto cameras = currentScene->getCameras();
+    auto cameras = currentScene->getCameraManager()->getCameras();
     
     QWidget* mainContainer = new QWidget(this);
 	QVBoxLayout* mainLayout = new QVBoxLayout(mainContainer);
@@ -59,7 +59,7 @@ SceneWidget::~SceneWidget()
 
 void SceneWidget::onCameraChanged(int index) {
 	IScene* mCurrentScene = mSceneManager->getCurrentScene();
-    auto cameras = mCurrentScene->getCameras();
+    auto cameras = mCurrentScene->getCameraManager()->getCameras();
     if (index >= 0 && index < cameras.size()) {
         mOpenGLWidget->setCurrentCamera(cameras[index]);
     }

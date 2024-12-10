@@ -56,6 +56,15 @@ CameraWidget::CameraWidget(Camera* camera, QWidget* parent)
     isOrthoLayout->addWidget(mIsOrtho);
     mainLayout->addLayout(isOrthoLayout);
 
+	// Draw Frustum
+	QHBoxLayout* drawFrustumLayout = new QHBoxLayout();
+	QLabel* drawFrustumLabel = new QLabel("Draw Frustum:");
+	mDrawFrustum = new QCheckBox();
+	drawFrustumLayout->addWidget(drawFrustumLabel);
+	drawFrustumLayout->addWidget(mDrawFrustum);
+	mainLayout->addLayout(drawFrustumLayout);
+
+
     // Width
     QHBoxLayout* widthLayout = new QHBoxLayout();
     QLabel* widthLabel = new QLabel("Width:");
@@ -74,6 +83,7 @@ CameraWidget::CameraWidget(Camera* camera, QWidget* parent)
     connect(mFar, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onFarSet);
     connect(mAspectRatio, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onAspectRatioSet);
     connect(mIsOrtho, &QCheckBox::toggled, this, &CameraWidget::onIsOrthoSet);
+	connect(mDrawFrustum, &QCheckBox::toggled, this, &CameraWidget::onDrawFrustumSet);
     connect(mWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &CameraWidget::onWidthSet);
 
     setNode(camera);
@@ -119,6 +129,11 @@ void CameraWidget::onWidthChanged(float value) {
 	mWidth->setValue(value);
 }
 
+void CameraWidget::onDrawFrustumChanged(bool value)
+{
+	mDrawFrustum->setChecked(value);
+}
+
 void CameraWidget::onFovSet(double value)
 {
 	if (mNode) {
@@ -161,6 +176,13 @@ void CameraWidget::onWidthSet(double value)
     }
 }
 
+void CameraWidget::onDrawFrustumSet(bool value)
+{
+	if (mNode) {
+		mNode->setDrawFrustum(value);
+	}
+}
+
 void CameraWidget::updateUI() {
     blockSignals(true);
     if (mNode) {
@@ -169,6 +191,7 @@ void CameraWidget::updateUI() {
         mFar->setValue(mNode->getFar());
         mAspectRatio->setValue(mNode->getAspectRatio());
         mIsOrtho->setChecked(mNode->getIsOrtho());
+		mDrawFrustum->setChecked(mNode->getDrawFrustum());
         mWidth->setValue(mNode->getWidth());
     }
     else {
@@ -177,6 +200,7 @@ void CameraWidget::updateUI() {
         mFar->setValue(1000.0);
         mAspectRatio->setValue(1.78);
         mIsOrtho->setChecked(false);
+		mDrawFrustum->setChecked(false);
         mWidth->setValue(1.0);
     }
     blockSignals(false);
@@ -190,6 +214,7 @@ void CameraWidget::connectSignals() {
 	connect(mNode, &Camera::farChanged, this, &CameraWidget::onFarChanged);
 	connect(mNode, &Camera::aspectRatioChanged, this, &CameraWidget::onAspectRatioChanged);
 	connect(mNode, &Camera::isOrthoChanged, this, &CameraWidget::onIsOrthoChanged);
+	connect(mNode, &Camera::drawFrustumChanged, this, &CameraWidget::onDrawFrustumChanged);
 	connect(mNode, &Camera::widthChanged, this, &CameraWidget::onWidthChanged);
 }
 
@@ -201,6 +226,7 @@ void CameraWidget::disconnectSignals() {
 	disconnect(mNode, &Camera::farChanged, this, &CameraWidget::onFarChanged);
 	disconnect(mNode, &Camera::aspectRatioChanged, this, &CameraWidget::onAspectRatioChanged);
 	disconnect(mNode, &Camera::isOrthoChanged, this, &CameraWidget::onIsOrthoChanged);
+	disconnect(mNode, &Camera::drawFrustumChanged, this, &CameraWidget::onDrawFrustumChanged);
 	disconnect(mNode, &Camera::widthChanged, this, &CameraWidget::onWidthChanged);
 }
 
@@ -211,5 +237,6 @@ void CameraWidget::blockSignals(bool value)
 	mFar->blockSignals(value);
 	mAspectRatio->blockSignals(value);
 	mIsOrtho->blockSignals(value);
+	mDrawFrustum->blockSignals(value);
 	mWidth->blockSignals(value);
 }

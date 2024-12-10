@@ -5,6 +5,7 @@ Scene::Scene()
 {
 	mMeshes = std::vector<Mesh*>();
 	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
+	mCameraManager = new CameraManager();
 }
 
 Scene::~Scene()
@@ -59,7 +60,6 @@ void Scene::start()
 
 void Scene::update(float deltaTime)
 {
-	
 	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
 		mChildrenNodes[i]->tryUpdate(deltaTime);
@@ -70,16 +70,13 @@ void Scene::render()
 {
 	mDefaultShader->bind();
 
-	mMainCamera->tryRender(*mDefaultShader); // Only render the main camera
+	mCameraManager->renderWithMainCamera(*mDefaultShader); // Only render the main camera
+
 
 	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
 		Node* node = mChildrenNodes[i].get();
-		Camera* camera = dynamic_cast<Camera*>(node);
-		if (camera != nullptr) { // Skip camera nodes
-			continue;
-		}
-
+		
 		node->tryRender(*mDefaultShader);
 	}
 
@@ -190,34 +187,11 @@ Mesh* Scene::getMesh(int index) const
 
 void Scene::addNode(Node* node)
 {
-	Camera* camera = dynamic_cast<Camera*>(node);
-	if (camera != nullptr) {
-		if (mMainCamera == nullptr) {
-			mMainCamera = camera;
-		}
-		mCameras.push_back(camera);
-	}
-
 	mChildrenNodes.push_back(std::unique_ptr<Node>(node));
-	
-
 }
 
 void Scene::removeNode(Node* node)
 {
-	Camera* camera = dynamic_cast<Camera*>(node);
-
-	if (camera != nullptr) {
-		auto it = std::remove(mCameras.begin(), mCameras.end(), camera);
-		if (it != mCameras.end()) {
-			mCameras.erase(it, mCameras.end());
-		}
-
-		if (mMainCamera == camera) {
-			mMainCamera = mCameras.size() > 0 ? mCameras[0] : nullptr;
-		}
-	}
-
 	auto it = std::remove_if(mChildrenNodes.begin(), mChildrenNodes.end(),
 		[node](const std::unique_ptr<Node>& ptr) {
 			return ptr.get() == node;
@@ -239,14 +213,9 @@ std::vector<Node*> Scene::getNodes() const
 	return children;
 }
 
-std::vector<Camera*> Scene::getCameras()
+CameraManager* Scene::getCameraManager()
 {
-	return mCameras;
-}
-
-void Scene::setMainCamera(Camera* camera)
-{
-	mMainCamera = camera;
+	return mCameraManager;
 }
 
 void Scene::setInputPublisher(InputPublisher* inputPublisher)

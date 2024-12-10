@@ -6,6 +6,7 @@
 #include "Engine/Interfaces/ISerializable.h"
 #include "Engine/Scenes/Node.h"
 #include "Engine/Nodes/Camera.h"
+#include "Engine/Scenes/CameraManager.h"
 
 #include <vector>
 #include <memory>
@@ -36,8 +37,8 @@ public:
     virtual void addNode(Node* node) = 0;
     virtual void removeNode(Node* node) = 0;
     virtual std::vector<Node*> getNodes() const = 0;
-    virtual std::vector<Camera*> getCameras() = 0;
-	virtual void setMainCamera(Camera* camera) = 0;
+
+	virtual CameraManager* getCameraManager() = 0;
 
 
 	virtual void setInputPublisher(InputPublisher* inputPublisher) = 0;

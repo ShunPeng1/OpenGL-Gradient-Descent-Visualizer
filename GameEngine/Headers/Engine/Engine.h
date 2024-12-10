@@ -7,6 +7,9 @@ class INodeVisitable;
 class INodeVisitor;
 class ISerializable;
 
+// Managers
+class CameraManager;
+
 
 // Components
 class Node;
