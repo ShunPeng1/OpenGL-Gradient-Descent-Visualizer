@@ -82,7 +82,7 @@ void TestScene::load()
 	MeshRenderer* coneNode = new MeshRenderer(cone, true);
 	
 
-	teapotNode->transform->setLocalPosition(QVector3D(-15.0f, 0.0f, 0.0f));
+	teapotNode->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 5.0f));
 	triangleNode->transform->setLocalPosition(QVector3D(1.0f, 0.0f, 0.0f));
 	quadNode->transform->setLocalPosition(QVector3D(3.0f, 0.0f, 0.0f));
 	circleNode->transform->setLocalPosition(QVector3D(5.0f, 0.0f, 0.0f));
@@ -188,7 +188,6 @@ void TestScene::load()
 	}
 
 	sphereContainer->transform->setWorldPosition(teapotNode->transform->getWorldPosition());
-	teapotNode->setParent(sphereContainer);
 }
 
 void TestScene::create()
