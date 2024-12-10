@@ -12,8 +12,6 @@ public:
 	Camera();
 	virtual ~Camera() noexcept;
 
-	virtual void init() override;
-
 	void drawFrustum(ShaderProgram& shaderProgram);
 
 	QVector<QVector3D> calculateFrustumCorners();
@@ -52,7 +50,8 @@ signals:
 	void widthChanged(float);
 	void drawFrustumChanged(bool);
 
-protected: 
+protected:
+	virtual void init() override;
 	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
 	virtual void render(ShaderProgram& shaderProgram) override;

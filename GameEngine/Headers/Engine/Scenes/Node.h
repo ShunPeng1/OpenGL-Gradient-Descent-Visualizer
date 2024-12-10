@@ -19,13 +19,14 @@ class Node : public QObject, public ISerializable, public INodeVisitable
 public:
     Node();
     virtual ~Node();
-
-    virtual void init();
+    
+    void tryInit();
     void tryStart(IScene* scene);
     void tryUpdate(float deltaTime);
     void tryRender(ShaderProgram& shaderProgram);
 	virtual void clear();
 
+    
     virtual void kill();
     virtual void revive();
     bool getIsAlive() const;
@@ -50,6 +51,7 @@ signals:
     void isAliveChanged(bool isAlive);
 
 protected:
+    virtual void init();
     virtual void start(IScene* scene);
     virtual void update(float deltaTime);
     virtual void render(ShaderProgram& shaderProgram);

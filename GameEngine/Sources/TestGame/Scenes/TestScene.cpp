@@ -47,43 +47,6 @@ void TestScene::load()
 	camera->setObjectName("Camera 1");
 
 
-	const int numLatitude = 10; // Number of latitude divisions
-	const int numLongitude = 10; // Number of longitude divisions
-	const float radius = 10.0f; // Radius of the sphere
-	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
-
-	// Create cameras on a sphere
-	Camera* topCamera = new Camera();
-	addNode(topCamera);
-	mCameraManager->addCamera(topCamera);
-	topCamera->setObjectName("Top Camera");
-	topCamera->transform->setLocalPosition(QVector3D(0, radius, 0));
-	topCamera->transform->setLocalRotation(LookAt(topCamera->transform->getLocalPosition(), center));
-
-	for (int i = 1; i < numLatitude; ++i) {
-		// Latitude: range from 0 (north pole) to pi (south pole)
-		float theta = M_PI * i / (numLatitude - 1);
-
-		for (int j = 0; j < numLongitude; ++j) {
-			// Longitude: range from 0 to 2*pi
-			float phi = 2 * M_PI * j / numLongitude;
-
-			float x = radius * sin(theta) * cos(phi);
-			float y = radius * cos(theta);  // Moves from pole (1) to equator (0)
-			float z = radius * sin(theta) * sin(phi);
-
-
-			Camera* camera = new Camera();
-			addNode(camera);
-			mCameraManager->addCamera(camera);
-
-            camera->setObjectName(QString("Camera %1 %2").arg(i).arg(j));
-			camera->transform->setLocalPosition(QVector3D(x, y, z));
-
-			// Look at the center
-			camera->transform->setLocalRotation(LookAt(camera->transform->getLocalPosition(), center));
-		}
-	}
 
 	ModelLoader tempLoader = ModelLoader::Builder().SetUseNormalColor(true).Build();
 
@@ -181,6 +144,51 @@ void TestScene::load()
 		}
 		addNode(planeNode1);
 	}
+
+
+	const int numLatitude = 10; // Number of latitude divisions
+	const int numLongitude = 10; // Number of longitude divisions
+	const float radius = 10.0f; // Radius of the sphere
+	const QVector3D center(0.0f, 0.0f, 0.0f); // Center of the sphere
+
+	Container* sphereContainer = new Container();
+	addNode(sphereContainer);
+
+	// Create cameras on a sphere
+	Camera* topCamera = new Camera();
+	topCamera->setParent(sphereContainer);
+	mCameraManager->addCamera(topCamera);
+	topCamera->setObjectName("Top Camera");
+	topCamera->transform->setLocalPosition(QVector3D(0, radius, 0));
+	topCamera->transform->setLocalRotation(LookAt(topCamera->transform->getLocalPosition(), center));
+
+	for (int i = 1; i < numLatitude; ++i) {
+		// Latitude: range from 0 (north pole) to pi (south pole)
+		float theta = M_PI * i / (numLatitude - 1);
+
+		for (int j = 0; j < numLongitude; ++j) {
+			// Longitude: range from 0 to 2*pi
+			float phi = 2 * M_PI * j / numLongitude;
+
+			float x = radius * sin(theta) * cos(phi);
+			float y = radius * cos(theta);  // Moves from pole (1) to equator (0)
+			float z = radius * sin(theta) * sin(phi);
+
+
+			Camera* camera = new Camera();
+			camera->setParent(sphereContainer);
+			mCameraManager->addCamera(camera);
+
+			camera->setObjectName(QString("Camera %1 %2").arg(i).arg(j));
+			camera->transform->setLocalPosition(QVector3D(x, y, z));
+
+			// Look at the center
+			camera->transform->setLocalRotation(LookAt(camera->transform->getLocalPosition(), center));
+		}
+	}
+
+	sphereContainer->transform->setWorldPosition(teapotNode->transform->getWorldPosition());
+	teapotNode->setParent(sphereContainer);
 }
 
 void TestScene::create()

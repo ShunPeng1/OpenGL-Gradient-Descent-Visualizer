@@ -32,7 +32,7 @@ void Scene::init()
 
 	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		mChildrenNodes[i]->init();
+		mChildrenNodes[i]->tryInit();
 	}
 
 }

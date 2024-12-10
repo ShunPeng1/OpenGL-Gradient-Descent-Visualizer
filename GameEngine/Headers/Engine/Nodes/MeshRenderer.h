@@ -15,7 +15,6 @@ public:
 	MeshRenderer();
 	MeshRenderer(Mesh* mesh, bool isInstance = false);
 
-	virtual void init() override;
 	virtual ~MeshRenderer() noexcept;
 
 	void setMesh(Mesh* mesh, bool isInstance);
@@ -26,6 +25,7 @@ public:
 	PolygonMode getPolygonMode() const;
 	DrawBufferMode getDrawBufferMode() const;
 
+	virtual void init() override;
 	virtual void start(IScene* scene) override;
 	virtual void update(float deltaTime) override;
 	virtual void render(ShaderProgram& shaderProgram) override;

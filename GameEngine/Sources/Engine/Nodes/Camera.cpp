@@ -8,7 +8,7 @@ Camera::Camera()
 	mAspectRatio = 16.0f/9.0f;
 	mIsOrtho = false;
 	mDirty = true;
-	mDrawFrustum = true;
+	mDrawFrustum = false;
 
 	setObjectName("Camera");
 }
@@ -42,20 +42,56 @@ void Camera::render(ShaderProgram& shaderProgram)
 }
 
 
+QVector<QVector3D> Camera::calculateFrustumCorners()
+{
+	// Combine projection and view matrices
+	QMatrix4x4 viewProj = getProjectionMatrix() * getViewMatrix();
+	QMatrix4x4 invViewProj = viewProj.inverted();
+
+	// Define corners of the NDC cube
+	QVector4D ndcCorners[] = {
+		{ -1, -1, -1, 1 }, { 1, -1, -1, 1 },
+		{ 1,  1, -1, 1 }, { -1,  1, -1, 1 },
+		{ -1, -1,  1, 1 }, { 1, -1,  1, 1 },
+		{ 1,  1,  1, 1 }, { -1,  1,  1, 1 }
+	};
+
+	QVector<QVector3D> corners(8);
+
+	// Transform NDC corners back to world space
+	for (int i = 0; i < 8; ++i) {
+		QVector4D worldCorner = invViewProj * ndcCorners[i];
+		corners[i] = (worldCorner / worldCorner.w()).toVector3D(); // Normalize homogeneous coordinate
+	}
+
+	return corners;
+}
+
 void Camera::drawFrustum(ShaderProgram& shaderProgram)
 {
 	QVector<QVector3D> frustumCorners = calculateFrustumCorners();
-	QVector<Vertex> vertices;
+	QVector<QVector3D> frustumLines = {
+		// Near plane
+		frustumCorners[0], frustumCorners[1], frustumCorners[1], frustumCorners[2],
+		frustumCorners[2], frustumCorners[3], frustumCorners[3], frustumCorners[0],
+		// Far plane
+		frustumCorners[4], frustumCorners[5], frustumCorners[5], frustumCorners[6],
+		frustumCorners[6], frustumCorners[7], frustumCorners[7], frustumCorners[4],
+		// Connect near and far planes
+		frustumCorners[0], frustumCorners[4], frustumCorners[1], frustumCorners[5],
+		frustumCorners[2], frustumCorners[6], frustumCorners[3], frustumCorners[7]
+	};
 
-	// Add the vertices for the frustum lines
-	for (const auto& corner : frustumCorners) {
+	QVector<Vertex> vertices;
+	for (const auto& linePoint : frustumLines) {
 		Vertex vertex;
-		vertex.position = corner;
+		vertex.position = linePoint;
 		vertex.normal = QVector3D(0.0f, 0.0f, 0.0f);
 		vertex.texCoord = QVector2D(0.0f, 0.0f);
 		vertex.color = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 		vertices.append(vertex);
 	}
+
 	// Generate and bind the VAO
 	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
@@ -63,10 +99,10 @@ void Camera::drawFrustum(ShaderProgram& shaderProgram)
 	// Generate and bind the VBO
 	glGenBuffers(1, &mVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_DYNAMIC_DRAW);
 
-	// Enable the vertex attribute array
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	// Enable the vertex attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
@@ -79,7 +115,7 @@ void Camera::drawFrustum(ShaderProgram& shaderProgram)
 	glEnableVertexAttribArray(3);
 
 	// Set the world matrix to identity for the frustum lines
-	QMatrix4x4 world = transform->getWorldMatrix();
+	QMatrix4x4 world = QMatrix4x4();
 	shaderProgram.setUniformValue("mWorld", world);
 
 	// Draw the frustum lines
@@ -87,38 +123,6 @@ void Camera::drawFrustum(ShaderProgram& shaderProgram)
 
 	// Unbind the VAO
 	glBindVertexArray(0);
-
-}
-
-QVector<QVector3D> Camera::calculateFrustumCorners()
-{
-	QVector<QVector3D> corners(8);
-
-	float nearHeight = 2.0f * tan(qDegreesToRadians(mFov) / 2.0f) * mNear;
-	float nearWidth = nearHeight * mAspectRatio;
-	float farHeight = 2.0f * tan(qDegreesToRadians(mFov) / 2.0f) * mFar;
-	float farWidth = farHeight * mAspectRatio;
-
-	QVector3D mPosition = transform->getWorldPosition();
-	QVector3D mFront = transform->getWorldRotation() * QVector3D(0.0f, 0.0f, -1.0f);
-	QVector3D mUp = transform->getWorldRotation() * QVector3D(0.0f, 1.0f, 0.0f);
-	QVector3D mRight = QVector3D::crossProduct(mFront, mUp).normalized();
-
-	QVector3D offset = mFront * 0.1f;  // Small offset forward
-	QVector3D nearCenter = mPosition + mFront * mNear + offset;
-	QVector3D farCenter = mPosition + mFront * mFar + offset;
-
-	corners[0] = nearCenter - mRight * (nearWidth / 2.0f) + mUp * (nearHeight / 2.0f);
-	corners[1] = nearCenter + mRight * (nearWidth / 2.0f) + mUp * (nearHeight / 2.0f);
-	corners[2] = nearCenter + mRight * (nearWidth / 2.0f) - mUp * (nearHeight / 2.0f);
-	corners[3] = nearCenter - mRight * (nearWidth / 2.0f) - mUp * (nearHeight / 2.0f);
-
-	corners[4] = farCenter - mRight * (farWidth / 2.0f) + mUp * (farHeight / 2.0f);
-	corners[5] = farCenter + mRight * (farWidth / 2.0f) + mUp * (farHeight / 2.0f);
-	corners[6] = farCenter + mRight * (farWidth / 2.0f) - mUp * (farHeight / 2.0f);
-	corners[7] = farCenter - mRight * (farWidth / 2.0f) - mUp * (farHeight / 2.0f);
-
-	return corners;
 }
 
 void Camera::setFov(float fov)

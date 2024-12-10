@@ -15,6 +15,19 @@ void Node::init()
 
 }
 
+void Node::tryInit()
+{
+	if (!mIsAlive) {
+		return;
+	}
+
+	init();
+	for (auto& child : mChildren)
+	{
+		child->tryInit();
+	}
+}
+
 void Node::tryStart(IScene* scene)
 {
     if (!mIsAlive) {
