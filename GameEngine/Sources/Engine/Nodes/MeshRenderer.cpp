@@ -12,9 +12,10 @@ MeshRenderer::MeshRenderer()
 	setObjectName("Mesh Renderer");
 }
 
-MeshRenderer::MeshRenderer(Mesh* mesh, bool isInstance)
+MeshRenderer::MeshRenderer(Mesh* mesh, Material* material, bool isInstance)
 {
 	mMesh = mesh;
+	mMaterial = material;
 	mPolygonMode = PolygonMode::FILL;
 	mDrawBufferMode = DrawBufferMode::FRONT_AND_BACK;
 
@@ -50,6 +51,16 @@ void MeshRenderer::setMesh(Mesh* mesh, bool isInstance)
 Mesh* MeshRenderer::getMesh() const
 {
 	return mMesh;
+}
+
+void MeshRenderer::setMaterial(Material* material)
+{
+	mMaterial = material;
+}
+
+Material* MeshRenderer::getMaterial()
+{
+	return mMaterial;
 }
 
 void MeshRenderer::setPolygonMode(PolygonMode polygonMode)
@@ -90,6 +101,15 @@ void MeshRenderer::render(ShaderProgram& shaderProgram)
 	shaderProgram.setUniformValue("mWorld", world);
 
 	glPolygonMode(static_cast<GLenum>(mDrawBufferMode), static_cast<GLenum>(mPolygonMode));
+	
+	if (mMaterial) {
+		shaderProgram.setUniformValue("mMaterial", mMaterial->getMaterial());
+		shaderProgram.setUniformValue("mColorFactor", mMaterial->getColorFactor());
+		shaderProgram.setUniformValue("mTextureFactor", mMaterial->getTextureFactor());
+		shaderProgram.setUniformValue("mPhongFactor", mMaterial->getPhongFactor());
+		shaderProgram.setUniformValue("mShininess", mMaterial->getShininess());
+	}
+
 	mMesh->draw(shaderProgram);
 
 }

@@ -126,12 +126,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Engine\Nodes\GradientDescent.cpp" />
+    <ClCompile Include="Sources\Engine\Nodes\Light.cpp" />
+    <ClCompile Include="Sources\Engine\Components\Material.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\CameraManager.cpp" />
     <ClCompile Include="Sources\Engine\Scenes\SceneManager.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyItem.cpp" />
     <ClCompile Include="Sources\Qt\Hierarchy\HierarchyWidget.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\Camera.cpp" />
-    <ClCompile Include="Sources\Engine\Components\Renderer.cpp" />
     <ClCompile Include="Sources\Engine\Nodes\MeshRenderer.cpp" />
     <ClCompile Include="Sources\Engine\Components\Transform.cpp" />
     <ClInclude Include="Headers\Engine\Constants\ResourcePath.h" />
@@ -144,6 +145,8 @@
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyWidget.h" />
     <QtMoc Include="Headers\Qt\Hierarchy\HierarchyItem.h" />
     <QtMoc Include="Headers\Engine\Nodes\GradientDescent.h" />
+    <QtMoc Include="Headers\Engine\Nodes\Light.h" />
+    <QtMoc Include="Headers\Engine\Components\Material.h" />
     <ClInclude Include="Headers\Engine\Scenes\CameraManager.h" />
     <ClInclude Include="Headers\Engine\Scenes\SceneManager.h" />
     <ClInclude Include="Headers\Qt\Inputs\InputState.h" />
@@ -177,7 +180,6 @@
     <QtMoc Include="Headers\Engine\Nodes\MeshRenderer.h" />
     <QtMoc Include="Headers\Engine\Components\Transform.h" />
     <QtMoc Include="Headers\Engine\Nodes\Container.h" />
-    <ClInclude Include="Headers\Engine\Components\Renderer.h" />
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h" />
     <ClInclude Include="Headers\Engine\Renders\EBO.h" />
     <ClInclude Include="Headers\Engine\Renders\Mesh.h" />

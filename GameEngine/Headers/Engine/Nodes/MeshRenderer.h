@@ -7,18 +7,22 @@
 #include "Engine/Enums/RenderMode.h"
 #include "Engine/Nodes/Container.h"
 #include "Engine/Renders/Mesh.h"
+#include "Engine/Components/Material.h"
 
 class MeshRenderer : public Container, public QOpenGLExtraFunctions
 {
 	Q_OBJECT
 public:
 	MeshRenderer();
-	MeshRenderer(Mesh* mesh, bool isInstance = false);
+	MeshRenderer(Mesh* mesh, Material *material = nullptr, bool isInstance = false);
 
 	virtual ~MeshRenderer() noexcept;
 
 	void setMesh(Mesh* mesh, bool isInstance);
 	Mesh* getMesh() const;
+
+	void setMaterial(Material* material);
+	Material* getMaterial();
 
 	void setPolygonMode(PolygonMode polygonMode);
 	void setDrawBufferMode(DrawBufferMode drawBufferMode);
@@ -45,6 +49,7 @@ protected:
 	bool mIsInstanced;
 	
 	Mesh* mMesh;
+	Material* mMaterial;
 
 	PolygonMode mPolygonMode;
 	DrawBufferMode mDrawBufferMode;

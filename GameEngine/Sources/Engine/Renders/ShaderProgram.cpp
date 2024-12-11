@@ -72,10 +72,20 @@ void ShaderProgram::start()
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
 
-    // TODO: Remove this and change to a more generic way
+
     mProgram->bind();
-    mProgram->setUniformValue("mUseTexture", false);
-    mProgram->setUniformValue("mUseColor", true);
+    mProgram->setUniformValue("mColorFactor", 1.0f);
+    mProgram->setUniformValue("mTextureFactor", 0.0f);
+    mProgram->setUniformValue("mPhongFactor", 0.0f);
+    mProgram->setUniformValue("mShininess", 32.0f);
+    mProgram->setUniformValue("mLightPosition", QVector3D(0.0f, 0.0f, 10.0f));
+    mProgram->setUniformValue("mTexScale", QVector2D(1.0f, 1.0f));
+    mProgram->setUniformValue("mWorld", QMatrix4x4());
+    mProgram->setUniformValue("mView", QMatrix4x4());
+    mProgram->setUniformValue("mProj", QMatrix4x4());
+    mProgram->setUniformValue("mMaterial", QMatrix3x3());
+    mProgram->setUniformValue("mLightIntensity", QMatrix3x3());
+
     mProgram->release();
 }
 
@@ -145,6 +155,14 @@ void ShaderProgram::setUniformValue(const char* name, const QMatrix4x4& value)
     {
         mProgram->setUniformValue(name, value);
     }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QMatrix3x3& value)
+{
+	if (mProgram)
+	{
+		mProgram->setUniformValue(name, value);
+	}
 }
 
 void ShaderProgram::setUniformValue(const char* name, const QVector2D& value)

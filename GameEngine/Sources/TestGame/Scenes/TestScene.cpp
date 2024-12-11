@@ -70,16 +70,19 @@ void TestScene::load()
 	addMesh(cylinder);
 	addMesh(cone);
 
+	Material* colorMaterial = new Material();
 
-	MeshRenderer* teapotNode = new MeshRenderer(teapot, true);
-	MeshRenderer* triangleNode = new MeshRenderer(triangle, true);
-	MeshRenderer* quadNode = new MeshRenderer(quad, true);
-	MeshRenderer* circleNode = new MeshRenderer(circle, true);
-	MeshRenderer* cubeNode = new MeshRenderer(cube, true);
-	MeshRenderer* sphereNode = new MeshRenderer(sphere, true);
-	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, true);
-	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, true);
-	MeshRenderer* coneNode = new MeshRenderer(cone, true);
+	Material* teapotMaterial = new Material();
+
+	MeshRenderer* teapotNode = new MeshRenderer(teapot, teapotMaterial, true);
+	MeshRenderer* triangleNode = new MeshRenderer(triangle, colorMaterial, true);
+	MeshRenderer* quadNode = new MeshRenderer(quad, colorMaterial, true);
+	MeshRenderer* circleNode = new MeshRenderer(circle, colorMaterial, true);
+	MeshRenderer* cubeNode = new MeshRenderer(cube, colorMaterial, true);
+	MeshRenderer* sphereNode = new MeshRenderer(sphere, colorMaterial, true);
+	MeshRenderer* icosphereNode = new MeshRenderer(icosphere, colorMaterial, true);
+	MeshRenderer* cylinderNode = new MeshRenderer(cylinder, colorMaterial, true);
+	MeshRenderer* coneNode = new MeshRenderer(cone, colorMaterial, true);
 	
 
 	teapotNode->transform->setLocalPosition(QVector3D(0.0f, 0.0f, 5.0f));
