@@ -20,6 +20,7 @@ Camera::~Camera() noexcept
 void Camera::init()
 {
 	initializeOpenGLFunctions();
+
 }
 
 void Camera::start(IScene* scene)
@@ -34,11 +35,9 @@ void Camera::update(float deltaTime)
 
 void Camera::render(ShaderProgram& shaderProgram)
 {
-
 	if (mDrawFrustum) {
 		drawFrustum(shaderProgram);
 	}
-
 }
 
 
@@ -148,6 +147,8 @@ void Camera::setFar(float far)
 
 void Camera::setAspectRatio(float width, float height)
 {
+	mWidth = width;
+	mHeight = height;
 	mAspectRatio = width / height;
 	mDirty = true;
 	emit aspectRatioChanged(mAspectRatio);
@@ -155,6 +156,7 @@ void Camera::setAspectRatio(float width, float height)
 
 void Camera::setAspectRatio(float aspectRatio)
 {
+	mHeight = mWidth / aspectRatio;
 	mAspectRatio = aspectRatio;
 	mDirty = true;
 	emit aspectRatioChanged(aspectRatio);
@@ -208,6 +210,11 @@ bool Camera::getIsOrtho() const
 float Camera::getWidth() const
 {
 	return mWidth;
+}
+
+float Camera::getHeight() const
+{
+	return mHeight;
 }
 
 bool Camera::getDrawFrustum() const

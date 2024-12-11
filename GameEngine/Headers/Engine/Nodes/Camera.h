@@ -31,6 +31,7 @@ public:
 	float getAspectRatio() const;
 	bool getIsOrtho() const;
 	float getWidth() const;
+	float getHeight() const;
 	bool getDrawFrustum() const;
 
 	QMatrix4x4 getViewMatrix();
@@ -62,12 +63,12 @@ protected:
 	float mFar;
 	float mAspectRatio;
 	float mWidth;
+	float mHeight;
 	float mIsOrtho;
 	bool mDirty;
 	bool mDrawFrustum;
 
 	QMatrix4x4 mProjection;
-
 
 	unsigned int mVAO;
 	unsigned int mVBO;
