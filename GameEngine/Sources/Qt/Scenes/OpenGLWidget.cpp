@@ -42,6 +42,11 @@ void OpenGLWidget::setCurrentCamera(Camera* camera)
     mInputPublisher->subscribe(cameraController);
 }
 
+Camera* OpenGLWidget::getCurrentCamera() const
+{
+	return mRenderCamera;
+}
+
 void OpenGLWidget::initializeGL() {
 
     initializeOpenGLFunctions();

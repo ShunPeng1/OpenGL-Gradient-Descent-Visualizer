@@ -4,7 +4,7 @@ Camera::Camera()
 {
 	mFov = 45.0f;
 	mNear = 0.1f;
-	mFar = 1000.0f;
+	mFar = 100.0f;
 	mAspectRatio = 16.0f/9.0f;
 	mIsOrtho = false;
 	mDirty = true;

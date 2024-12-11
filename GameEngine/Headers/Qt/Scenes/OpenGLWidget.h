@@ -21,6 +21,7 @@ public:
 
 public:
     void setCurrentCamera(Camera* camera);
+    Camera* getCurrentCamera() const;
 
 protected:
     void initializeGL() override;
