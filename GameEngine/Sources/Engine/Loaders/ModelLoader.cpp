@@ -324,6 +324,7 @@ Mesh* ModelLoader::loadCircle(int sector)
 		indices.push_back(i);
 
 	}
+	QString path = MODEL_CIRCLE + SEPARATOR + QString::number(sector);
 	return new Mesh(MODEL_CIRCLE, vertices, indices, {}, GL_TRIANGLE_FAN);
 }
 
@@ -421,8 +422,8 @@ Mesh* ModelLoader::loadCylinder(int sector)
 	indices.push_back(0);
 	indices.push_back(1);
 	
-
-    return new Mesh(MODEL_CYLINDER, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_CYLINDER + SEPARATOR + QString::number(sector);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 Mesh* ModelLoader::loadSphere(int sector, int stack)
@@ -506,8 +507,8 @@ Mesh* ModelLoader::loadSphere(int sector, int stack)
 
 	}
 
-
-    return new Mesh(MODEL_SPHERE, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_SPHERE + SEPARATOR + QString::number(sector) + SEPARATOR + QString::number(stack);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
 unsigned int addMiddlePoint(unsigned int p1, unsigned int p2, std::vector<QVector3D>& vertices, std::map<uint64_t, unsigned int> &middlePointCache) {
@@ -631,15 +632,14 @@ Mesh* ModelLoader::loadIcosphere(int subdivision)
         vertices.push_back(vertex);
     }
 
-	return new Mesh(MODEL_ICOSPHERE, vertices, indices, {}, GL_TRIANGLES);
+	QString path = MODEL_ICOSPHERE + SEPARATOR + QString::number(subdivision);
+	return new Mesh(path, vertices, indices, {}, GL_TRIANGLES);
 
 }
 
 Mesh* ModelLoader::loadCubeSphere(int subdivision)
 {
     
-
-
 
     return new Mesh("", {}, {}, {});
 }
@@ -716,114 +716,10 @@ Mesh* ModelLoader::loadCone(int sector)
 	indices.push_back(topCenterIndex);
 
 
-
-    return new Mesh(MODEL_CONE, vertices, indices, {}, GL_TRIANGLE_STRIP);
+	QString path = MODEL_CONE + SEPARATOR + QString::number(sector);
+    return new Mesh(path, vertices, indices, {}, GL_TRIANGLE_STRIP);
 }
 
-void getHeatMapColor(float value, float* red, float* green, float* blue)
-{
-    const int NUM_COLORS = 4;
-    static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,0}, {1,1,0}, {1,0,0} };
-
-    int idx1, idx2;
-    float fractBetween = 0;
-
-    if (value <= 0) {
-        idx1 = idx2 = 0;
-    }
-    else if (value >= 1) {
-        idx1 = idx2 = NUM_COLORS - 1;
-    }
-    else {
-        value = value * (NUM_COLORS - 1);
-        idx1 = floor(value);
-        idx2 = idx1 + 1;
-        fractBetween = value - float(idx1);
-    }
-
-    *red = (color[idx2][0] - color[idx1][0]) * fractBetween + color[idx1][0];
-    *green = (color[idx2][1] - color[idx1][1]) * fractBetween + color[idx1][1];
-    *blue = (color[idx2][2] - color[idx1][2]) * fractBetween + color[idx1][2];
-
-}
-
-Mesh* ModelLoader::loadPlane(float (*func)(float, float), Range& xRange, Range& yRange)
-{
-    std::vector<QVector3D> positions;
-    std::vector<QVector3D> normals;
-    std::vector<QVector2D> texcoords;
-    std::vector<QVector4D> normalColors;
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-
-    float xStep = (xRange.to - xRange.from) / xRange.step;
-    float yStep = (yRange.to - yRange.from) / yRange.step;
-    float minZ = std::numeric_limits<float>::max();
-    float maxZ = std::numeric_limits<float>::lowest();
-
-    for (int i = 0; i <= xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            float x = xRange.from + i * xRange.step;
-            float y = yRange.from + j * yRange.step;
-            float z = func(x, y);
-            if (z < minZ) minZ = z;
-            if (z > maxZ) maxZ = z;
-
-        }
-    }
-
-    for (int i = 0; i <= xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            float x = xRange.from + i * xRange.step;
-            float y = yRange.from + j * yRange.step;
-            float z = func(x, y);
-
-            positions.push_back(QVector3D(x, y, z));
-            QVector3D normal = QVector3D::crossProduct(
-                QVector3D(1.0f, 0.0f, func(x + 0.01f, y) - z),
-                QVector3D(0.0f, 1.0f, func(x, y + 0.01f) - z)
-            );
-            normals.push_back(normal.normalized());
-
-            texcoords.push_back(QVector2D(x, y));
-
-            float r, g, b;
-            float normalizedZ = (z - minZ) / (maxZ - minZ);
-            getHeatMapColor(normalizedZ, &r, &g, &b);
-            normalColors.push_back(QVector4D(r, g, b, 1.0f));
-        }
-    }
-
-    for (int i = 0; i <= xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            int index = j + i * (yStep + 1);
-
-            Vertex vertex = {};
-            vertex.position = positions[index];
-            vertex.normal = normals[index];
-            vertex.texCoord = texcoords[index];
-            vertex.color = normalColors[index];
-            vertices.push_back(vertex);
-        }
-    }
-
-    for (int i = 0; i < xStep; i++) {
-        for (int j = 0; j <= yStep; j++) {
-            int index1 = j + i * (yStep + 1);
-            int index2 = j + (i + 1) * (yStep + 1);
-
-            indices.push_back(index1);
-            indices.push_back(index2);
-        }
-
-        if (i < xStep - 1) {
-            indices.push_back(indices[indices.size() - 1]);
-            indices.push_back((i + 1) * (yStep + 1));
-        }
-    }
-
-    return new Mesh(MODEL_PLANE, vertices, indices, {}, GL_TRIANGLE_STRIP);
-}
 
 QVector3D ModelLoader::getNormalFromOrigin(QVector3D origin, QVector3D point)
 {

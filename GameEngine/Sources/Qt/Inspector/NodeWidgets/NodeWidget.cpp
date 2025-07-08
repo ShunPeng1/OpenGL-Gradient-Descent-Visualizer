@@ -1,6 +1,6 @@
 #include "Qt/Inspector/NodeWidgets/NodeWidget.h"
 
-NodeWidget::NodeWidget(Node* node, QWidget* parent) : QWidget(parent), mNode() {
+NodeWidget::NodeWidget(Node* node, QWidget* parent) : INodeWidget(parent), mNode() {
     QVBoxLayout* widgetLayout = new QVBoxLayout(this);
 
     SectionWidget* section = new SectionWidget("Node", 0, this);
@@ -19,47 +19,45 @@ NodeWidget::NodeWidget(Node* node, QWidget* parent) : QWidget(parent), mNode() {
 
 	section->setContentLayout(*mainLayout);
 
-    mNode = node;
-    if (mNode) {
-        mNameEdit->setText(mNode->getName());
-        mIsAliveCheckBox->setChecked(mNode->getIsAlive());
-    }
+    connect(mNameEdit, &QLineEdit::textEdited, this, &NodeWidget::onObjectNameSet);
+    connect(mIsAliveCheckBox, &QCheckBox::clicked, this, &NodeWidget::onIsAliveSet);
 
-
-    connect(mNameEdit, &QLineEdit::textChanged, this, &NodeWidget::onNameChanged);
-    connect(mIsAliveCheckBox, &QCheckBox::toggled, this, &NodeWidget::onIsAliveChanged);
+	setNode(node);
 }
 
-NodeWidget::~NodeWidget() {}
+NodeWidget::~NodeWidget() 
+{
+    disconnectSignals();
+}
 
 void NodeWidget::setNode(Node* node) {
+
+    disconnectSignals();
+    
     mNode = node;
-	mIsUpdating = true;
-    if (node) {
-        mNameEdit->setText(node->getName());
-        mIsAliveCheckBox->setChecked(node->getIsAlive());
-    }
-	mIsUpdating = false;
+
+    updateUI();
+	connectSignals();
 }
 
 void NodeWidget::clearNode() {
+    disconnectSignals();
+
 	mNode = nullptr;
-    mNameEdit->clear();
-    mIsAliveCheckBox->setChecked(false);
-}
 
-QString NodeWidget::getName() const {
-    return mNameEdit->text();
-}
-
-bool NodeWidget::getIsAlive() const {
-    return mIsAliveCheckBox->isChecked();
+	updateUI();
 }
 
 void NodeWidget::onIsAliveChanged(bool isAlive) {
-	if (mIsUpdating) {
-		return;
-	}
+    mIsAliveCheckBox->setChecked(isAlive);
+}
+
+void NodeWidget::onObjectNameChanged(const QString& name) {
+    mNameEdit->setText(name);
+}
+
+void NodeWidget::onIsAliveSet(bool isAlive)
+{
     if (mNode) {
         if (isAlive) {
             mNode->revive();
@@ -70,11 +68,46 @@ void NodeWidget::onIsAliveChanged(bool isAlive) {
     }
 }
 
-void NodeWidget::onNameChanged(const QString& name) {
-    if (mIsUpdating) {
-        return;
-    }
+void NodeWidget::onObjectNameSet(const QString& name)
+{
     if (mNode) {
-        mNode->setName(name);
+        mNode->setObjectName(name);
     }
+}
+
+void NodeWidget::updateUI()
+{
+	if (mNode) {
+		mNameEdit->setText(mNode->objectName());
+		mIsAliveCheckBox->setChecked(mNode->getIsAlive());
+	}
+    else {
+		mNameEdit->clear();
+		mIsAliveCheckBox->setChecked(false);
+    }
+}
+
+void NodeWidget::connectSignals()
+{
+	if (!mNode) {
+		return;
+	}
+    connect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+    connect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+}
+
+void NodeWidget::disconnectSignals()
+{
+	if (!mNode) {
+		return;
+	}
+
+	disconnect(mNode, &Node::objectNameChanged, this, &NodeWidget::onObjectNameChanged);
+	disconnect(mNode, &Node::isAliveChanged, this, &NodeWidget::onIsAliveChanged);
+}
+
+void NodeWidget::blockSignals(bool)
+{
+	mNameEdit->blockSignals(true);
+	mIsAliveCheckBox->blockSignals(true);
 }

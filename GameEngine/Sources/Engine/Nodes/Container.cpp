@@ -2,8 +2,8 @@
 
 Container::Container() : Node()
 {
-    transform = std::make_shared<Transform>(); // Initialize with make_shared
-    setName("Container");
+    transform = new Transform(); // Initialize with make_shared
+    setObjectName("Container");
 }
 
 Container::~Container() noexcept
@@ -18,7 +18,7 @@ void Container::setParent(Node* parent)
     Container* parentContainer = dynamic_cast<Container*>(parent);
     if (parentContainer)
     {
-        transform->setParent(parentContainer->transform.get());
+        transform->setParent(parentContainer->transform);
     }
     else
     {

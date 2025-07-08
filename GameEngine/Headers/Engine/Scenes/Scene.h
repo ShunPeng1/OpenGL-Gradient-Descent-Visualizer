@@ -7,8 +7,8 @@
 #include "Engine/Renders/Mesh.h"
 #include "Qt/Inputs/InputPublisher.h"
 
-
 #include "Engine/Scenes/Node.h"
+#include "Engine/Scenes/CameraManager.h"
 #include "Engine/Nodes/Camera.h"
 
 #include <vector>
@@ -41,19 +41,18 @@ public:
 	QString getName() const;
 	void setName(const QString& name);
 
-	int addMesh(std::shared_ptr<Mesh> mesh);
-	void removeMesh(std::shared_ptr<Mesh> mesh);
-	std::shared_ptr<Mesh> getMesh(int index) const;
+	int addMesh(Mesh* mesh) override;
+	void removeMesh(Mesh* mesh) override;
+	Mesh* getMesh(int index) const;
 
 	void addNode(Node* node);
 	void removeNode(Node* node);
 	virtual std::vector<Node*> getNodes() const;
 
+	CameraManager* getCameraManager() override;
+
 	void setInputPublisher(InputPublisher* inputPublisher);
 	InputPublisher* getInputPublisher() const;
-
-	void setCamera(Camera* camera);
-	Camera* getCamera() const;
 
 protected:
 	QString mName;
@@ -61,12 +60,11 @@ protected:
 	std::shared_ptr<ShaderProgram> mDefaultShader;
 
 	std::vector<std::unique_ptr<Node>> mChildrenNodes;
-	std::vector<std::shared_ptr<Mesh>> mMeshes;
+	std::vector<Mesh*> mMeshes;
 
+	CameraManager* mCameraManager;
 
 	InputPublisher* inputPublisher;
-	Camera* camera;
-
 
 };
 

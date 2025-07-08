@@ -8,8 +8,13 @@
 #include <vector>
 #include <memory> 
 
-class Transform
+#include "Engine/Interfaces/IComponent.h"
+#include <QObject>
+
+class Transform : public QObject, public IComponent
 {
+	Q_OBJECT
+
 public:
 	Transform();
 	virtual ~Transform();
@@ -34,6 +39,8 @@ public:
 	QQuaternion getLocalRotation();
 	QVector3D getLocalScale();
 
+	bool getIsDirty() const;
+
 	void setParent(Transform* parent);
 	Transform* getParent() const;
 	int getChildCount() const;
@@ -44,18 +51,31 @@ public:
 	QMatrix4x4 getWorldMatrix();
 	QMatrix4x4 getLocalMatrix();
 
+
+signals:
+	void positionChanged(QVector3D);
+	void rotationChanged(QQuaternion);
+	void scaleChanged(QVector3D);
+
 private:
 
 	void addChild(Transform* child);
 	void removeChild(Transform* child);
+
+	void computeModelMatrix();
+	void computeModelMatrix(QMatrix4x4 parentGlobalModelMatrix);
 	void updateChildrenWorldMatrix();
 
-	QVector3D mWorldPosition;
-	QQuaternion mWorldRotation;
-	QVector3D mWorldScale;
+	QVector3D mLocalPosition;
+	QQuaternion mLocalRotation;
+	QVector3D mLocalScale;
+
+	QMatrix4x4 mWorldMatrix;
+
+	bool mIsDirty;
 
 	Transform* mParent;
-	std::vector<Transform*> mChildren; // Use unique_ptr for children
+	std::vector<Transform*> mChildren; 
 
 };
 

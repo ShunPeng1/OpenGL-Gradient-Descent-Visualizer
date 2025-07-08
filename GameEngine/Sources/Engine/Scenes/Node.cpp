@@ -1,8 +1,8 @@
 #include "Engine/Scenes/Node.h"
 
-Node::Node()
+Node::Node() : mIsAlive(true), mIsStarted(false), mScenePtr(nullptr), mParent(nullptr)
 {
-	mIsAlive = true;
+
 }
 
 Node::~Node()
@@ -15,10 +15,26 @@ void Node::init()
 
 }
 
+void Node::tryInit()
+{
+	if (!mIsAlive) {
+		return;
+	}
+
+	init();
+	for (auto& child : mChildren)
+	{
+		child->tryInit();
+	}
+}
+
 void Node::tryStart(IScene* scene)
 {
-	if (!mIsStarted)
-	{
+    if (!mIsAlive) {
+        return;
+    }
+
+	if (!mIsStarted) {
 		start(scene);
 		mIsStarted = true;
 	}
@@ -31,10 +47,11 @@ void Node::tryStart(IScene* scene)
 
 void Node::tryUpdate(float deltaTime)
 {
-	if (mIsAlive)
-	{
-		update(deltaTime);
-	}
+	if (!mIsAlive){
+        return;
+	}		
+
+    update(deltaTime);
 
 	for (auto& child : mChildren)
 	{
@@ -44,10 +61,11 @@ void Node::tryUpdate(float deltaTime)
 
 void Node::tryRender(ShaderProgram& shaderProgram)
 {
-	if (mIsAlive)
-	{
-		render(shaderProgram);
+	if (!mIsAlive){ 
+		return;
 	}
+
+    render(shaderProgram);
 
 	for (auto& child : mChildren)
 	{
@@ -66,24 +84,20 @@ void Node::clear()
 
 }
 
-void Node::setName(const QString& name)
-{
-	mName = name;
-}
-
-QString Node::getName() const
-{
-	return mName;
-}
-
 void Node::kill()
 {
-	mIsAlive = false;
+    if (mIsAlive) {
+        mIsAlive = false;
+        emit isAliveChanged(mIsAlive);
+    }
 }
 
 void Node::revive()
 {
-	mIsAlive = true;
+    if (!mIsAlive) {
+        mIsAlive = true;
+        emit isAliveChanged(mIsAlive);
+    }
 }
 
 bool Node::getIsAlive() const
@@ -138,7 +152,7 @@ std::vector<Node*> Node::getChildren() const
 }
 
 void Node::write(QJsonObject& json) const {
-    json[SERIALIZE_NODE_NAME] = mName;
+	json[SERIALIZE_NODE_NAME] = objectName();
     json[SERIALIZE_NODE_IS_ALIVE] = mIsAlive;
 
     QJsonArray childrenArray;
@@ -151,7 +165,7 @@ void Node::write(QJsonObject& json) const {
 }
 
 void Node::read(const QJsonObject& json) {
-    mName = json[SERIALIZE_NODE_NAME].toString();
+    setObjectName(json[SERIALIZE_NODE_NAME].toString());
     mIsAlive = json[SERIALIZE_NODE_IS_ALIVE].toBool();
 
     QJsonArray childrenArray = json[SERIALIZE_NODE_CHILDREN].toArray();

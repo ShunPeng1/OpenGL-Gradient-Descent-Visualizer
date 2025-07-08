@@ -39,39 +39,37 @@ void Mesh::tryStart()
 
 void Mesh::start()
 {
-
     setupMesh();
 }
 
 void Mesh::setupMesh() {
-
-    glGenVertexArrays(1, &mVAO);
     glGenBuffers(1, &mVBO);
     glGenBuffers(1, &mEBO);
 
-    glBindVertexArray(mVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-        &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-    // vertex positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
-	// vertex color
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
 
-    glBindVertexArray(0);
+void Mesh::updateMesh(QString newPath, const std::vector<Vertex>& newVertices, const std::vector<unsigned int>& newIndices)
+{
+    if (mIsStarted) {
+        glDeleteBuffers(1, &mVBO);
+        glDeleteBuffers(1, &mEBO);
+    }
+
+    // Update vertices and indices
+	path = newPath;
+    vertices = newVertices;
+    indices = newIndices;
+
+    // Re-setup the mesh
+    setupMesh();
 }
 
 void Mesh::write(QJsonObject& json) const {
@@ -137,9 +135,38 @@ void Mesh::draw(ShaderProgram& shader) {
 		shader.setUniformInt((name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].ID);
 	}*/
-	glBindVertexArray(mVAO);
+    glGenVertexArrays(1, &mVAO);
+    glBindVertexArray(mVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+    glEnableVertexAttribArray(2);
+
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(3);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
+
+    /*GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        qDebug() << "OpenGL Error after glBindVertexArray:" << error;
+    }*/
+
+    glActiveTexture(GL_TEXTURE0);
+
 	glDrawElements(mDrawMode, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	glActiveTexture(GL_TEXTURE0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    // Delete VAO after drawing
+    glDeleteVertexArrays(1, &mVAO);
+
 }

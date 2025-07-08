@@ -9,31 +9,33 @@
 #include <QLabel>
 
 #include "Engine/Scenes/Node.h"
+#include "Qt/Interfaces/INodeWidget.h"
 #include "Qt/Widgets/SectionWidget.h"
 #include "Qt/Layouts/VectorFieldLayout.h"
 
-
-class NodeWidget : public QWidget {
+class NodeWidget : public INodeWidget<Node> {
     Q_OBJECT
 
 public:
     NodeWidget(Node* node, QWidget* parent = nullptr);
     ~NodeWidget();
-    void setNode(Node* node);
-    void clearNode();
-
-	QString getName() const;
-	bool getIsAlive() const;
-
+    void setNode(Node* node) override;
+    void clearNode() override;
 
 private slots:
     void onIsAliveChanged(bool isAlive);
-    void onNameChanged(const QString& name);
+    void onObjectNameChanged(const QString& name);
 
+	void onIsAliveSet(bool isAlive);
+	void onObjectNameSet(const QString& name);
 
 private:
-    bool mIsUpdating;
+    void updateUI() override;
+    void connectSignals() override;
+    void disconnectSignals() override;
+    void blockSignals(bool) override;
 
+private:
     Node* mNode;
 
     SectionWidget* mSection;

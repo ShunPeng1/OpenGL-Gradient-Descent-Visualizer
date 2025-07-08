@@ -49,6 +49,7 @@ void ShaderProgram::start()
 
     mIsStarted = true;
 
+
     mProgram = new QOpenGLShaderProgram();
 
     if (!mProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexCode))
@@ -59,10 +60,33 @@ void ShaderProgram::start()
     {
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
+
+    // Bind attribute locations before linking
+    mProgram->bindAttributeLocation("position", 0);
+    mProgram->bindAttributeLocation("normal", 1);
+    mProgram->bindAttributeLocation("texCoord", 2);
+    mProgram->bindAttributeLocation("color", 3);
+
     if (!mProgram->link())
     {
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << mProgram->log().toStdString() << std::endl;
     }
+
+
+    mProgram->bind();
+    mProgram->setUniformValue("mColorFactor", 1.0f);
+    mProgram->setUniformValue("mTextureFactor", 0.0f);
+    mProgram->setUniformValue("mPhongFactor", 0.0f);
+    mProgram->setUniformValue("mShininess", 32.0f);
+    mProgram->setUniformValue("mLightPosition", QVector3D(0.0f, 0.0f, 10.0f));
+    mProgram->setUniformValue("mTexScale", QVector2D(1.0f, 1.0f));
+    mProgram->setUniformValue("mWorld", QMatrix4x4());
+    mProgram->setUniformValue("mView", QMatrix4x4());
+    mProgram->setUniformValue("mProj", QMatrix4x4());
+    mProgram->setUniformValue("mMaterial", QMatrix3x3());
+    mProgram->setUniformValue("mLightIntensity", QMatrix3x3());
+
+    mProgram->release();
 }
 
 void ShaderProgram::clear()
@@ -79,18 +103,18 @@ void ShaderProgram::clear()
 
 void ShaderProgram::bind()
 {
-	if (mProgram)
-	{
-		mProgram->bind();
-	}
+    if (mProgram)
+    {
+        mProgram->bind();
+    }
 }
 
 void ShaderProgram::release()
 {
-	if (mProgram)
-	{
-		mProgram->release();
-	}
+    if (mProgram)
+    {
+        mProgram->release();
+    }
 }
 
 void ShaderProgram::bindAttributeLocation(const char* name, int location)
@@ -131,6 +155,14 @@ void ShaderProgram::setUniformValue(const char* name, const QMatrix4x4& value)
     {
         mProgram->setUniformValue(name, value);
     }
+}
+
+void ShaderProgram::setUniformValue(const char* name, const QMatrix3x3& value)
+{
+	if (mProgram)
+	{
+		mProgram->setUniformValue(name, value);
+	}
 }
 
 void ShaderProgram::setUniformValue(const char* name, const QVector2D& value)

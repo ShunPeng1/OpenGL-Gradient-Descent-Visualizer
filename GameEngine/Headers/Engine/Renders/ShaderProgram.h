@@ -34,6 +34,7 @@ public:
     void setUniformValue(const char* name, int value);
     void setUniformValue(const char* name, float value);
     void setUniformValue(const char* name, const QMatrix4x4& value);
+	void setUniformValue(const char* name, const QMatrix3x3& value);
     void setUniformValue(const char* name, const QVector2D& value);
     void setUniformValue(const char* name, const QVector3D& value);
     void setUniformValue(const char* name, const QVector4D& value);

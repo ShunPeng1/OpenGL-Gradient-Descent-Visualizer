@@ -3,10 +3,9 @@
 
 Scene::Scene()
 {
-	mMeshes = std::vector<std::shared_ptr<Mesh>>();
+	mMeshes = std::vector<Mesh*>();
 	mChildrenNodes = std::vector<std::unique_ptr<Node>>();
-
-	camera = new Camera();
+	mCameraManager = new CameraManager();
 }
 
 Scene::~Scene()
@@ -18,91 +17,84 @@ void Scene::load()
 	ShaderProgram* defaultShader = new ShaderProgram(":/Resources/Shaders/default.vert", ":/Resources/Shaders/default.frag");
 	mDefaultShader = std::shared_ptr<ShaderProgram>(defaultShader);
 
+	// Input publisher
+	inputPublisher = new InputPublisher();
 }
 
 void Scene::init()
 {
 	mDefaultShader->init();
 
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->init();
+		mMeshes[i]->init();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->init();
+		mChildrenNodes[i]->tryInit();
 	}
 
-	camera->init();
-	
 }
 
 void Scene::create()
 {
-	// Bind attribute locations before linking
-	mDefaultShader->bindAttributeLocation("position", 0);
-	mDefaultShader->bindAttributeLocation("normal", 1);
-	mDefaultShader->bindAttributeLocation("texCoord", 2);
-	mDefaultShader->bindAttributeLocation("color", 3);
 
-	mDefaultShader->start();
-	mDefaultShader->bind();
-	mDefaultShader->setUniformValue("mUseTexture", false);
-	mDefaultShader->setUniformValue("mUseColor", true);
-	mDefaultShader->release();
 }
 
 void Scene::start()
 {
+	mDefaultShader->start();
 
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->tryStart();
+		mMeshes[i]->tryStart();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->tryStart(this);
+		mChildrenNodes[i]->tryStart(this);
 	}
 
-	camera->tryStart(this);
 }
 
 void Scene::update(float deltaTime)
 {
-	camera->tryUpdate(deltaTime);
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
-		node->tryUpdate(deltaTime);
+		mChildrenNodes[i]->tryUpdate(deltaTime);
 	}
 }
 
 void Scene::render()
 {
 	mDefaultShader->bind();
-	camera->tryRender(*mDefaultShader);
 
-	for (auto& node : mChildrenNodes)
+	mCameraManager->renderWithMainCamera(*mDefaultShader); // Only render the main camera
+
+
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
+		Node* node = mChildrenNodes[i].get();
+		
 		node->tryRender(*mDefaultShader);
 	}
+
 	mDefaultShader->release();
 }
 
 void Scene::clear()
 {
-	for (auto& mesh : mMeshes)
+	for (int i = 0; i < mMeshes.size(); i++)
 	{
-		mesh->clear();
+		mMeshes[i]->clear();
 	}
 
-	for (auto& node : mChildrenNodes)
+	for (int i = 0; i < mChildrenNodes.size(); i++)
 	{
+		Node* node = mChildrenNodes[i].get();
 		node->clear();
 	}
-
-	camera->clear();
 
 	mDefaultShader->clear();
 }
@@ -144,7 +136,7 @@ void Scene::read(const QJsonObject& json) {
 	QJsonArray meshesArray = json[SERIALIZE_SCENE_MESHES].toArray();
 	for (int i = 0; i < meshesArray.size(); ++i) {
 		QJsonObject meshObject = meshesArray[i].toObject();
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		Mesh* mesh = new Mesh();
 		// Assuming Mesh class has a read method
 		mesh->read(meshObject);
 		addMesh(mesh);
@@ -173,15 +165,24 @@ void Scene::setName(const QString& name)
 	mName = name;
 }
 
-int Scene::addMesh(std::shared_ptr<Mesh> mesh)
+int Scene::addMesh(Mesh* mesh)
 {
 	mMeshes.push_back(mesh);
 	return static_cast<int>(mMeshes.size()) - 1;
 }
 
-void Scene::removeMesh(std::shared_ptr<Mesh> mesh)
+void Scene::removeMesh(Mesh* mesh)
 {
 	mMeshes.erase(std::remove(mMeshes.begin(), mMeshes.end(), mesh), mMeshes.end());
+}
+
+Mesh* Scene::getMesh(int index) const
+{
+	if (index < 0 || index >= mMeshes.size()) {
+		return nullptr;
+	}
+
+	return mMeshes[index];
 }
 
 void Scene::addNode(Node* node)
@@ -198,6 +199,7 @@ void Scene::removeNode(Node* node)
 	if (it != mChildrenNodes.end()) {
 		mChildrenNodes.erase(it, mChildrenNodes.end());
 	}
+	
 }
 
 std::vector<Node*> Scene::getNodes() const
@@ -211,6 +213,11 @@ std::vector<Node*> Scene::getNodes() const
 	return children;
 }
 
+CameraManager* Scene::getCameraManager()
+{
+	return mCameraManager;
+}
+
 void Scene::setInputPublisher(InputPublisher* inputPublisher)
 {
 	this->inputPublisher = inputPublisher;
@@ -219,19 +226,4 @@ void Scene::setInputPublisher(InputPublisher* inputPublisher)
 InputPublisher* Scene::getInputPublisher() const
 {
 	return this->inputPublisher;
-}
-
-void Scene::setCamera(Camera* camera)
-{
-	this->camera = camera;
-}
-
-Camera* Scene::getCamera() const
-{
-	return this->camera;
-}
-
-std::shared_ptr<Mesh> Scene::getMesh(int index) const
-{
-	return mMeshes[index];
 }

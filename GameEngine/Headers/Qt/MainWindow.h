@@ -4,8 +4,9 @@
 
 #include "Qt/Hierarchy/HierarchyWidget.h"
 #include "Qt/Inspector/InspectorWidget.h"
-#include "Qt/OpenGLWidget.h"
+#include "Qt/Scenes/SceneWidget.h"
 
+#include "Engine/Scenes/SceneManager.h"
 #include "Engine/Interfaces/IScene.h"
 
 #include <QMainWindow>
@@ -35,16 +36,19 @@ private slots:
     void onPauseButtonClicked();
 
 private:
+	void createScenes();
     void createDockWidgets();
     void createControlButtons();
 
 private:
-    QDockWidget* mCameraViewDock;
-    QDockWidget* mInspectorDock;
 
-    IScene* mPlayingScene;
-    IScene* mEditingScene;
+    SceneManager* mSceneManager;
+
+    SceneWidget* mSceneWidget;
+    SceneWidget* mSceneWidget2;
+
 
     HierarchyWidget* mHierarchyWidget;
+    QDockWidget* mInspectorDock;
     InspectorWidget* mInspectorWidget;
 };

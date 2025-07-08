@@ -41,7 +41,7 @@
     <ClCompile Include="Sources\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Qt\OpenGLWidget.cpp">
+    <ClCompile Include="Sources\Qt\Scenes\OpenGLWidget.cpp">
       <Filter>Source Files\Qt</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Engine\Loaders\ModelLoader.cpp">
@@ -119,6 +119,30 @@
     <ClCompile Include="Sources\Qt\Layouts\VectorFieldLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\CameraWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\NodeWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Engine\Scenes\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Scenes\SceneWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\MeshRendererWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Engine\Nodes\GradientDescent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Qt\Inspector\NodeWidgets\GradientDescentWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Engine\Scenes\CameraManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Engine\Loaders\ModelLoader.h">
@@ -148,19 +172,7 @@
     <ClInclude Include="Headers\Engine\Scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Scenes\Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\Container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\MeshRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Engine\Nodes\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\TestGame\Controllers\FPSCameraController.h">
@@ -199,9 +211,6 @@
     <ClInclude Include="Headers\Engine\Interfaces\INodeVisitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Engine\Components\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\Engine\Components\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -209,6 +218,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Qt\Layouts\VectorFieldLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Scenes\SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Interfaces\IComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Qt\Interfaces\INodeWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Enums\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Engine\Scenes\CameraManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -222,7 +246,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Headers\Qt\OpenGLWidget.h">
+    <QtMoc Include="Headers\Qt\Scenes\OpenGLWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\MainWindow.h">
@@ -241,6 +265,39 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Headers\Qt\Widgets\SectionWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\NodeWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\CameraWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Scenes\SceneWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Scenes\Node.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Components\Transform.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\Container.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\Camera.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\MeshRenderer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\MeshRendererWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Engine\Nodes\GradientDescent.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Headers\Qt\Inspector\NodeWidgets\GradientDescentWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
