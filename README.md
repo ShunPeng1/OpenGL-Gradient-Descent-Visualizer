@@ -10,7 +10,7 @@ The project is developed in **C++ Qt** using **OpenGL** and features an interact
 - **Resizable and movable widgets** for a customizable UI.  
 
 ## Demo  
-Demo Video: [Coming Soon]  
+Demo Video: https://youtu.be/wF0KWbLykRs
 
 ## Installation Guide  
 To build and run the project, follow these steps:  
